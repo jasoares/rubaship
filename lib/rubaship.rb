@@ -1,2 +1,5 @@
 require "rubaship/version"
 require "rubaship/cli"
+require "rubaship/game"
+require "rubaship/player"
+require "rubaship/ship"
