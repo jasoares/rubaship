@@ -4,8 +4,8 @@ When /^I start a new game$/ do
 end
 
 Then /^I should have the following ships:$/ do |table|
-  ships = table.to_ships_hash.inject([]) do |ships, s|
-    ships << Rubaship::Ship.new(s['name'], s['size'])
+  ships = table.to_ships_hash.collect do |ship|
+    Rubaship::Ship.new(ship['name'], ship['size'])
   end
   @player.ships.should == ships
 end
