@@ -10,7 +10,7 @@ Then /^I should have the following ships:$/ do |table|
   @player.ships.should == ships
 end
 
-Then /^I should have the following fleet board:$/ do |table|
+Then /^I should have the following board:$/ do |table|
   @player.board.should == table.to_board
 end
 

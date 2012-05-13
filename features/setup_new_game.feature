@@ -1,4 +1,4 @@
-@setup_game @api @wip
+@setup_game @api
 Feature: setup new game
 
   As a player
@@ -10,12 +10,6 @@ Feature: setup new game
 
   Each ship is represented on the board by the initial letter of its name.
 
-  The player has two boards, the fleet board, where the players places his
-  ships, and the war board where the he keeps track of its shots.
-
-  Each player's fleet board corresponds to the opponent's war board without the
-  ability to see the ships but only the shots taken.
-
   Scenario: starting a new game
     When I start a new game
     Then I should have the following ships:
@@ -25,7 +19,7 @@ Feature: setup new game
       | submarine        |  3   |
       | destroyer        |  3   |
       | patrol boat      |  2   |
-    And I should have the following fleet board:
+    And I should have the following board:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
       | A |   |   |   |   |   |   |   |   |   |   |
       | B |   |   |   |   |   |   |   |   |   |   |
