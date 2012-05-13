@@ -55,5 +55,16 @@ module Rubaship
         PatrolBoat.new
       ]
     end
+
+    def self.create(ship)
+      case ship
+      when :A, 'A', /\Aaircraft carrier\z/i then AircraftCarrier.new
+      when :B, 'B', /\Abattleship\z/i then Battleship.new
+      when :S, 'S', /\Asubmarine\z/i then Submarine.new
+      when :D, 'D', /\Adestroyer\z/i then Destroyer.new
+      when :P, 'P', /\Apatrol boat\z/i then PatrolBoat.new
+      else nil
+      end
+    end
   end
 end

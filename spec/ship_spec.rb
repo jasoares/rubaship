@@ -46,6 +46,22 @@ module Rubaship
         Ship.ships.should == ships
       end
     end
+
+    describe ".create" do
+      context "when passed a symbol" do
+        it "retuns a ship object corresponding to the symbol passed" do
+          Ship.create(:D).should == Destroyer.new
+        end
+      end
+      context "when passed a string" do
+        it "accepts the ship's name" do
+          Ship.create("aircraft carrier").should == AircraftCarrier.new
+        end
+        it "accepts a string symbol" do
+          Ship.create("B").should == Battleship.new
+        end
+      end
+    end
   end
 
   describe AircraftCarrier do
