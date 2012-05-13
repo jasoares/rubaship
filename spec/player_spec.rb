@@ -19,5 +19,11 @@ module Rubaship
         @player.ships.should == Ship.ships
       end
     end
+
+    describe "#board" do
+      it "returns a Board object" do
+        @player.board.should be_a Board
+      end
+    end
   end
 end
