@@ -11,10 +11,8 @@ module Cucumber
       def to_board
         validate_board_table
 
-        map_column!("", true) { |char| char.to_sym }
-
         board = Hash.new do |hash, key|
-          hash[key[0]] = key[1..10]
+          hash[key[0]] = key[1..10].collect { |cell| Rubaship::Ship.create(cell) }
         end
 
         raw[1..10].each do |row|
