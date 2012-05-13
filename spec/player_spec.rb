@@ -7,7 +7,7 @@ module Rubaship
     end
 
     describe "#ships" do
-      it "should be an array" do
+      it "returns an array" do
         @player.ships.should be_an Array
       end
 
