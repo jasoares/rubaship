@@ -4,6 +4,12 @@ module Rubaship
   shared_examples "a ship" do
     let(:ship) { described_class.new }
 
+    describe "::INDEX" do
+      it "returns the ship's ordering index" do
+        described_class::INDEX.should be @index
+      end
+    end
+
     describe "#name" do
       it "returns the ship's name" do
         @ship.name.should == @name
@@ -62,6 +68,25 @@ module Rubaship
         end
       end
     end
+
+    describe ".index" do
+      context "when passed a ship's symbol" do
+        it "retuns the #ships array index corresponding to the ship which symbol was passed" do
+          Ship.create(:D).should == Destroyer.new
+        end
+      end
+      context "when passed a string" do
+        context "when the string contains a ship's name" do
+          it "retuns the #ships array index corresponding to the ship which name was passed" do
+            Ship.create("aircraft carrier").should == AircraftCarrier.new
+          end
+        end
+        context "when the string contains a ship's initial letter"
+        it "retuns the #ships array index corresponding to the ship which initial was passed" do
+          Ship.create("B").should == Battleship.new
+        end
+      end
+    end
   end
 
   describe AircraftCarrier do
@@ -69,6 +94,7 @@ module Rubaship
       @ship = AircraftCarrier.new
       @name = "aircraft carrier"
       @size = 5
+      @index = 0
     end
 
     it_behaves_like "a ship"
@@ -79,6 +105,7 @@ module Rubaship
       @ship = Battleship.new
       @name = "battleship"
       @size = 4
+      @index = 1
     end
 
     it_behaves_like "a ship"
@@ -89,6 +116,7 @@ module Rubaship
       @ship = Submarine.new
       @name = "submarine"
       @size = 3
+      @index = 2
     end
 
     it_behaves_like "a ship"
@@ -99,6 +127,7 @@ module Rubaship
       @ship = Destroyer.new
       @name = "destroyer"
       @size = 3
+      @index = 3
     end
 
     it_behaves_like "a ship"
@@ -109,6 +138,7 @@ module Rubaship
       @ship = PatrolBoat.new
       @name = "patrol boat"
       @size = 2
+      @index = 4
     end
 
     it_behaves_like "a ship"
