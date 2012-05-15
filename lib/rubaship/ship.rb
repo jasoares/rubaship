@@ -77,6 +77,7 @@ module Rubaship
     end
 
     def self.index(ship)
+      return ship >= 0 && ship < TOTAL_SHIPS ? ship : TOTAL_SHIPS if ship.is_a?(Fixnum)
       case ship
       when :A, 'A', /\Aaircraft carrier\z/i then AircraftCarrier::INDEX
       when :B, 'B', /\Abattleship\z/i then Battleship::INDEX

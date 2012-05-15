@@ -47,7 +47,7 @@ module Rubaship
       it "should have 5 ships" do
         Ship.ships.should have(5).ships
       end
-      it "should be ordered by SHIP::INDEX" do
+      it "should be ordered by Ship::INDEX" do
         Ship.ships.each_with_index do |ship, index|
           index.should be ship.class::INDEX unless ship.nil?
         end
@@ -55,17 +55,34 @@ module Rubaship
     end
 
     describe ".create" do
+      it "creates a new ship object based on the argument passed" do
+        Ship.create(:A).should == AircraftCarrier.new
+      end
+      context "when passed a Fixnum" do
+        it "returns a new ship object which type matches the Ship::INDEX to the argument passed" do
+          Ship.create(4).should == PatrolBoat.new
+        end
+      end
       context "when passed a symbol" do
-        it "retuns a ship object corresponding to the symbol passed" do
+        it "uses Ship.index to return a ship object corresponding to the symbol passed" do
           Ship.create(:D).should == Destroyer.new
         end
       end
       context "when passed a string" do
-        it "accepts the ship's name" do
-          Ship.create("aircraft carrier").should == AircraftCarrier.new
+        context "and it contains a ship's name" do
+          it "uses Ship.index to return a ship object corresponding to the ship's name" do
+            Ship.create("aircraft carrier").should == AircraftCarrier.new
+          end
         end
-        it "accepts a string symbol" do
-          Ship.create("B").should == Battleship.new
+        context "and it contains a ship's name initial" do
+          it "uses Ship.index to return a ship object corresponding to the ship's name initial" do
+            Ship.create("B").should == Battleship.new
+          end
+        end
+      end
+      context "when passed an invalid ship identifier(Fixnum, String or Symbol). See Ship.index" do
+        it "returns nil" do
+          Ship.create(5).should == nil
         end
       end
     end
@@ -73,18 +90,29 @@ module Rubaship
     describe ".index" do
       context "when passed a ship's symbol" do
         it "retuns the #ships array index corresponding to the ship which symbol was passed" do
-          Ship.create(:D).should == Destroyer.new
+          Ship.index(:D).should == Destroyer::INDEX
         end
       end
-      context "when passed a string" do
-        context "when the string contains a ship's name" do
-          it "retuns the #ships array index corresponding to the ship which name was passed" do
-            Ship.create("aircraft carrier").should == AircraftCarrier.new
+      context "when passed one of the following valid ship identifiers as a string:" do
+        context "the ship's name, case insensitive and space separated" do
+          it "retuns the corresponding ship's array index" do
+            Ship.index("aircraft carrier").should == AircraftCarrier::INDEX
           end
         end
-        context "when the string contains a ship's initial letter"
-        it "retuns the #ships array index corresponding to the ship which initial was passed" do
-          Ship.create("B").should == Battleship.new
+        context "the ship's name initial letter, case insensitive" do
+          it "retuns the corresponding ship's array index" do
+            Ship.index("B").should be 1
+          end
+        end
+      end
+      context "when passed a valid Fixnum index" do
+        it "returns the argument passed" do
+          Ship.index(3).should be 3
+        end
+      end
+      context "when the argument passed is an invalid ship index or identifier" do
+        it "returns Ship::TOTAL_SHIPS" do
+          Ship.index(6).should be 5
         end
       end
     end
