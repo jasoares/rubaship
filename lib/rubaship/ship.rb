@@ -64,13 +64,12 @@ module Rubaship
 
   class Ship
     def self.ships
-      [
-        AircraftCarrier.new,
-        Battleship.new,
-        Submarine.new,
-        Destroyer.new,
-        PatrolBoat.new
-      ]
+      ary = []
+      ary.insert(AircraftCarrier::INDEX, AircraftCarrier.new)
+      ary.insert(Battleship::INDEX, Battleship.new)
+      ary.insert(Submarine::INDEX, Submarine.new)
+      ary.insert(Destroyer::INDEX, Destroyer.new)
+      ary.insert(PatrolBoat::INDEX, PatrolBoat.new)
     end
 
     def self.create(ship)

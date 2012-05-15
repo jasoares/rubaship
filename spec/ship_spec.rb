@@ -41,15 +41,16 @@ module Rubaship
     it { should respond_to :status }
 
     describe ".ships" do
-      it "returns an array of 5 ships with one of each ship" do
-        ships = [
-          AircraftCarrier.new,
-          Battleship.new,
-          Submarine.new,
-          Destroyer.new,
-          PatrolBoat.new
-        ]
-        Ship.ships.should == ships
+      it "should be an array" do
+        Ship.ships.should be_an Array
+      end
+      it "should have 5 ships" do
+        Ship.ships.should have(5).ships
+      end
+      it "should be ordered by SHIP::INDEX" do
+        Ship.ships.each_with_index do |ship, index|
+          index.should be ship.class::INDEX unless ship.nil?
+        end
       end
     end
 
