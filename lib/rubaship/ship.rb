@@ -3,10 +3,11 @@ module Rubaship
 
     TOTAL_SHIPS = 5
 
-    attr_reader :name, :size, :status
+    attr_reader :name, :size, :status, :position
 
     def initialize(name, size, status=size)
       @name, @size, @status = name, size, status
+      @position, @placed = nil, false
     end
 
     def ==(o)
@@ -14,6 +15,10 @@ module Rubaship
       @name == o.name &&
       @size == o.size &&
       @status == o.status
+    end
+
+    def placed?
+      @placed
     end
   end
 

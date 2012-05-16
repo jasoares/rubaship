@@ -1,8 +1,20 @@
 require 'spec_helper.rb'
 
 module Rubaship
+
   shared_examples "a ship" do
-    let(:ship) { described_class.new }
+    before(:all) do
+      @player = Player.new
+      @ship = @player.ship(@name)
+    end
+
+    it { should respond_to :name }
+
+    it { should respond_to :placed? }
+
+    it { should respond_to :size }
+
+    it { should respond_to :status }
 
     describe "::INDEX" do
       it "returns the ship's ordering index" do
@@ -29,16 +41,25 @@ module Rubaship
         end
       end
     end
+
+    describe "#placed?" do
+      context "when the ship has just been created and have not been placed yet" do
+        it "returns false" do
+          @ship.placed?.should be false
+        end
+      end
+    end
+
+    describe "#position" do
+      context "when the ship has not been placed on a board yet" do
+        it "returns nil" do
+          @ship.position.should be_nil
+        end
+      end
+    end
   end
 
   describe Ship do
-    subject { Ship.new("destroyer", 3) }
-
-    it { should respond_to :name }
-
-    it { should respond_to :size }
-
-    it { should respond_to :status }
 
     describe ".ships" do
       it "should be an array" do
@@ -120,7 +141,6 @@ module Rubaship
 
   describe AircraftCarrier do
     before(:all) do
-      @ship = AircraftCarrier.new
       @name = "aircraft carrier"
       @size = 5
       @index = 0
@@ -131,7 +151,6 @@ module Rubaship
 
   describe Battleship do
     before(:all) do
-      @ship = Battleship.new
       @name = "battleship"
       @size = 4
       @index = 1
@@ -142,7 +161,6 @@ module Rubaship
 
   describe Submarine do
     before(:all) do
-      @ship = Submarine.new
       @name = "submarine"
       @size = 3
       @index = 2
@@ -153,7 +171,6 @@ module Rubaship
 
   describe Destroyer do
     before(:all) do
-      @ship = Destroyer.new
       @name = "destroyer"
       @size = 3
       @index = 3
@@ -164,7 +181,6 @@ module Rubaship
 
   describe PatrolBoat do
     before(:all) do
-      @ship = PatrolBoat.new
       @name = "patrol boat"
       @size = 2
       @index = 4
