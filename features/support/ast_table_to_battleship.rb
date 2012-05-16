@@ -11,14 +11,11 @@ module Cucumber
       def to_board
         validate_board_table
 
-        board = Hash.new do |hash, key|
-          hash[key[0]] = key[1..10].collect { |cell| Rubaship::Ship.create(cell) }
+        raw[1..10].collect do |table_row|
+          table_row[1..10].collect do |table_cell|
+            Rubaship::Ship.create(table_cell)
+          end
         end
-
-        raw[1..10].each do |row|
-          board[row]
-        end
-        board
       end
 
       def validate_board_table

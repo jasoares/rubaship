@@ -1,22 +1,22 @@
 module Rubaship
   class Board
 
-    ROWS = ("A".."J").to_a
-    COLS = (1..10).to_a
-
     attr_reader :board
 
     def initialize
-      @board = Hash.new { |board, row| board[row] = Array.new(10) { nil } }
-      ("A".."J").each { |row| @board[row] }
+      @board = Array.new(10) { Array.new(10) { nil } }
     end
 
     def ==(o)
-      @board == o
+      if o.is_a? Hash then to_hash == o
+      elsif o.is_a? Array then @board == o
+      elsif o.is_a? Board then @board == o.board end
     end
 
     def to_hash
-      @board
+      @board.each_with_index.inject({}) do |hash, (row, i)|
+        hash[('A'.ord + i).chr.to_sym] = row; hash
+      end
     end
   end
 end
