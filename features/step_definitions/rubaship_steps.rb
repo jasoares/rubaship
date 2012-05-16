@@ -1,5 +1,14 @@
 SHIP_REGEXP = /aircraft carrier|battleship|destroyer|submarine|patrol boat/i
 
+Given /^I have the board:$/ do |table|
+  @player = Rubaship::Game.new.player
+  @player.board.should == table.to_board
+end
+
+Given /^I have the player's list of ships$/ do
+  @list = Rubaship::Game.new.player.ships
+end
+
 When /^I start a new game$/ do
   @game = Rubaship::Game.new
   @player = @game.player
@@ -11,6 +20,11 @@ end
 
 When /^I enter (.*) as the location$/ do |location|
   @location = location
+end
+
+When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, location|
+  loc = Rubaship::Board.parse_location(location)
+  @player.place(@player.ship(ship), loc)
 end
 
 Then /^I should get the player's (#{SHIP_REGEXP}) ship object$/ do |ship|
@@ -27,7 +41,7 @@ end
 
 Then /^my (#{SHIP_REGEXP}) should be (.*)$/ do |ship, method|
   method.gsub!(" ", "_").to_sym
-  @player.ships[Ship.index(ship)].should be method
+  @player.ship(ship).should be method
 end
 
 Then /^I should have the following board:$/ do |table|
