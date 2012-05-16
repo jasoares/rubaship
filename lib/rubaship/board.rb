@@ -25,6 +25,10 @@ module Rubaship
       elsif o.is_a? Board then @board == o.board end
     end
 
+    def [](index)
+      @board[Board.row_to_index(index)]
+    end
+
     def to_hash
       @board.each_with_index.inject({}) do |hash, (row, i)|
         hash[('A'.ord + i).chr.to_sym] = row; hash
@@ -38,6 +42,12 @@ module Rubaship
         :col => r[:col].ord - '0'.ord,
         :ori => r[:ori][0].upcase.to_sym
       } unless r.nil?
+    end
+
+    def self.row_to_index(row)
+      if row.is_a? String then row[0].upcase.ord - 'A'.ord
+      elsif row.is_a? Symbol then row_to_index(row.to_s)
+      elsif row.is_a? Fixnum then row end
     end
   end
 end

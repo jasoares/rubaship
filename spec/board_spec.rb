@@ -24,6 +24,24 @@ module Rubaship
       end
     end
 
+    describe ".row_to_index" do
+      context "when passed a string with a row letter" do
+        it "returns its equivalent index to the board" do
+          Board.row_to_index("C").should be 2
+        end
+      end
+      context "when passed a row letter symbol" do
+        it "returns its equivalent index to the board" do
+          Board.row_to_index(:D).should be 3
+        end
+      end
+      context "when passed a Fixnum" do
+        it "returns the Fixnum passed" do
+          Board.row_to_index(3).should be 3
+        end
+      end
+    end
+
     describe "#==" do
       context "when passed a Board object" do
         it "compares the two board object's arrays" do
@@ -38,6 +56,19 @@ module Rubaship
       context "when passed an array" do
         it "compares the board object's array with the array passed" do
           @board.should == @board.board
+        end
+      end
+    end
+
+    describe "#[]" do
+      context "when passed an integer" do
+        it "translates the integer coordinate to the propper hash key and returns that row" do
+          @board[3].should == @board.board[3]
+        end
+      end
+      context "when passed a symbol" do
+        it "returns the row equivalent to that key symbol" do
+          @board[:C].should == @board.board[2]
         end
       end
     end
