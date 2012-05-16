@@ -17,14 +17,17 @@ Feature: player specifies location
     * The orientation should be horizontal or vertical and can be expressed
       both as h and horizontal or v and vertical, also not case sensitive.
       The orientation always comes last and should be separated by a ":" (colon)
-      from the position part.
+      from the position part. Any word partial of horizontal like horiz or of
+      vertical like vert should be accepted as well, so the following examples
+      are valid as well
+        C3:horiz, C3:verti, A4:ver, F6:hor
 
     * So some possible full examples of the specified positions may be:
       a2:h, A2:h, 2A:horizontal, a2:H, A2:Horizontal, 2A:HORIZONTAL
       f8:v, F8:v, 8F:vertical, f8:V, F8:Vertical, 8F:VERTICAL
 
-    * Yet a more ubiquitous example:
-      H6,h 6H:horizontal, h6:H, H8:Horizontal, 8H:H, 8H:HORIZONTAL
+    * Yet a more ubiquitous accepted examples list:
+      H6:h 6H:horizontal, h6:H, H8:Horizontal, 8H:H, 8H:HORIZONTAL
 
   There is, however, a standard format which will be used by the game to
   express locations wherever necessary which is the upcase, [row][col]:[ori]
@@ -57,8 +60,30 @@ Feature: player specifies location
     | g8:Horizontal   |      G      |      8      | horizontal  |
     | F10:HoRiZONtal  |      F      |     10      | horizontal  |
 
-  Scenarios: valid input, reversed order
+  Scenarios: valid input, reversed order, mixed
     | input           | anchor[row] | anchor[col] | orientation |
     | 3A:v            |      A      |      3      | vertical    |
-    | 10F:Horizontal  |      F      |     10      | horizontal  |
-    | 7G:VERTical     |      G      |      7      | vertical    |
+    | 10F:Horizon     |      F      |     10      | horizontal  |
+    | 10G:VERT        |      G      |     10      | vertical    |
+
+  Scenarios: valid input, edge cases
+    | input           | anchor[row] | anchor[col] | orientation |
+    | A1:ver          |      A      |      1      | vertical    |
+    | J10:vert        |      J      |     10      | vertical    |
+    | A10:HO          |      A      |     10      | horizontal  |
+    | 3A:ve           |      A      |      3      | vertical    |
+    | B3:ho           |      B      |      3      | horizontal  |
+
+  Scenarios: invalid input
+    | input           | anchor[row] | anchor[col] | orientation |
+    | 0F:h            |     nil     |     nil     | nil         |
+    | C0:v            |     nil     |     nil     | nil         |
+    | 7G v            |     nil     |     nil     | nil         |
+    | K3:V            |     nil     |     nil     | nil         |
+    | 3K:V            |     nil     |     nil     | nil         |
+    | 11G:H           |     nil     |     nil     | nil         |
+    | 3A:verical      |     nil     |     nil     | nil         |
+    | 10F:Horzontal   |     nil     |     nil     | nil         |
+    | B3:hr           |     nil     |     nil     | nil         |
+    | K3:vt           |     nil     |     nil     | nil         |
+    | K3:vrt          |     nil     |     nil     | nil         |

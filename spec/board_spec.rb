@@ -6,6 +6,24 @@ module Rubaship
       @board = Board.new
     end
 
+    describe ".parse_location" do
+      before(:all) do
+        @valid_location = "A7:H"
+        @invalid_location = "A11:H"
+      end
+
+      context "when passed a valid location" do
+        it "parses the location string passed to a hash of options" do
+          Board.parse_location(@valid_location).should == { :row => :A, :col => 7, :ori => :H }
+        end
+      end
+      context "when passed an invalid location" do
+        it "returns nil" do
+          Board.parse_location(@invalid_location).should be_nil
+        end
+      end
+    end
+
     describe "#==" do
       context "when passed a Board object" do
         it "compares the two board object's arrays" do
