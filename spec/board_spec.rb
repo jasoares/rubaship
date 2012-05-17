@@ -79,13 +79,18 @@ module Rubaship
 
     describe "#[]" do
       context "when passed an integer" do
-        it "translates the integer coordinate to the propper hash key and returns that row" do
-          @board[3].should == @board.board[3]
+        it "returns the row from board with that index" do
+          @board[0].should == @board.board[0]
         end
       end
       context "when passed a symbol" do
-        it "returns the row equivalent to that key symbol" do
+        it "returns the indexed row equivalent to that key symbol" do
           @board[:C].should == @board.board[2]
+        end
+      end
+      context "when passed a string symbol" do
+        it "returns the indexed row equivalent to that string symbol" do
+          @board["J"].should == @board.board[9]
         end
       end
     end
