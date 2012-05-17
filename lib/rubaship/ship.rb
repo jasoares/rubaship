@@ -28,6 +28,11 @@ module Rubaship
     def to_s
       @name[0].upcase
     end
+
+    def position=(pos)
+      @position = pos
+      @placed = true
+    end
   end
 
   class AircraftCarrier < Ship

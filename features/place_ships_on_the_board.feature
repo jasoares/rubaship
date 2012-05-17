@@ -1,4 +1,4 @@
-@place_ships @api @wip
+@place_ships @api
 Feature: place ships on the board
 
   As a player
@@ -31,7 +31,8 @@ Feature: place ships on the board
       | I |   |   |   |   |   |   |   |   |   |   |
       | J |   |   |   |   |   |   |   |   |   |   |
     When I place my aircraft carrier at b3:h
-    Then I should have the following board:
+    Then my aircraft carrier should be placed at B3:H
+    And I should have the following board:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
       | A |   |   |   |   |   |   |   |   |   |   |
       | B |   |   | A | A | A | A | A |   |   |   |
@@ -43,4 +44,31 @@ Feature: place ships on the board
       | H |   |   |   |   |   |   |   |   |   |   |
       | I |   |   |   |   |   |   |   |   |   |   |
       | J |   |   |   |   |   |   |   |   |   |   |
-    And my aircraft carrier should be placed
+    When I place my battleship at 9b:v
+    Then my battleship should be placed at B9:V
+    And I should have the following board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   | A | A | A | A | A |   | B |   |
+      | C |   |   |   |   |   |   |   |   | B |   |
+      | D |   |   |   |   |   |   |   |   | B |   |
+      | E |   |   |   |   |   |   |   |   | B |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
+    When I place my submarine at C5:V
+    Then my submarine should be placed at C5:V
+    And I should have the following board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   | A | A | A | A | A |   | B |   |
+      | C |   |   |   |   | S |   |   |   | B |   |
+      | D |   |   |   |   | S |   |   |   | B |   |
+      | E |   |   |   |   | S |   |   |   | B |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |

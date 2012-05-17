@@ -39,9 +39,8 @@ Then /^I should have the following ships:$/ do |table|
   @player.ships.should == ships
 end
 
-Then /^my (#{SHIP_REGEXP}) should be (.*)$/ do |ship, method|
-  method.gsub!(" ", "_").to_sym
-  @player.ship(ship).should be method
+Then /^my (#{SHIP_REGEXP}) should be placed at (.*)$/ do |ship, pos|
+  @player.ship(ship).position.should == Rubaship::Board.parse_location(pos)
 end
 
 Then /^I should have the following board:$/ do |table|

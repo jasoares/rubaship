@@ -6,6 +6,25 @@ module Rubaship
       @player = Player.new
     end
 
+    describe "#board" do
+      it "returns a Board object" do
+        @player.board.should be_a Board
+      end
+    end
+
+    describe "#place" do
+      before(:each) do
+        @player = Player.new
+        @board = @player.board
+      end
+
+      it "tries to add a ship to the board" do
+        pos = { row: :D, col: 5, ori: :V }
+        @board.should_receive(:add!).with(@player.ship(:B), pos)
+        @player.place(:B, pos)
+      end
+    end
+
     describe "#ships" do
       it "returns an array" do
         @player.ships.should be_an Array
@@ -48,12 +67,6 @@ module Rubaship
             @player.ship("Submarine").should == @player.ships[Ship.index("Submarine")]
           end
         end
-      end
-    end
-
-    describe "#board" do
-      it "returns a Board object" do
-        @player.board.should be_a Board
       end
     end
   end
