@@ -20,9 +20,11 @@ module Rubaship
     end
 
     def ==(o)
-      if o.is_a? Hash then to_hash == o
-      elsif o.is_a? Array then @board == o
-      elsif o.is_a? Board then @board == o.board end
+      return case o
+        when Hash  then to_hash == o
+        when Array then @board == o
+        when Board then @board == o.board
+      end
     end
 
     def [](index)
