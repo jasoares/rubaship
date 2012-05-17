@@ -47,7 +47,11 @@ module Rubaship
     def self.row_to_index(row)
       if row.is_a? String then row[0].upcase.ord - 'A'.ord
       elsif row.is_a? Symbol then row_to_index(row.to_s)
-      elsif row.is_a? Fixnum then row end
+      elsif row.is_a? Fixnum then row
+      elsif row.is_a? Range and row.first.is_a? Fixnum then row
+      elsif row.is_a? Range
+        Range.new(row_to_index(row.min), row_to_index(row.max))
+      end
     end
   end
 end

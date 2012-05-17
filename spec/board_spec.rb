@@ -36,8 +36,25 @@ module Rubaship
         end
       end
       context "when passed a Fixnum" do
-        it "returns the Fixnum passed" do
+        it "returns the argument passed unchanged" do
           Board.row_to_index(3).should be 3
+        end
+      end
+      context "when passed a Range" do
+        context "and it is a range of Strings" do
+          it "converts the range to a Fixnum range" do
+            Board.row_to_index("B".."D").should == (1..3)
+          end
+        end
+        context "and it is a range of Symbols" do
+          it "converts the range to a Fixnum range" do
+            Board.row_to_index(:C..:E).should == (2..4)
+          end
+        end
+        context "and it is a range of Fixnums" do
+          it "returns the argument passed unchanged" do
+            Board.row_to_index(3..5).should == (3..5)
+          end
         end
       end
     end
