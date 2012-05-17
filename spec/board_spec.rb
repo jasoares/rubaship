@@ -14,7 +14,7 @@ module Rubaship
 
       context "when passed a valid location" do
         it "parses the location string passed to a hash of options" do
-          Board.parse_location(@valid_location).should == { :row => :A, :col => 7, :ori => :H }
+          Board.parse_location(@valid_location).should == { :row => :A, :col => 6, :ori => :H }
         end
       end
       context "when passed an invalid location" do

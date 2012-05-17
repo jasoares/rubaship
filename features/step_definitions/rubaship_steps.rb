@@ -63,7 +63,7 @@ Then /^it should mean ([A-J]|nil) ([1-9]|10|nil) (horizontal|vertical|nil)$/ do 
   else
     Rubaship::Board.parse_location(@location).should == {
       :row => row.upcase.to_sym,
-      :col => col.ord - '0'.ord,
+      :col => col.ord - '0'.ord - 1,
       :ori => ori[0].upcase.to_sym
     }
   end
