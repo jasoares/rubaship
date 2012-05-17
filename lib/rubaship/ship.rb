@@ -20,6 +20,14 @@ module Rubaship
     def placed?
       @placed
     end
+
+    def to_a
+      Array.new(@size) { self }
+    end
+
+    def to_s
+      @name[0].upcase
+    end
   end
 
   class AircraftCarrier < Ship

@@ -4,8 +4,7 @@ module Rubaship
 
   shared_examples "a ship" do
     before(:all) do
-      @player = Player.new
-      @ship = @player.ship(@name)
+      @ship = Ship.create(@name)
     end
 
     it { should respond_to :name }
@@ -55,6 +54,18 @@ module Rubaship
         it "returns nil" do
           @ship.position.should be_nil
         end
+      end
+    end
+
+    describe "#to_a" do
+      it "returns an array representation of the ship with length equal to ship.size" do
+        @ship.to_a.should == Array.new(@ship.size) { @ship }
+      end
+    end
+
+    describe "#to_s" do
+      it "returns a symbol representation of the, as shown on the board" do
+        @ship.to_s.should == @ship.name[0].upcase
       end
     end
   end

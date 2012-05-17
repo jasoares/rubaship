@@ -2,10 +2,6 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Board do
-    before(:all) do
-      @board = Board.new
-    end
-
     describe ".parse_location" do
       before(:all) do
         @valid_location = "A7:H"
@@ -60,9 +56,15 @@ module Rubaship
     end
 
     describe "#==" do
+      before(:all) do
+        @board = Board.new
+        @board.add!(Ship.create(:D), Board.parse_location("G3:H"))
+      end
       context "when passed a Board object" do
         it "compares the two board object's arrays" do
-          @board.should == Board.new
+          board = Board.new
+          board.add!(Ship.create(:D), Board.parse_location("G3:H"))
+          @board.should == board
         end
       end
       context "when passed a hash" do
@@ -78,6 +80,11 @@ module Rubaship
     end
 
     describe "#[]" do
+      before(:all) do
+        @board = Board.new
+        @board.add!(Ship.create(:D), Board.parse_location("C2:H"))
+        @board.add!(Ship.create(:S), Board.parse_location("C1:V"))
+      end
       context "when passed an integer" do
         it "returns the row from board with that index" do
           @board[0].should == @board.board[0]
@@ -95,7 +102,32 @@ module Rubaship
       end
     end
 
+    describe "#add!" do
+      before(:each) do
+        @board = Board.new
+      end
+      context "when passed a valid anchor" do
+        context "with horizontal orientation" do
+          it "updates the row equivalent to the index or symbol passed to reflect the ship position" do
+            @ship = Ship.create(:S)
+            @board.add!(@ship, { :row => :D, :col => 2, :ori => :H })
+            @board[:D][2..(2 + @ship.size - 1)].should == @ship.to_a
+          end
+        end
+        context "with vertical orientation" do
+          it "updates the column equivalent to the index passed to reflect the ship position" do
+            @ship = Ship.create(:A)
+            @board.add!(@ship, { :row => :B, :col => 8, :ori => :V })
+            @board[:B..:F].collect { |row| row[8] }.should == @ship.to_a
+          end
+        end
+      end
+    end
+
     describe "#to_hash" do
+      before(:each) do
+        @board = Board.new
+      end
       it "returns a hash representation of the board where keys map to row letters and values to arrays of row cells" do
         hash = Hash.new { |hash, key| hash[key.to_sym] = Array.new(10) { nil } }
         ("A".."J").each { |key| hash[key] }

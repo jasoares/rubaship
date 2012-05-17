@@ -31,6 +31,17 @@ module Rubaship
       @board[Board.row_to_index(index)]
     end
 
+    def add!(ship, p)
+      row = Board.row_to_index(p[:row])
+      col = p[:col]
+      case p[:ori]
+      when :H
+        @board[row][col..col + ship.size - 1] = ship.to_a
+      when :V
+        @board[row..row + ship.size - 1].each { |row| row[col] = ship }
+      end
+    end
+
     def to_hash
       @board.each_with_index.inject({}) do |hash, (row, i)|
         hash[('A'.ord + i).chr.to_sym] = row; hash
