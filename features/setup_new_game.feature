@@ -16,8 +16,8 @@ Feature: setup new game
       | name             | size |
       | aircraft carrier |  5   |
       | battleship       |  4   |
-      | submarine        |  3   |
       | destroyer        |  3   |
+      | submarine        |  3   |
       | patrol boat      |  2   |
     And I should have the following board:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |

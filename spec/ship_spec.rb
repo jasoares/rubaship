@@ -191,9 +191,9 @@ module Rubaship
     it_behaves_like "a ship"
   end
 
-  describe Submarine do
+  describe Destroyer do
     before(:all) do
-      @name = "submarine"
+      @name = "destroyer"
       @size = 3
       @index = 2
     end
@@ -201,9 +201,9 @@ module Rubaship
     it_behaves_like "a ship"
   end
 
-  describe Destroyer do
+  describe Submarine do
     before(:all) do
-      @name = "destroyer"
+      @name = "submarine"
       @size = 3
       @index = 3
     end
