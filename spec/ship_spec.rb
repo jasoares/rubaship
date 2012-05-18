@@ -133,9 +133,21 @@ module Rubaship
           end
         end
       end
-      context "when passed an invalid ship identifier(Fixnum, String or Symbol). See Ship.index" do
-        it "returns nil" do
-          Ship.create(5).should == nil
+      context "when passed an invalid ship identifier. See Ship.index" do
+        context "and it is a Fixnum" do
+          it "returns nil" do
+            Ship.create(5).should be nil
+          end
+        end
+        context "and it is a String" do
+          it "returns nil" do
+            Ship.create("cruiser").should be nil
+          end
+        end
+        context "and it is a Symbol" do
+          it "returns nil" do
+            Ship.create(:F).should be nil
+          end
         end
       end
     end
