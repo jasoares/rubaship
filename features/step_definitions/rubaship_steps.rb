@@ -18,13 +18,13 @@ When /^I ask for the (#{SHIP_REGEXP}) on that list$/ do |ship|
   @ship = @list[Rubaship::Ship.index(ship)]
 end
 
-When /^I enter (.*) as the location$/ do |location|
-  @location = location
+When /^I enter (.*) as the position$/ do |pos|
+  @pos = pos
 end
 
-When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, location|
-  loc = Rubaship::Board.parse_location(location)
-  @player.place(@player.ship(ship), loc)
+When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, pos|
+  p = Rubaship::Board.parse_pos(pos)
+  @player.place(@player.ship(ship), p)
 end
 
 Then /^I should get the player's (#{SHIP_REGEXP}) ship object$/ do |ship|
@@ -40,7 +40,7 @@ Then /^I should have the following ships:$/ do |table|
 end
 
 Then /^my (#{SHIP_REGEXP}) should be placed at (.*)$/ do |ship, pos|
-  @player.ship(ship).position.should == Rubaship::Board.parse_location(pos)
+  @player.ship(ship).position.should == Rubaship::Board.parse_pos(pos)
 end
 
 Then /^I should have the following board:$/ do |table|
@@ -58,9 +58,9 @@ end
 
 Then /^it should mean ([A-J]|nil) ([1-9]|10|nil) (horizontal|vertical|nil)$/ do |row, col, ori|
   if row == "nil" or col == "nil" or ori == "nil"
-    Rubaship::Board.parse_location(@location).should be_nil
+    Rubaship::Board.parse_pos(@pos).should be_nil
   else
-    Rubaship::Board.parse_location(@location).should == {
+    Rubaship::Board.parse_pos(@pos).should == {
       :row => row.upcase.to_sym,
       :col => col.ord - '0'.ord - 1,
       :ori => ori[0].upcase.to_sym

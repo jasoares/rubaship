@@ -48,8 +48,8 @@ module Rubaship
       end
     end
 
-    def self.parse_location(location)
-      r = LOCATION_REGEXP.match(location)
+    def self.parse_pos(pos)
+      r = LOCATION_REGEXP.match(pos)
       return {
         :row => r[:row].upcase.to_sym,
         :col => r[:col].ord - '0'.ord - 1,

@@ -1,12 +1,12 @@
-@specify_location @cli
-Feature: player specifies location
+@specify_position @cli
+Feature: player specifies position
 
   As a player playing on the cli client
   In order to be straight forward to place a ship
-  I want to be able to specify a location in a simple short manner
+  I want to be able to specify a position in a simple short manner
 
   Taking into account that ships are placed on each player's board by
-  specifying an anchor position, and that the location is given by a
+  specifying an anchor position, and that the position is given by a
   letter and a number of the board, and that the orientation is given
   by a horizontal ou vertical option, the following are the considerations
   about how the player should provide that information:
@@ -30,12 +30,12 @@ Feature: player specifies location
       H6:h 6H:horizontal, h6:H, H8:Horizontal, 8H:H, 8H:HORIZONTAL
 
   There is, however, a standard format which will be used by the game to
-  express locations wherever necessary which is the upcase, [row][col]:[ori]
+  express positions wherever necessary which is the upcase, [row][col]:[ori]
   format.
     For example, A2 horizontal, H8 horizontal, B3 vertical and so on
 
-  Scenario Outline: specifying location
-    When I enter <input> as the location
+  Scenario Outline: specifying position
+    When I enter <input> as the position
     Then it should mean <anchor[row]> <anchor[col]> <orientation>
 
   Scenarios: valid input, standard order, capitalized

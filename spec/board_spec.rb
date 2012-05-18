@@ -2,20 +2,20 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Board do
-    describe ".parse_location" do
+    describe ".parse_pos" do
       before(:all) do
-        @valid_location = "A7:H"
-        @invalid_location = "A11:H"
+        @valid_pos = "A7:H"
+        @invalid_pos = "A11:H"
       end
 
-      context "when passed a valid location" do
-        it "parses the location string passed to a hash of options" do
-          Board.parse_location(@valid_location).should == { :row => :A, :col => 6, :ori => :H }
+      context "when passed a valid position" do
+        it "parses the position string passed to a hash of options" do
+          Board.parse_pos(@valid_pos).should == { :row => :A, :col => 6, :ori => :H }
         end
       end
-      context "when passed an invalid location" do
+      context "when passed an invalid position" do
         it "returns nil" do
-          Board.parse_location(@invalid_location).should be_nil
+          Board.parse_pos(@invalid_pos).should be_nil
         end
       end
     end
@@ -58,12 +58,12 @@ module Rubaship
     describe "#==" do
       before(:all) do
         @board = Board.new
-        @board.add!(Ship.create(:D), Board.parse_location("G3:H"))
+        @board.add!(Ship.create(:D), Board.parse_pos("G3:H"))
       end
       context "when passed a Board object" do
         it "compares the two board object's arrays" do
           board = Board.new
-          board.add!(Ship.create(:D), Board.parse_location("G3:H"))
+          board.add!(Ship.create(:D), Board.parse_pos("G3:H"))
           @board.should == board
         end
       end
@@ -82,8 +82,8 @@ module Rubaship
     describe "#[]" do
       before(:all) do
         @board = Board.new
-        @board.add!(Ship.create(:D), Board.parse_location("C2:H"))
-        @board.add!(Ship.create(:S), Board.parse_location("C1:V"))
+        @board.add!(Ship.create(:D), Board.parse_pos("C2:H"))
+        @board.add!(Ship.create(:S), Board.parse_pos("C1:V"))
       end
       context "when passed an integer" do
         it "returns the row from board with that index" do

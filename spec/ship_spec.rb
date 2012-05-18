@@ -50,7 +50,7 @@ module Rubaship
       context "when the ship has been already placed on the board" do
         it "returns true" do
           @player = Player.new
-          @player.place(@name, Board.parse_location("3d:h"))
+          @player.place(@name, Board.parse_pos("3d:h"))
           @player.ship(@name).placed?.should be true
         end
       end
@@ -69,7 +69,7 @@ module Rubaship
           @pos = { :row => :C, :col => 3, :ori => :V }
           @player.place(@ship, @pos)
         end
-        it "should return its location represented by a hash" do
+        it "should return its position represented by a hash" do
           @ship.position.should be_a Hash
         end
         it "should contain the position of the ship" do
