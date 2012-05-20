@@ -1,6 +1,8 @@
 module Rubaship
   class Board
 
+    ROWS = ("A".."J").to_a
+
     LOCATION_REGEXP = %r{
       ^(?:
         (?<row> [A-J] )
@@ -59,14 +61,17 @@ module Rubaship
 
     def self.row_to_index(row)
       return case row
-        when String then row[0].upcase.ord - 'A'.ord
+        when String then ROWS.index(row)
         when Symbol then self.row_to_index(row.to_s)
-        when Fixnum then row
         when Range
           if row.first.is_a? Fixnum then row
           else Range.new(row_to_index(row.min), row_to_index(row.max)) end
         else row
       end
+    end
+
+    def self.col_to_index(col)
+      col - 1
     end
   end
 end

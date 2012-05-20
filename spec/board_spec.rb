@@ -2,6 +2,12 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Board do
+    describe Board::ROWS do
+      it "returns the array of valid board rows" do
+        Board::ROWS.should == %w{ A B C D E F G H I J }
+      end
+    end
+
     describe ".parse_pos" do
       before(:all) do
         @valid_pos = "A7:H"
@@ -31,11 +37,6 @@ module Rubaship
           Board.row_to_index(:D).should be 3
         end
       end
-      context "when passed a Fixnum" do
-        it "returns the argument passed unchanged" do
-          Board.row_to_index(3).should be 3
-        end
-      end
       context "when passed a Range" do
         context "and it is a range of Strings" do
           it "converts the range to a Fixnum range" do
@@ -51,6 +52,19 @@ module Rubaship
           it "returns the argument passed unchanged" do
             Board.row_to_index(3..5).should == (3..5)
           end
+        end
+      end
+      context "when passed any other type" do
+        it "returns the argument passed unchanged" do
+          Board.row_to_index(3).should be 3
+        end
+      end
+    end
+
+    describe ".col_to_index" do
+      context "when passed a column number" do
+        it "returns the index of the column passed" do
+          Board.col_to_index(5).should be 4
         end
       end
     end
