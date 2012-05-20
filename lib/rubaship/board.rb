@@ -18,7 +18,7 @@ module Rubaship
     attr_reader :board
 
     def initialize
-      @board = Array.new(10) { Array.new(10) { nil } }
+      @board = Array.new(10) { Array.new(10) { Sector.new } }
     end
 
     def ==(o)
@@ -38,15 +38,16 @@ module Rubaship
       col = p[:col]
       case p[:ori]
       when :H
-        @board[row][col..col + ship.size - 1] = ship.to_a
+        @board[row][col..col + ship.size - 1].each { |sector| sector.ship = ship }
       when :V
-        @board[row..row + ship.size - 1].each { |row| row[col] = ship }
+        @board[row..row + ship.size - 1].each { |row| row[col].ship = ship }
       end
     end
 
     def to_hash
-      @board.each_with_index.inject({}) do |hash, (row, i)|
-        hash[('A'.ord + i).chr.to_sym] = row; hash
+      @board.each_with_index.inject({}) do |row_hash, (row, i)|
+        row_hash[ROWS[i].to_sym] = row.collect { |sector| sector.to_hash }
+        row_hash
       end
     end
 
@@ -72,6 +73,26 @@ module Rubaship
 
     def self.col_to_index(col)
       col - 1
+    end
+  end
+
+  class Sector
+
+    attr_accessor :ship
+
+    def initialize(ship=nil)
+      @ship = ship
+    end
+
+    def to_hash
+      { :ship => @ship }
+    end
+
+    def ==(o)
+      case o
+        when Hash then to_hash == o
+        else @ship == o.ship
+      end
     end
   end
 end

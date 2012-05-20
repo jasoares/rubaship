@@ -125,14 +125,14 @@ module Rubaship
           it "updates the row equivalent to the index or symbol passed to reflect the ship position" do
             @ship = Ship.create(:S)
             @board.add!(@ship, { :row => :D, :col => 2, :ori => :H })
-            @board[:D][2..(2 + @ship.size - 1)].should == @ship.to_a
+            @board[:D][2..(2 + @ship.size - 1)].collect { |sector| sector.ship }.should == @ship.to_a
           end
         end
         context "with vertical orientation" do
           it "updates the column equivalent to the index passed to reflect the ship position" do
             @ship = Ship.create(:A)
             @board.add!(@ship, { :row => :B, :col => 8, :ori => :V })
-            @board[:B..:F].collect { |row| row[8] }.should == @ship.to_a
+            @board[:B..:F].collect { |row| row[8].ship }.should == @ship.to_a
           end
         end
       end
@@ -143,9 +143,29 @@ module Rubaship
         @board = Board.new
       end
       it "returns a hash representation of the board where keys map to row letters and values to arrays of row cells" do
-        hash = Hash.new { |hash, key| hash[key.to_sym] = Array.new(10) { nil } }
+        hash = Hash.new { |hash, key| hash[key.to_sym] = Array.new(10) { Sector.new } }
         ("A".."J").each { |key| hash[key] }
         @board.to_hash.should == hash
+      end
+    end
+  end
+
+  describe Sector do
+    before(:each) do
+      @sector = Sector.new
+    end
+
+    describe "#to_hash" do
+      it "returns a hash representation of the sector" do
+        @sector.ship = Ship.create(:B)
+        @sector.to_hash.should == { :ship => @sector.ship }
+      end
+    end
+
+    describe "#==" do
+      it "compares sectors based on shot and ship attributes" do
+        @sector.ship = Ship.create(:D)
+        Sector.new(Ship.create(:D)).should == @sector
       end
     end
   end
