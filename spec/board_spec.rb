@@ -98,6 +98,43 @@ module Rubaship
       end
     end
 
+    describe ".ori_to_sym" do
+      context "when passed a String" do
+        context "and it contains a valid orientation" do
+          it "accepts the full word 'horizontal' or 'vertical'" do
+            Board.ori_to_sym("horizontal").should be :H
+          end
+          it "accepts a partial word like 'horiz' or 'vertic'" do
+            Board.ori_to_sym("horiz").should be :H
+          end
+          it "accepts the initial letter of the work like 'h' or 'v'" do
+            Board.ori_to_sym("v").should be :V
+          end
+        end
+        context "and it contains an invalid orientation" do
+          it "raises an InvalidOrientationArgument" do
+            lambda { Board.ori_to_sym("vr") }.should raise_error(InvalidOrientationArgument)
+          end
+        end
+      end
+      context "when passed a Symbol with a valid orientation" do
+        it "accepts the full word like :HORIZONTAL or :vertical" do
+          Board.ori_to_sym(:HORIZONTAL).should be :H
+        end
+        it "accepts a partial word like :Horiz or :vertic" do
+          Board.ori_to_sym(:Horiz).should be :H
+        end
+        it "accepts the initial letter of the work like :h or :V" do
+          Board.ori_to_sym(:V).should be :V
+        end
+      end
+      context "and it contains an invalid orientation" do
+        it "raises an InvalidOrientationArgument" do
+          lambda { Board.ori_to_sym(:hr) }.should raise_error(InvalidOrientationArgument)
+        end
+      end
+    end
+
     describe "#==" do
       before(:all) do
         @board = Board.new

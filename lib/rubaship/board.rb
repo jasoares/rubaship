@@ -1,4 +1,7 @@
 module Rubaship
+
+  class InvalidOrientationArgument < ArgumentError; end
+
   class Board
 
     ROWS = ("A".."J").to_a
@@ -95,11 +98,14 @@ module Rubaship
     def self.ori_to_sym(ori)
       return case ori
         when String
-          if "horizontal" =~ /#{ori}[orizontal]{,9}/i then :H
-          elsif "vertical" =~ /#{ori}[ertical]{,7}/i then :V
-          else nil end
+          if "horizontal" =~ /#{ori}[orizontal]{,#{10 - ori.length}}/i then :H
+          elsif "vertical" =~ /#{ori}[ertical]{,#{8 - ori.length}}/i then :V
+          else raise InvalidOrientationArgument,
+            "Invalid orientation \"#{ori}\":String"
+          end
         when Symbol then ori_to_sym(ori.to_s)
-        else raise "invalid orientation passed #{ori}"
+        else raise InvalidOrientationArgument,
+          "Invalid orientation type passed #{ori}:#{ori.class}"
       end
     end
 
