@@ -21,4 +21,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'cucumber', '~>1.1.9'
   gem.add_development_dependency 'guard-cucumber', '~> 0.7.5'
   gem.add_development_dependency 'aruba', '~> 0.4.11'
+  gem.add_development_dependency 'simplecov', '~> 0.6.3'
 end
