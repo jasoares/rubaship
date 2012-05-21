@@ -8,7 +8,9 @@ module Rubaship
 
     POSITION_REGEXP = /^(?<anchor>[A-Z0-9]{2,3}):(?<orientation>[a-z]{1,10})$/i
     ANCHOR_REGEXP = /^(?:(?<row>[A-J])(?<col>([1-9])|10)|\g<col>\g<row>)$/i
-    ORIENT_REGEXP = /^(?<ori>h(o(r(i(z(o(n(t(a(l)?)?)?)?)?)?)?)?)?|v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/i
+    ORIENT_REGEXP = /^(?<ori>
+      h(o(r(i(z(o(n(t(a(l)?)?)?)?)?)?)?)?)? |
+      v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/ix
 
     attr_reader :board
 
@@ -29,8 +31,10 @@ module Rubaship
     end
 
     def add!(ship, pos_row, col=nil, ori=:H)
-      pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String and col.nil?
-      pos_row, col, ori = pos_row if pos_row.is_a? Array
+      if col.nil?
+        pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String
+        pos_row, col, ori = pos_row if pos_row.is_a? Array
+      end
 
       row = Board.row_to_idx(pos_row)
       col = Board.col_to_idx(col)
@@ -38,10 +42,13 @@ module Rubaship
 
       case ori
         when :H
-          @board[row][col..col + ship.size - 1].each { |sector| sector.ship = ship }
+          @board[row][col..col + ship.size - 1].each do |sector|
+            sector.ship = ship
+          end
         when :V
-          @board[row..row + ship.size - 1].each { |row| row[col].ship = ship }
-        else raise "No valid orientation error!"
+          @board[row..row + ship.size - 1].each do |row|
+            row[col].ship = ship
+          end
       end
       @board
     end
@@ -80,18 +87,14 @@ module Rubaship
       end
     end
 
-    def self.col_to_idx(col, array_index=true)
+    def self.col_to_idx(col, array=true)
       return case col
-        when Fixnum then array_index ? col - 1 : col
-        when String then col_to_idx(col.ord - '0'.ord, array_index)
-        when Symbol then col_to_idx(col.to_s, array_index)
+        when Fixnum then array ? col - 1 : col
+        when String then col_to_idx(col.ord - '0'.ord, array)
         when Range
-          if col.first.is_a? Fixnum
-            Range.new((col_to_idx(col.min, array_index)), col_to_idx(col.max, array_index))
-          else
-            Range.new(col_to_idx(col.min, array_index), col_to_idx(col.max, array_index))
-          end
-        else raise "invalid column or range passed #{col}"
+          Range.new((col_to_idx(col.min, array)), col_to_idx(col.max, array))
+        else raise InvalidColumnArgument,
+          "Invalid column or range type passed #{col}:#{col.class}"
       end
     end
 
