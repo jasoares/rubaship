@@ -19,7 +19,7 @@ module Rubaship
       end
 
       it "tries to add a ship to the board" do
-        pos = { row: :D, col: 5, ori: :V }
+        pos = [ :D, 5, :V ]
         @board.should_receive(:add!).with(@player.ship(:B), pos)
         @player.place(:B, pos)
       end

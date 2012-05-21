@@ -66,11 +66,11 @@ module Rubaship
         before(:all) do
           @player = Player.new
           @ship = @player.ship(@name)
-          @pos = { :row => :C, :col => 3, :ori => :V }
+          @pos = [ :C, 3, :V ]
           @player.place(@ship, @pos)
         end
-        it "should return its position represented by a hash" do
-          @ship.position.should be_a Hash
+        it "should return its position represented by an array" do
+          @ship.position.should be_an Array
         end
         it "should contain the position of the ship" do
           @ship.position.should be == @pos

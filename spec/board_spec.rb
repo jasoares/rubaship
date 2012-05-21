@@ -16,7 +16,7 @@ module Rubaship
 
       context "when passed a valid position" do
         it "parses the position string passed to a hash of options" do
-          Board.parse_pos(@valid_pos).should == { :row => :A, :col => 6, :ori => :H }
+          Board.parse_pos(@valid_pos).should ==  [:A, 7, :H]
         end
       end
       context "when passed an invalid position" do
@@ -62,9 +62,38 @@ module Rubaship
     end
 
     describe ".col_to_index" do
-      context "when passed a column number" do
-        it "returns the index of the column passed" do
-          Board.col_to_index(5).should be 4
+      context "when no array_index argument is passed or its value is true(default)" do
+        context "and passed a string with a number" do
+          it "returns the index of the column passed" do
+            Board.col_to_index("3", true).should be 2
+          end
+        end
+        context "and passed a Fixnum with column number" do
+          it "returns the index of the column passed" do
+            Board.col_to_index(5).should be 4
+          end
+        end
+        context "and passed a range of columns" do
+          it "returns the range with its max and min decreased by 1" do
+            Board.col_to_index(3..6).should == (2..5)
+          end
+        end
+      end
+      context "when the optional array_index argument is passed as false" do
+        context "and is passed a string with a number" do
+          it "returns the column number of the column passed corresponding to the board" do
+            Board.col_to_index("4", false).should be 4
+          end
+        end
+        context "and is passed a Fixnum with column number" do
+          it "returns the column number of the column number passed" do
+            Board.col_to_index(5, false).should be 5
+          end
+        end
+        context "and is passed a Range of String numbers" do
+          it "returns the column range corresponding to the board column numbers passed" do
+            Board.col_to_index("4".."7", false).should == (4..7)
+          end
         end
       end
     end
@@ -72,12 +101,12 @@ module Rubaship
     describe "#==" do
       before(:all) do
         @board = Board.new
-        @board.add!(Ship.create(:D), Board.parse_pos("G3:H"))
+        @board.add!(Ship.create(:D), "G3:H")
       end
       context "when passed a Board object" do
         it "compares the two board object's arrays" do
           board = Board.new
-          board.add!(Ship.create(:D), Board.parse_pos("G3:H"))
+          board.add!(Ship.create(:D), :G, 3, :H)
           @board.should == board
         end
       end
@@ -97,7 +126,7 @@ module Rubaship
       before(:all) do
         @board = Board.new
         @board.add!(Ship.create(:D), Board.parse_pos("C2:H"))
-        @board.add!(Ship.create(:S), Board.parse_pos("C1:V"))
+        @board.add!(Ship.create(:S), :C, 1, :V)
       end
       context "when passed an integer" do
         it "returns the row from board with that index" do
@@ -114,6 +143,16 @@ module Rubaship
           @board["J"].should == @board.board[9]
         end
       end
+      context "when passed a string range" do
+        it "returns the range of rows equivalent to that string range" do
+          @board["B".."F"].should == @board.board[1..5]
+        end
+      end
+      context "when passed a symbol range" do
+        it "returns the range of rows equivalent to that symbol range" do
+          @board[:C..:E].should == @board.board[2..4]
+        end
+      end
     end
 
     describe "#add!" do
@@ -121,18 +160,22 @@ module Rubaship
         @board = Board.new
       end
       context "when passed a valid anchor" do
+        it "returns the board with the ship added" do
+          @ship = Ship.create(:P)
+          @board.add!(@ship, :G, "1", "Vertical").should == Board.new.add!(Ship.create(:P), "G1:V")
+        end
         context "with horizontal orientation" do
           it "updates the row equivalent to the index or symbol passed to reflect the ship position" do
             @ship = Ship.create(:S)
-            @board.add!(@ship, { :row => :D, :col => 2, :ori => :H })
-            @board[:D][2..(2 + @ship.size - 1)].collect { |sector| sector.ship }.should == @ship.to_a
+            @board.add!(@ship, "D", "2", "H")
+            @board[:D][(1..1 + @ship.size - 1)].collect { |sector| sector.ship }.should == @ship.to_a
           end
         end
         context "with vertical orientation" do
           it "updates the column equivalent to the index passed to reflect the ship position" do
             @ship = Ship.create(:A)
-            @board.add!(@ship, { :row => :B, :col => 8, :ori => :V })
-            @board[:B..:F].collect { |row| row[8].ship }.should == @ship.to_a
+            @board.add!(@ship, :B, 8, :V)
+            @board[(:B..:F)].collect { |row| row[7].ship }.should == @ship.to_a
           end
         end
       end
