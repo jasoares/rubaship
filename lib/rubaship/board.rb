@@ -1,5 +1,7 @@
 module Rubaship
 
+  class InvalidRowArgument < ArgumentError; end
+  class InvalidColumnArgument < ArgumentError; end
   class InvalidOrientationArgument < ArgumentError; end
 
   class Board
@@ -35,22 +37,25 @@ module Rubaship
         pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String
         pos_row, col, ori = pos_row if pos_row.is_a? Array
       end
+      begin
+        row = Board.row_to_idx(pos_row)
+        col = Board.col_to_idx(col)
+        ori = Board.ori_to_sym(ori)
 
-      row = Board.row_to_idx(pos_row)
-      col = Board.col_to_idx(col)
-      ori = Board.ori_to_sym(ori)
+        case ori
+          when :H
+            @board[row][col..col + ship.size - 1].each do |sector|
+              sector.ship = ship
+            end
+          when :V
+            @board[row..row + ship.size - 1].each do |row|
+              row[col].ship = ship
+            end
+        end
 
-      case ori
-        when :H
-          @board[row][col..col + ship.size - 1].each do |sector|
-            sector.ship = ship
-          end
-        when :V
-          @board[row..row + ship.size - 1].each do |row|
-            row[col].ship = ship
-          end
+      rescue ArgumentError
+        false
       end
-      @board
     end
 
     def to_hash
@@ -83,7 +88,8 @@ module Rubaship
           else
             Range.new(row_to_idx(row.min), row_to_idx(row.max))
           end
-        else raise "invalid row or range passed #{row}"
+        else raise InvalidRowArgument,
+          "Invalid row or range type passed #{row}:#{row.class}"
       end
     end
 

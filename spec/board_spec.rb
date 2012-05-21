@@ -55,8 +55,8 @@ module Rubaship
         end
       end
       context "when passed any other type" do
-        it "returns the argument passed unchanged" do
-          Board.row_to_idx(3).should be 3
+        it "raises an exception" do
+          lambda { Board.row_to_idx([2]) }.should raise_error(InvalidRowArgument)
         end
       end
     end
@@ -78,6 +78,11 @@ module Rubaship
             Board.col_to_idx(3..6).should == (2..5)
           end
         end
+        context "and passed an invalid column type" do
+          it "raises an exception" do
+            lambda { Board.col_to_idx(:"2") }.should raise_error(InvalidColumnArgument)
+          end
+        end
       end
       context "when the optional array_index argument is passed as false" do
         context "and is passed a string with a number" do
@@ -93,6 +98,11 @@ module Rubaship
         context "and is passed a Range of String numbers" do
           it "returns the column range corresponding to the board column numbers passed" do
             Board.col_to_idx("4".."7", false).should == (4..7)
+          end
+        end
+        context "and passed an invalid column type" do
+          it "raises an exception" do
+            lambda { Board.col_to_idx(:"2") }.should raise_error(InvalidColumnArgument)
           end
         end
       end
@@ -127,10 +137,15 @@ module Rubaship
         it "accepts the initial letter of the work like :h or :V" do
           Board.ori_to_sym(:V).should be :V
         end
+        context "and it contains an invalid orientation" do
+          it "raises an InvalidOrientationArgument" do
+            lambda { Board.ori_to_sym(:hr) }.should raise_error(InvalidOrientationArgument)
+          end
+        end
       end
-      context "and it contains an invalid orientation" do
+      context "when passed an invalid type" do
         it "raises an InvalidOrientationArgument" do
-          lambda { Board.ori_to_sym(:hr) }.should raise_error(InvalidOrientationArgument)
+          lambda { Board.ori_to_sym(4) }.should raise_error(InvalidOrientationArgument)
         end
       end
     end
@@ -214,6 +229,11 @@ module Rubaship
             @board.add!(@ship, :B, 8, :V)
             @board[(:B..:F)].collect { |row| row[7].ship }.should == @ship.to_a
           end
+        end
+      end
+      context "when passed invalid position" do
+        it "returns false" do
+          @board.add!(Ship.create(:D), "K6:h").should be false
         end
       end
     end
