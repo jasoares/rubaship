@@ -60,6 +60,6 @@ Then /^it should mean ([A-J]|nil) ([1-9]|10|nil) (horizontal|vertical|nil)$/ do 
   if row == "nil" or col == "nil" or ori == "nil"
     Rubaship::Board.parse_pos(@pos).should be_nil
   else
-    Rubaship::Board.parse_pos(@pos).should == Rubaship::Board.pos_to_simple(row, col, ori)
+    Rubaship::Board.parse_pos(@pos).should == Rubaship::Board.format_pos(row, col, ori)
   end
 end

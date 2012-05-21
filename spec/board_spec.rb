@@ -26,73 +26,73 @@ module Rubaship
       end
     end
 
-    describe ".row_to_index" do
+    describe ".row_to_idx" do
       context "when passed a string with a row letter" do
         it "returns its equivalent index to the board" do
-          Board.row_to_index("C").should be 2
+          Board.row_to_idx("C").should be 2
         end
       end
       context "when passed a row letter symbol" do
         it "returns its equivalent index to the board" do
-          Board.row_to_index(:D).should be 3
+          Board.row_to_idx(:D).should be 3
         end
       end
       context "when passed a Range" do
         context "and it is a range of Strings" do
           it "converts the range to a Fixnum range" do
-            Board.row_to_index("B".."D").should == (1..3)
+            Board.row_to_idx("B".."D").should == (1..3)
           end
         end
         context "and it is a range of Symbols" do
           it "converts the range to a Fixnum range" do
-            Board.row_to_index(:C..:E).should == (2..4)
+            Board.row_to_idx(:C..:E).should == (2..4)
           end
         end
         context "and it is a range of Fixnums" do
           it "returns the argument passed unchanged" do
-            Board.row_to_index(3..5).should == (3..5)
+            Board.row_to_idx(3..5).should == (3..5)
           end
         end
       end
       context "when passed any other type" do
         it "returns the argument passed unchanged" do
-          Board.row_to_index(3).should be 3
+          Board.row_to_idx(3).should be 3
         end
       end
     end
 
-    describe ".col_to_index" do
+    describe ".col_to_idx" do
       context "when no array_index argument is passed or its value is true(default)" do
         context "and passed a string with a number" do
           it "returns the index of the column passed" do
-            Board.col_to_index("3", true).should be 2
+            Board.col_to_idx("3", true).should be 2
           end
         end
         context "and passed a Fixnum with column number" do
           it "returns the index of the column passed" do
-            Board.col_to_index(5).should be 4
+            Board.col_to_idx(5).should be 4
           end
         end
         context "and passed a range of columns" do
           it "returns the range with its max and min decreased by 1" do
-            Board.col_to_index(3..6).should == (2..5)
+            Board.col_to_idx(3..6).should == (2..5)
           end
         end
       end
       context "when the optional array_index argument is passed as false" do
         context "and is passed a string with a number" do
           it "returns the column number of the column passed corresponding to the board" do
-            Board.col_to_index("4", false).should be 4
+            Board.col_to_idx("4", false).should be 4
           end
         end
         context "and is passed a Fixnum with column number" do
           it "returns the column number of the column number passed" do
-            Board.col_to_index(5, false).should be 5
+            Board.col_to_idx(5, false).should be 5
           end
         end
         context "and is passed a Range of String numbers" do
           it "returns the column range corresponding to the board column numbers passed" do
-            Board.col_to_index("4".."7", false).should == (4..7)
+            Board.col_to_idx("4".."7", false).should == (4..7)
           end
         end
       end

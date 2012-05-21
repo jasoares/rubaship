@@ -22,16 +22,16 @@ module Rubaship
     end
 
     def [](index)
-      @board[Board.row_to_index(index)]
+      @board[Board.row_to_idx(index)]
     end
 
     def add!(ship, pos_row, col=nil, ori=:H)
       pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String and col.nil?
       pos_row, col, ori = pos_row if pos_row.is_a? Array
 
-      row = Board.row_to_index(pos_row)
-      col = Board.col_to_index(col)
-      ori = Board.orient_to_symbol(ori)
+      row = Board.row_to_idx(pos_row)
+      col = Board.col_to_idx(col)
+      ori = Board.ori_to_sym(ori)
 
       case ori
         when :H
@@ -58,52 +58,52 @@ module Rubaship
       orient = ORIENT_REGEXP.match(orient)
 
       unless anchor.nil? or orient.nil?
-        pos_to_simple(anchor[1], anchor[2], orient[1])
+        format_pos(anchor[1], anchor[2], orient[1])
       end
     end
 
-    def self.row_to_index(row)
+    def self.row_to_idx(row)
       return case row
         when Fixnum then row
         when String then ROWS.index(row.upcase)
-        when Symbol then row_to_index(row.to_s)
+        when Symbol then row_to_idx(row.to_s)
         when Range
           if row.first.is_a? Fixnum
             row
           else
-            Range.new(row_to_index(row.min), row_to_index(row.max))
+            Range.new(row_to_idx(row.min), row_to_idx(row.max))
           end
         else raise "invalid row or range passed #{row}"
       end
     end
 
-    def self.col_to_index(col, array_index=true)
+    def self.col_to_idx(col, array_index=true)
       return case col
         when Fixnum then array_index ? col - 1 : col
-        when String then col_to_index(col.ord - '0'.ord, array_index)
-        when Symbol then col_to_index(col.to_s, array_index)
+        when String then col_to_idx(col.ord - '0'.ord, array_index)
+        when Symbol then col_to_idx(col.to_s, array_index)
         when Range
           if col.first.is_a? Fixnum
-            Range.new((col_to_index(col.min, array_index)), col_to_index(col.max, array_index))
+            Range.new((col_to_idx(col.min, array_index)), col_to_idx(col.max, array_index))
           else
-            Range.new(col_to_index(col.min, array_index), col_to_index(col.max, array_index))
+            Range.new(col_to_idx(col.min, array_index), col_to_idx(col.max, array_index))
           end
         else raise "invalid column or range passed #{col}"
       end
     end
 
-    def self.orient_to_symbol(ori)
+    def self.ori_to_sym(ori)
       return case ori
         when String
           if "horizontal" =~ /#{ori}[orizontal]{,9}/i then :H
           elsif "vertical" =~ /#{ori}[ertical]{,7}/i then :V
           else nil end
-        when Symbol then orient_to_symbol(ori.to_s)
+        when Symbol then ori_to_sym(ori.to_s)
         else raise "invalid orientation passed #{ori}"
       end
     end
 
-    def self.pos_to_simple(row, col, ori)
+    def self.format_pos(row, col, ori)
       Array.[](
         row.upcase.to_sym,
         col.ord - '0'.ord,
