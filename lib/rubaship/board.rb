@@ -14,8 +14,6 @@ module Rubaship
       h(o(r(i(z(o(n(t(a(l)?)?)?)?)?)?)?)?)? |
       v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/ix
 
-    attr_reader :board
-
     def initialize
       @board = Array.new(10) { Array.new(10) { Sector.new } }
     end
@@ -24,7 +22,7 @@ module Rubaship
       return case o
         when Hash  then to_hash == o
         when Array then @board == o
-        when Board then @board == o.board
+        when Board then @board == o.to_a
       end
     end
 
@@ -63,6 +61,10 @@ module Rubaship
         row_hash[ROWS[i].to_sym] = row.collect { |sector| sector.to_hash }
         row_hash
       end
+    end
+
+    def to_a
+      @board
     end
 
     def self.parse_pos(p)

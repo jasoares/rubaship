@@ -169,7 +169,7 @@ module Rubaship
       end
       context "when passed an array" do
         it "compares the board object's array with the array passed" do
-          @board.should == @board.board
+          @board.should == @board.to_a
         end
       end
     end
@@ -182,27 +182,27 @@ module Rubaship
       end
       context "when passed an integer" do
         it "returns the row from board with that index" do
-          @board[0].should == @board.board[0]
+          @board[0].should == @board.to_a[0]
         end
       end
       context "when passed a symbol" do
         it "returns the indexed row equivalent to that key symbol" do
-          @board[:C].should == @board.board[2]
+          @board[:C].should == @board.to_a[2]
         end
       end
       context "when passed a string symbol" do
         it "returns the indexed row equivalent to that string symbol" do
-          @board["J"].should == @board.board[9]
+          @board["J"].should == @board.to_a[9]
         end
       end
       context "when passed a string range" do
         it "returns the range of rows equivalent to that string range" do
-          @board["B".."F"].should == @board.board[1..5]
+          @board["B".."F"].should == @board.to_a[1..5]
         end
       end
       context "when passed a symbol range" do
         it "returns the range of rows equivalent to that symbol range" do
-          @board[:C..:E].should == @board.board[2..4]
+          @board[:C..:E].should == @board.to_a[2..4]
         end
       end
     end
