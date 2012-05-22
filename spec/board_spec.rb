@@ -238,6 +238,29 @@ module Rubaship
       end
     end
 
+    describe "#dup" do
+      before(:each) do
+        @board = Board.new
+      end
+      it "returns a Board object" do
+        @board.dup.should be_a Board
+      end
+      it "returns a shallow copy of the original Board object" do
+        @board.dup.should == @board
+      end
+      it "returns a deep copy of the original Board object" do
+        board = @board.dup
+        board.add!(Ship.create(:S), :C, 4, :H)
+        board.should_not == @board
+      end
+      context "when applying changes to the copy" do
+        it "doen't change the original object" do
+          board = @board.dup
+          lambda { board.add!(Ship.create(:A), :C, 3, :H) }.should_not change @board, :to_a
+        end
+      end
+    end
+
     describe "#to_hash" do
       before(:each) do
         @board = Board.new

@@ -18,6 +18,14 @@ module Rubaship
       @board = Array.new(10) { Array.new(10) { Sector.new } }
     end
 
+    def initialize_copy(orig)
+      @board = orig.to_a.collect do |row|
+        row.collect do |sector|
+          sector.dup
+        end
+      end
+    end
+
     def ==(o)
       return case o
         when Hash  then to_hash == o
