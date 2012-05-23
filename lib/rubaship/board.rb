@@ -75,6 +75,25 @@ module Rubaship
       @board
     end
 
+    def to_s(empty=" ",sep="|", col_width=3)
+      b = self.dup.to_a
+      b = b.each_with_index do |row, idx|
+        row.insert(0, ROWS[idx])
+      end
+      b.insert(0, (0..10).to_a)
+      b.collect do |row|
+        "#{sep}" << row.collect do |cell|
+          if cell.is_a? Fixnum
+            cell == 0 ? empty.center(col_width) : cell.to_s.center(col_width)
+          elsif cell.is_a? String
+            cell.center(col_width)
+          else
+            cell.to_s(empty).center(col_width)
+          end
+        end.join(sep) << sep
+      end.join("\n") << "\n"
+    end
+
     def self.parse_pos(p)
       return nil unless m = POSITION_REGEXP.match(p)
 
@@ -154,6 +173,10 @@ module Rubaship
         when Hash then to_hash == o
         else @ship == o.ship
       end
+    end
+
+    def to_s(empty=" ")
+      @ship.nil? ? empty : @ship.to_s
     end
   end
 end

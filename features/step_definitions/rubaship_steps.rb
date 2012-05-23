@@ -9,6 +9,17 @@ Given /^I have the player's list of ships$/ do
   @list = Rubaship::Game.new.player.ships
 end
 
+Given /^I have a board already setup with my fleet$/ do
+  @game = Rubaship::Game.new
+  @player = @game.player
+  @board = @player.board
+  @board.add!(@player.ship(:A), :B, 2, :H)
+  @board.add!(@player.ship(:B), :D, 3, :V)
+  @board.add!(@player.ship(:D), :D, 6, :H)
+  @board.add!(@player.ship(:S), :F, 10, :V)
+  @board.add!(@player.ship(:P), :J, 6, :H)
+end
+
 When /^I start a new game$/ do
   @game = Rubaship::Game.new
   @player = @game.player
@@ -25,6 +36,17 @@ end
 When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, pos|
   p = Rubaship::Board.parse_pos(pos)
   @player.place(@player.ship(ship), p)
+end
+
+When /^I use the default values$/ do
+end
+
+When /^I (?:use|set|select|choose) "?([^"]{0,2}|\d)(?: spaces)?"? as the ((?:empty|separator|column) (?:character|width))$/ do |arg, type|
+  case type
+    when /empty character/     then @empty     = arg
+    when /separator character/ then @sep       = arg
+    when /column width/        then @col_width = arg.ord - '0'.ord
+  end
 end
 
 Then /^I should get the player's (#{SHIP_REGEXP}) ship object$/ do |ship|
@@ -45,6 +67,13 @@ end
 
 Then /^I should have the following board:$/ do |table|
   @player.board.should == table.to_board
+end
+
+Then /^I should see the following representation:$/ do |representation|
+  empty = @empty.nil? ? " " : @empty
+  sep = @sep.nil? ? "|" : @sep
+  col_width = @col_width.nil? ? 3 : @col_width
+  @board.to_s(empty, sep, col_width).should == representation
 end
 
 Then /^I should see the message:$/ do |message|

@@ -271,6 +271,50 @@ module Rubaship
         @board.to_hash.should == hash
       end
     end
+
+    describe "#to_s" do
+      before(:each) do
+        @board = Board.new
+        @board.add!(Ship.create(:A), :D, 4, :V)
+      end
+      context "when no additional arguments passed" do
+        it "returns a string representation of the board and its ships" do
+          @board.to_s.should == (<<-eos)
+|   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+| A |   |   |   |   |   |   |   |   |   |   |
+| B |   |   |   |   |   |   |   |   |   |   |
+| C |   |   |   |   |   |   |   |   |   |   |
+| D |   |   |   | A |   |   |   |   |   |   |
+| E |   |   |   | A |   |   |   |   |   |   |
+| F |   |   |   | A |   |   |   |   |   |   |
+| G |   |   |   | A |   |   |   |   |   |   |
+| H |   |   |   | A |   |   |   |   |   |   |
+| I |   |   |   |   |   |   |   |   |   |   |
+| J |   |   |   |   |   |   |   |   |   |   |
+          eos
+        end
+      end
+      context "when arguments are provided to override the defaults" do
+        it "returns a representation of the board where empty sectors are filled with that character" do
+          @board.to_s("~", "!", 5).should == <<-eos
+!  ~  !  1  !  2  !  3  !  4  !  5  !  6  !  7  !  8  !  9  ! 10  !
+!  A  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  B  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  C  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  D  !  ~  !  ~  !  ~  !  A  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  E  !  ~  !  ~  !  ~  !  A  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  F  !  ~  !  ~  !  ~  !  A  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  G  !  ~  !  ~  !  ~  !  A  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  H  !  ~  !  ~  !  ~  !  A  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  I  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+!  J  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !  ~  !
+          eos
+        end
+      end
+      it "should not change the board" do
+        lambda { @board.to_s }.should_not change @board, :to_s
+      end
+    end
   end
 
   describe Sector do
@@ -289,6 +333,27 @@ module Rubaship
       it "compares sectors based on shot and ship attributes" do
         @sector.ship = Ship.create(:D)
         Sector.new(Ship.create(:D)).should == @sector
+      end
+    end
+
+    describe "#to_s" do
+      context "when the sector has no ship" do
+        context "and no arguments are passed" do
+          it "returns a string with a single space" do
+            @sector.to_s.should == " "
+          end
+        end
+        context "and an character argument is passed" do
+          it "returns that character" do
+            @sector.to_s("~").should == "~"
+          end
+        end
+      end
+      context "when the sector has a ship" do
+        it "returns the return value of ship's to_s method" do
+          @sector.ship = Ship.create(:S)
+          @sector.to_s("~").should == @sector.ship.to_s
+        end
       end
     end
   end
