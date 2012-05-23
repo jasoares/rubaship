@@ -2,7 +2,7 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Board do
-    describe Board::ROWS do
+    describe "::ROWS" do
       it "returns the array of valid board rows" do
         Board::ROWS.should == %w{ A B C D E F G H I J }
       end
