@@ -170,9 +170,16 @@ module Rubaship
           end
         end
       end
-      context "when passed a valid Fixnum index" do
-        it "returns the argument passed" do
-          Ship.index(3).should be 3
+      context "when passed a Fixnum index" do
+        context "and it is valid" do
+          it "returns the argument passed" do
+            Ship.index(3).should be 3
+          end
+        end
+        context "and it is invalid" do
+          it "returns the Ship::TOTAL_SHIPS constant" do
+            Ship.index(7).should be 5
+          end
         end
       end
       context "when the argument passed is an invalid ship index or identifier" do
