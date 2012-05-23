@@ -153,15 +153,27 @@ module Rubaship
     end
 
     describe ".index" do
-      context "when passed a ship's symbol" do
-        it "retuns the #ships array index corresponding to the ship which symbol was passed" do
-          Ship.index(:D).should == Destroyer::INDEX
+      context "when passed a Symbol" do
+        context "and it contains a ship's initial letter" do
+          it "retuns the ship's array index corresponding to that ship" do
+            Ship.index(:D).should == Destroyer::INDEX
+          end
+        end
+        context "and it contains a ship's name with spaces replaced by underscores" do
+          it "returns that ship's array index" do
+            Ship.index(:patrol_boat) == PatrolBoat::INDEX
+          end
         end
       end
       context "when passed one of the following valid ship identifiers as a string:" do
         context "the ship's name, case insensitive and space separated" do
           it "retuns the corresponding ship's array index" do
             Ship.index("aircraft carrier").should == AircraftCarrier::INDEX
+          end
+        end
+        context "when passed the identifier \"carrier\" as the aircraft carrier" do
+          it "returns the expected ship, this only works for carriers and boats" do
+            Ship.index("carrier").should == AircraftCarrier::INDEX
           end
         end
         context "the ship's name initial letter, case insensitive" do

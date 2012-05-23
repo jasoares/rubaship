@@ -96,12 +96,13 @@ module Rubaship
     end
 
     def self.index(ship)
+      ship = ship.id2name.gsub("_", " ") if ship.is_a? Symbol
       case ship
-        when :A, 'A', /\Aaircraft carrier\z/i; AircraftCarrier::INDEX
-        when :B, 'B', /\Abattleship\z/i      ; Battleship::INDEX
-        when :D, 'D', /\Adestroyer\z/i       ; Destroyer::INDEX
-        when :S, 'S', /\Asubmarine\z/i       ; Submarine::INDEX
-        when :P, 'P', /\Apatrol boat\z/i     ; PatrolBoat::INDEX
+        when 'A', /^aircraft (?<c>carrier)|\g<c>$/i; AircraftCarrier::INDEX
+        when 'B', /^battleship$/i                  ; Battleship::INDEX
+        when 'D', /^destroyer$/i                   ; Destroyer::INDEX
+        when 'S', /^submarine$/i                   ; Submarine::INDEX
+        when 'P', /^patrol (?<b>boat)|\g<b>$/i     ; PatrolBoat::INDEX
         when Fixnum; (ship >= 0 && ship < TOTAL_SHIPS) ? ship : TOTAL_SHIPS
         else TOTAL_SHIPS
       end
