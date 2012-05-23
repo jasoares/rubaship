@@ -3,6 +3,7 @@ module Rubaship
   class InvalidRowArgument < ArgumentError; end
   class InvalidColumnArgument < ArgumentError; end
   class InvalidOrientationArgument < ArgumentError; end
+  class InvalidShipArgument < ArgumentError; end
 
   class Board
 
@@ -39,6 +40,7 @@ module Rubaship
     end
 
     def add!(ship, pos_row, col=nil, ori=:H)
+      raise InvalidShipArgument, "Must be a Ship object." unless ship.is_a? Ship
       if col.nil?
         pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String
         pos_row, col, ori = pos_row if pos_row.is_a? Array
@@ -58,7 +60,6 @@ module Rubaship
               row[col].ship = ship
             end
         end
-
       rescue ArgumentError
         false
       end

@@ -236,6 +236,11 @@ module Rubaship
           @board.add!(Ship.create(:D), "K6:h").should be false
         end
       end
+      context "when passed an invalid ship argument" do
+        it "raises an InvalidShipArgument error" do
+          lambda { @board.add!(:D, "D3:h") }.should raise_error(InvalidShipArgument)
+        end
+      end
     end
 
     describe "#dup" do
