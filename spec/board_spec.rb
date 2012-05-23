@@ -207,6 +207,18 @@ module Rubaship
       end
     end
 
+    describe "#add" do
+      before(:each) do
+        @board = Board.new
+      end
+      it "returns a board object with the ship added" do
+        @board.add(Ship.create(:B), :A, 10, :V).should == Board.new.add(Ship.create(:B), :a, 10, :v)
+      end
+      it "does not change the receiver object" do
+        lambda { @board.add(Ship.create(:A), :j, 2, :h) }.should_not change @board, :to_a
+      end
+    end
+
     describe "#add!" do
       before(:each) do
         @board = Board.new

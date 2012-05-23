@@ -39,6 +39,10 @@ module Rubaship
       @board[Board.row_to_idx(index)]
     end
 
+    def add(ship, pos_row, col=nil, ori=:H)
+      self.dup.add!(ship, pos_row, col, ori)
+    end
+
     def add!(ship, pos_row, col=nil, ori=:H)
       raise InvalidShipArgument, "Must be a Ship object." unless ship.is_a? Ship
       if col.nil?
