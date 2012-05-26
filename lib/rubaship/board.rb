@@ -39,6 +39,8 @@ module Rubaship
       @board[Board.row_to_idx(index)]
     end
 
+    alias :row :[]
+
     def add(ship, pos_row, col=nil, ori=:H)
       self.dup.add!(ship, pos_row, col, ori)
     end
@@ -67,6 +69,10 @@ module Rubaship
       rescue ArgumentError
         false
       end
+    end
+
+    def col(col)
+      @board.collect { |row| row[Board.col_to_idx(col)] }
     end
 
     def to_hash

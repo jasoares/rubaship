@@ -255,6 +255,20 @@ module Rubaship
       end
     end
 
+    describe "#col" do
+      before(:each) do
+        @board = Board.new
+        @ship = Ship.create(:D)
+        @board.add!(@ship, :F, 3, :V)
+      end
+
+      it "returns an array containing the sectors of the given column" do
+        es = Sector.new
+        ss = Sector.new(@ship)
+        @board.col(3).should == [es, es, es, es, es, ss, ss, ss, es, es]
+      end
+    end
+
     describe "#dup" do
       before(:each) do
         @board = Board.new
@@ -275,6 +289,16 @@ module Rubaship
           board = @board.dup
           lambda { board.add!(Ship.create(:A), :C, 3, :H) }.should_not change @board, :to_a
         end
+      end
+    end
+
+    describe "#row" do
+      before(:each) do
+        @board = Board.new
+        @board.add!(Ship.create(:B), :A, 2, :H)
+      end
+      it "alias the Board#[] method" do
+        @board.row(:A).should == @board[:A]
       end
     end
 
