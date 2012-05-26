@@ -75,6 +75,10 @@ module Rubaship
       @board.collect { |row| row[Board.col_to_idx(col)] }
     end
 
+    def sector(row, col)
+      @board[Board.row_to_idx(row)][Board.col_to_idx(col)]
+    end
+
     def to_hash
       @board.each_with_index.inject({}) do |row_hash, (row, i)|
         row_hash[ROWS[i].to_sym] = row.collect { |sector| sector.to_hash }

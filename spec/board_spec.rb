@@ -302,6 +302,16 @@ module Rubaship
       end
     end
 
+    describe "#sector" do
+      before(:each) do
+        @board = Board.new
+        @board.add!(Ship.create(:S), :D, 7, :V)
+      end
+      it "returns a single sector which coordinates respond to col and row to idx" do
+        @board.sector(:E, 7).should == Sector.new(Ship.create(:S))
+      end
+    end
+
     describe "#to_hash" do
       before(:each) do
         @board = Board.new
