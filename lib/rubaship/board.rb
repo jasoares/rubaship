@@ -62,8 +62,8 @@ module Rubaship
               sector.ship = ship
             end
           when :V
-            @board[row..row + ship.size - 1].each do |row|
-              row[col].ship = ship
+            @board[row..row + ship.size - 1].each do |r|
+              r[col].ship = ship
             end
         end
       rescue ArgumentError
