@@ -34,34 +34,28 @@ module Rubaship
     end
 
     describe "#status" do
-      context "when just created" do
-        it "should be equal to its size" do
-          @ship.status.should be @size
-        end
+      it "should be equal to its size right after creation" do
+        @ship.status.should be @size
       end
     end
 
     describe "#placed?" do
-      context "when the ship has just been created and have not been placed yet" do
-        it "returns false" do
-          @ship.placed?.should be false
-        end
+      it "returns false if the ship has not been placed yet" do
+        @ship.placed?.should be false
       end
-      context "when the ship has been already placed on the board" do
-        it "returns true" do
-          @player = Player.new
-          @player.place(@name, Board.parse_pos("3d:h"))
-          @player.ship(@name).placed?.should be true
-        end
+
+      it "returns true after the ship has been placed" do
+        @player = Player.new
+        @player.place(@name, Board.parse_pos("3d:h"))
+        @player.ship(@name).placed?.should be true
       end
     end
 
     describe "#position" do
-      context "when the ship has not been placed on a board yet" do
-        it "returns nil" do
-          @ship.position.should be_nil
-        end
+      it "returns nil when if the ship has not been placed" do
+        @ship.position.should be_nil
       end
+
       context "when the ship is already placed on a board" do
         before(:all) do
           @player = Player.new
@@ -69,9 +63,11 @@ module Rubaship
           @pos = [ :C, 3, :V ]
           @player.place(@ship, @pos)
         end
+
         it "should return its position represented by an array" do
           @ship.position.should be_an Array
         end
+
         it "should contain the position of the ship" do
           @ship.position.should be == @pos
         end
@@ -97,9 +93,11 @@ module Rubaship
       it "should be an array" do
         Ship.ships.should be_an Array
       end
+
       it "should have 5 ships" do
         Ship.ships.should have(5).ships
       end
+
       it "should be ordered by Ship::INDEX" do
         Ship.ships.each_with_index do |ship, index|
           index.should be ship.class::INDEX unless ship.nil?
@@ -111,93 +109,67 @@ module Rubaship
       it "creates a new ship object based on the argument passed" do
         Ship.create(:A).should == AircraftCarrier.new
       end
-      context "when passed a Fixnum" do
-        it "returns a new ship object which type matches the Ship::INDEX to the argument passed" do
-          Ship.create(4).should == PatrolBoat.new
-        end
+
+      it "matches Ship::INDEX when a Fixnum is passed" do
+        Ship.create(4).should == PatrolBoat.new
       end
-      context "when passed a symbol" do
-        it "uses Ship.index to return a ship object corresponding to the symbol passed" do
-          Ship.create(:D).should == Destroyer.new
-        end
+
+      it "matches a ship using Ship.index when a Symbol is passed" do
+        Ship.create(:D).should == Destroyer.new
       end
+
       context "when passed a string" do
-        context "and it contains a ship's name" do
-          it "uses Ship.index to return a ship object corresponding to the ship's name" do
-            Ship.create("aircraft carrier").should == AircraftCarrier.new
-          end
+        it "uses Ship.index to match a ship when a name is passed" do
+          Ship.create("aircraft carrier").should == AircraftCarrier.new
         end
-        context "and it contains a ship's name initial" do
-          it "uses Ship.index to return a ship object corresponding to the ship's name initial" do
-            Ship.create("B").should == Battleship.new
-          end
+
+        it "uses Ship.index to match a ship when a ship's name initial is passed" do
+          Ship.create("B").should == Battleship.new
         end
       end
+
       context "when passed an invalid ship identifier. See Ship.index" do
-        context "and it is a Fixnum" do
-          it "returns nil" do
-            Ship.create(5).should be nil
-          end
+        it "returns nil when passed a Fixnum" do
+          Ship.create(5).should be nil
         end
-        context "and it is a String" do
-          it "returns nil" do
-            Ship.create("cruiser").should be nil
-          end
+
+        it "returns nil when passed a String" do
+          Ship.create("cruiser").should be nil
         end
-        context "and it is a Symbol" do
-          it "returns nil" do
-            Ship.create(:F).should be nil
-          end
+
+        it "returns nil when passed a Symbol" do
+          Ship.create(:F).should be nil
         end
       end
     end
 
     describe ".index" do
-      context "when passed a Symbol" do
-        context "and it contains a ship's initial letter" do
-          it "retuns the ship's array index corresponding to that ship" do
-            Ship.index(:D).should == Destroyer::INDEX
-          end
-        end
-        context "and it contains a ship's name with spaces replaced by underscores" do
-          it "returns that ship's array index" do
-            Ship.index(:patrol_boat) == PatrolBoat::INDEX
-          end
-        end
+      it "returns the ship's index that matches the Symbol name passed" do
+        Ship.index(:patrol_boat) == PatrolBoat::INDEX
       end
-      context "when passed one of the following valid ship identifiers as a string:" do
-        context "the ship's name, case insensitive and space separated" do
-          it "retuns the corresponding ship's array index" do
-            Ship.index("aircraft carrier").should == AircraftCarrier::INDEX
-          end
-        end
-        context "when passed the identifier \"carrier\" as the aircraft carrier" do
-          it "returns the expected ship, this only works for carriers and boats" do
-            Ship.index("carrier").should == AircraftCarrier::INDEX
-          end
-        end
-        context "the ship's name initial letter, case insensitive" do
-          it "retuns the corresponding ship's array index" do
-            Ship.index("B").should be 1
-          end
-        end
+
+      it "returns the ship's index that matches the Symbol letter passed" do
+        Ship.index(:D).should == Destroyer::INDEX
       end
-      context "when passed a Fixnum index" do
-        context "and it is valid" do
-          it "returns the argument passed" do
-            Ship.index(3).should be 3
-          end
-        end
-        context "and it is invalid" do
-          it "returns the Ship::TOTAL_SHIPS constant" do
-            Ship.index(7).should be 5
-          end
-        end
+
+      it "returns the ship's index that matches the String name passed" do
+        Ship.index("aircraft carrier").should == AircraftCarrier::INDEX
       end
-      context "when the argument passed is an invalid ship index or identifier" do
-        it "returns Ship::TOTAL_SHIPS" do
-          Ship.index(6).should be 5
-        end
+
+      it "retuns the ship's index that matches the String letter passed" do
+        Ship.index("B").should be 1
+      end
+
+      it "returns the aircraft carrier index when passed the small form \"carrier\"" do
+        Ship.index("carrier").should == AircraftCarrier::INDEX
+      end
+
+      it "returns the argument unchanged when passed a Fixnum" do
+        Ship.index(3).should be 3
+      end
+
+      it "returns Ship::TOTAL_SHIPS when passed any other invalid identifier" do
+        Ship.index(6).should be 5
       end
     end
   end
