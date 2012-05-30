@@ -92,6 +92,8 @@ module Rubaship
       end
     end
 
+    alias :cols :each_col
+
     alias :each_sector :each
 
     def each_row
@@ -101,6 +103,8 @@ module Rubaship
         self.enum_for(:each_row)
       end
     end
+
+    alias :rows :each_row
 
     alias :row :[]
 
