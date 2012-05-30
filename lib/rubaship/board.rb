@@ -6,6 +6,7 @@ module Rubaship
   class InvalidShipArgument < ArgumentError; end
 
   class Board
+    include Enumerable
 
     ROWS = ("A".."J").to_a
 
@@ -38,8 +39,6 @@ module Rubaship
     def [](index)
       @board[Board.row_to_idx(index)]
     end
-
-    alias :row :[]
 
     def add(ship, pos_row, col=nil, ori=:H)
       self.dup.add!(ship, pos_row, col, ori)
@@ -74,6 +73,36 @@ module Rubaship
     def col(col)
       @board.collect { |row| row[Board.col_to_idx(col)] }
     end
+
+    def each
+      if block_given?
+        @board.collect do |row|
+          row.collect { |sector| yield sector }
+        end
+      else
+        self.to_enum
+      end
+    end
+
+    def each_col
+      if block_given?
+        @board.transpose.each { |col| yield col }
+      else
+        self.enum_for(:each_col)
+      end
+    end
+
+    alias :each_sector :each
+
+    def each_row
+      if block_given?
+        @board.each { |row| yield row }
+      else
+        self.enum_for(:each_row)
+      end
+    end
+
+    alias :row :[]
 
     def sector(row, col)
       @board[Board.row_to_idx(row)][Board.col_to_idx(col)]

@@ -267,6 +267,42 @@ module Rubaship
       end
     end
 
+    describe "#each" do
+      before(:each) { @board = Board.new }
+
+      it "iterates over each of the 100 sectors of the board" do
+        @board.collect { |sector| sector }.should have(100).sectors
+      end
+
+      it "returns an enumerator when no block given" do
+        @board.each.should be_an Enumerator
+      end
+    end
+
+    describe "#each_col" do
+      before(:each) { @board = Board.new }
+
+      it "iterates over each of the 10 columns" do
+        @board.each_col { |col| col.should have(10).sectors }
+      end
+
+      it "returns an enumerator when no block given" do
+        @board.each_col.should be_an Enumerator
+      end
+    end
+
+    describe "#each_row" do
+      before(:each) { @board = Board.new }
+
+      it "iterates over each of the 10 rows" do
+        @board.each_row { |row| row.should have(10).sectors }
+      end
+
+      it "returns an enumerator when no block given" do
+        @board.each_row.should be_an Enumerator
+      end
+    end
+
     describe "#row" do
       it "alias the Board#[] method" do
         @board = Board.new
