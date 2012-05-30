@@ -124,10 +124,13 @@ module Rubaship
       to_cell = Proc.new do |v|
         sep + (v.is_a?(Sector) ? v.to_s(empty) : v.to_s).center(col_width)
       end
+      to_row = Proc.new do |row|
+        to_cell.(row[0]) + row[1].map(&to_cell).join + "#{sep}\n"
+      end
 
-      str = "" << ([empty] + (1..10).to_a).map(&to_cell).join + "#{sep}\n"
-      ROWS.zip(each_row).inject(str) do |s, row|
-        s << to_cell.(row[0]) + row[1].map(&to_cell).join + "#{sep}\n"
+      str = to_row.([empty] << (1..10).to_a)
+      ROWS.zip(rows).inject(str) do |s, row|
+        s << to_row.(row)
       end
     end
 
