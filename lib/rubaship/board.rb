@@ -21,8 +21,8 @@ module Rubaship
     end
 
     def initialize_copy(orig)
-      @board = orig.to_a.collect do |row|
-        row.collect do |sector|
+      @board = orig.rows.map do |row|
+        row.map do |sector|
           sector.dup
         end
       end
@@ -55,15 +55,12 @@ module Rubaship
         col = Board.col_to_idx(col)
         ori = Board.ori_to_sym(ori)
 
+        insert_ship = lambda { |sector| sector.ship = ship }
         case ori
           when :H
-            @board[row][col..col + ship.size - 1].each do |sector|
-              sector.ship = ship
-            end
+            @board[row][col..col + ship.size - 1].each(&insert_ship)
           when :V
-            @board[row..row + ship.size - 1].each do |r|
-              r[col].ship = ship
-            end
+            @board.transpose[col][row..row + ship.size - 1].each(&insert_ship)
         end
       rescue ArgumentError
         false
@@ -71,7 +68,7 @@ module Rubaship
     end
 
     def col(col)
-      @board.collect { |row| row[Board.col_to_idx(col)] }
+      @board.transpose[Board.col_to_idx(col)]
     end
 
     def each
@@ -123,23 +120,15 @@ module Rubaship
       @board
     end
 
-    def to_s(empty=" ",sep="|", col_width=3)
-      b = self.dup.to_a
-      b = b.each_with_index do |row, idx|
-        row.insert(0, ROWS[idx])
+    def to_s(empty=" ", sep="|", col_width=3)
+      to_cell = Proc.new do |v|
+        sep + (v.is_a?(Sector) ? v.to_s(empty) : v.to_s).center(col_width)
       end
-      b.insert(0, (0..10).to_a)
-      b.collect do |row|
-        "#{sep}" << row.collect do |cell|
-          if cell.is_a? Fixnum
-            cell == 0 ? empty.center(col_width) : cell.to_s.center(col_width)
-          elsif cell.is_a? String
-            cell.center(col_width)
-          else
-            cell.to_s(empty).center(col_width)
-          end
-        end.join(sep) << sep
-      end.join("\n") << "\n"
+
+      str = "" << ([empty] + (1..10).to_a).map(&to_cell).join + "#{sep}\n"
+      ROWS.zip(each_row).inject(str) do |s, row|
+        s << to_cell.(row[0]) + row[1].map(&to_cell).join + "#{sep}\n"
+      end
     end
 
     def self.parse_pos(p)
