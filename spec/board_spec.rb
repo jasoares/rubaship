@@ -251,14 +251,8 @@ module Rubaship
         @board.dup.should be_a Board
       end
 
-      it "returns a shallow copy of the original Board object" do
-        @board.dup.should == @board
-      end
-
       it "returns a deep copy of the original Board object" do
-        board = @board.dup
-        board.add!(Ship.create(:S), :C, 4, :H)
-        board.should_not == @board
+        @board.dup.should == @board
       end
 
       it "doesn't change the original object when applying changes to the copy" do
@@ -316,6 +310,18 @@ module Rubaship
         @board = Board.new
         @board.add!(Ship.create(:S), :D, 7, :V)
         @board.sector(:E, 7).should == Sector.new(Ship.create(:S))
+      end
+    end
+
+    describe "#to_a" do
+      before(:each) { @board = Board.new }
+
+      it "returns an array" do
+        @board.to_a.should be_an Array
+      end
+
+      it "is a deep copy of the Board object inner array" do
+        lambda { @board.to_a[1][2] = "S" }.should_not change @board, :to_a
       end
     end
 
@@ -380,6 +386,12 @@ module Rubaship
       it "compares sectors based on shot and ship attributes" do
         @sector.ship = Ship.create(:D)
         Sector.new(Ship.create(:D)).should == @sector
+      end
+    end
+
+    describe "#dup" do
+      it "returns a deep copy of the sector" do
+        lambda { @sector.dup.ship = Ship.create(:A) }.should_not change @sector, :ship
       end
     end
 

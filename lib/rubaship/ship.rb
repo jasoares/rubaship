@@ -10,6 +10,11 @@ module Rubaship
       @position, @placed = nil, false
     end
 
+    def initialize_copy(orig)
+      @name, @size, @status = orig.name, orig.size, orig.status
+      @position, @placed = orig.position, orig.placed?
+    end
+
     def ==(o)
       return false unless o.is_a? Ship
       @name == o.name &&

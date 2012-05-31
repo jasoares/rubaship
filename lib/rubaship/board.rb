@@ -21,18 +21,15 @@ module Rubaship
     end
 
     def initialize_copy(orig)
-      @board = orig.rows.map do |row|
-        row.map do |sector|
-          sector.dup
-        end
-      end
+      s = orig.enum_for(:each_sector)
+      @board = Array.new(10) { Array.new(10) { s.next.dup } }
     end
 
     def ==(o)
       return case o
         when Hash  then to_hash == o
-        when Array then @board == o
-        when Board then @board == o.to_a
+        when Array then self.to_a == o
+        when Board then self.to_a == o.to_a
       end
     end
 
@@ -81,6 +78,10 @@ module Rubaship
       end
     end
 
+    alias :each_sector :each
+
+    alias :sectors :each
+
     def each_col
       if block_given?
         @board.transpose.each { |col| yield col }
@@ -90,8 +91,6 @@ module Rubaship
     end
 
     alias :cols :each_col
-
-    alias :each_sector :each
 
     def each_row
       if block_given?
@@ -117,7 +116,8 @@ module Rubaship
     end
 
     def to_a
-      @board
+      s = self.enum_for(:each_sector)
+      Array.new(10) { Array.new(10) { s.next.dup } }
     end
 
     def to_s(empty=" ", sep="|", col_width=3)
@@ -129,7 +129,7 @@ module Rubaship
       end
 
       str = to_row.([empty] << (1..10).to_a)
-      ROWS.zip(rows).inject(str) do |s, row|
+      ROWS.zip(self.rows).inject(str) do |s, row|
         s << to_row.(row)
       end
     end
@@ -202,6 +202,10 @@ module Rubaship
 
     def initialize(ship=nil)
       @ship = ship
+    end
+
+    def initialize_copy(orig)
+      @ship = orig.ship.is_a?(Ship) ? orig.ship.dup : nil
     end
 
     def to_hash
