@@ -21,10 +21,6 @@ module Rubaship
         it "returns the range index that matches the Range passed" do
           Board.col_to_idx(3..6).should == (2..5)
         end
-
-        it "raises an exception when an invalid column type is passed" do
-          lambda { Board.col_to_idx(:"2") }.should raise_error(InvalidColumnArgument)
-        end
       end
 
       context "when array_index is passed as false" do
@@ -39,10 +35,10 @@ module Rubaship
         it "returns the column range matching the board column numbers passed" do
           Board.col_to_idx("4".."7", false).should == (4..7)
         end
+      end
 
-        it "raises an exception when passed an invalid column type" do
-          lambda { Board.col_to_idx(:"2") }.should raise_error(InvalidColumnArgument)
-        end
+      it "raises an exception when an invalid column type is passed" do
+        lambda { Board.col_to_idx(:"2") }.should raise_error(InvalidColumnArgument)
       end
     end
 
@@ -128,6 +124,8 @@ module Rubaship
       end
     end
 
+    before(:each) { @board = Board.new }
+
     describe "#[]" do
       context "for an example board already containing ships" do
         before(:all) do
@@ -160,11 +158,9 @@ module Rubaship
 
     describe "#==" do
       before(:all) do
-        @board1 = Board.new
+        @board1, @board2, @board3 = Board.new, Board.new, Board.new
         @board1.add!(Ship.create(:D), :G, 3, :H)
-        @board2 = Board.new
         @board2.add!(Ship.create(:D), :G, 3, :H)
-        @board3 = Board.new
         @board3.add!(Ship.create(:D), :G, 4, :H)
       end
 
@@ -194,8 +190,6 @@ module Rubaship
     end
 
     describe "#add" do
-      before(:each) { @board = Board.new }
-
       it "returns a board object with the ship added" do
         @board.add(Ship.create(:B), :A, 10, :V).should == Board.new.add(Ship.create(:B), :a, 10, :v)
       end
@@ -207,8 +201,6 @@ module Rubaship
 
     describe "#add!" do
       before(:all) { @ship = Ship.create(:S) }
-
-      before(:each) { @board = Board.new }
 
       it "returns the board with the ship added when passed a valid position" do
         @board.add!(@ship, :G, "1", "Vertical").should == Board.new.add!(@ship, "G1:V")
@@ -225,7 +217,7 @@ module Rubaship
       end
 
       it "changes the receiver object" do
-        lambda { @board.add!(Ship.create(:A), :B, 3, :H) }.should change @board, :to_a
+        lambda { @board.add!(@ship, :B, 3, :H) }.should change @board, :to_a
       end
 
       it "returns false when passed an invalid position" do
@@ -239,7 +231,6 @@ module Rubaship
 
     describe "#col" do
       it "returns an array containing the sectors of the given column" do
-        @board = Board.new
         @ship = Ship.create(:D)
         @board.add!(@ship, :F, 3, :V)
         es = Sector.new         # empty_sector
@@ -249,8 +240,6 @@ module Rubaship
     end
 
     describe "#dup" do
-      before(:each) { @board = Board.new }
-
       it "returns a Board object" do
         @board.dup.should be_a Board
       end
@@ -266,8 +255,6 @@ module Rubaship
     end
 
     describe "#each" do
-      before(:each) { @board = Board.new }
-
       it "iterates over each of the 100 sectors of the board" do
         @board.collect { |sector| sector }.should have(100).sectors
       end
@@ -278,8 +265,6 @@ module Rubaship
     end
 
     describe "#each_col" do
-      before(:each) { @board = Board.new }
-
       it "iterates over each of the 10 columns" do
         @board.each_col { |col| col.should have(10).sectors }
       end
@@ -290,8 +275,6 @@ module Rubaship
     end
 
     describe "#each_row" do
-      before(:each) { @board = Board.new }
-
       it "iterates over each of the 10 rows" do
         @board.each_row { |row| row.should have(10).sectors }
       end
@@ -303,7 +286,6 @@ module Rubaship
 
     describe "#row" do
       it "alias the Board#[] method" do
-        @board = Board.new
         @board.add!(Ship.create(:B), :A, 2, :H)
         @board.row(:A).should == @board[:A]
       end
@@ -311,15 +293,12 @@ module Rubaship
 
     describe "#sector" do
       it "returns a single sector which coordinates respond to col and row to idx" do
-        @board = Board.new
         @board.add!(Ship.create(:S), :D, 7, :V)
         @board.sector(:E, 7).should == Sector.new(Ship.create(:S))
       end
     end
 
     describe "#to_a" do
-      before(:each) { @board = Board.new }
-
       it "returns an array" do
         @board.to_a.should be_an Array
       end
@@ -331,7 +310,6 @@ module Rubaship
 
     describe "#to_hash" do
       it "returns a hash representation of the board where keys map to row letters and values to arrays of row cells" do
-        @board = Board.new
         hash = Hash.new { |hash, key| hash[key.to_sym] = Array.new(10) { Sector.new } }
         ("A".."J").each { |key| hash[key] }
         @board.to_hash.should == hash
@@ -340,7 +318,6 @@ module Rubaship
 
     describe "#to_s" do
       before(:each) do
-        @board = Board.new
         @board.add!(Ship.create(:A), :D, 4, :V)
       end
       context "when no additional arguments passed" do
