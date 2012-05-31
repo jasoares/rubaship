@@ -35,7 +35,11 @@ end
 
 When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, pos|
   p = Rubaship::Board.parse_pos(pos)
-  @player.place(@player.ship(ship), p)
+  begin
+    @player.place(ship, p)
+  rescue Exception => e
+    @message = e.message
+  end
 end
 
 When /^I use the default values$/ do
@@ -65,6 +69,10 @@ Then /^my (#{SHIP_REGEXP}) should be placed at (.*)$/ do |ship, pos|
   @player.ship(ship).position.should == Rubaship::Board.parse_pos(pos)
 end
 
+Then /^my (#{SHIP_REGEXP}) should not be placed$/ do |ship|
+  @player.ship(ship).placed?.should be false
+end
+
 Then /^I should have the following board:$/ do |table|
   @player.board.should == table.to_board
 end
@@ -77,12 +85,7 @@ Then /^I should see the following representation:$/ do |representation|
 end
 
 Then /^I should see the message:$/ do |message|
-  steps %{
-    Then the output should match:
-    """
-    #{message}
-    """
-  }
+  @message.should == message
 end
 
 Then /^it should mean ([A-J]|nil) ([1-9]|10|nil) (horizontal|vertical|nil)$/ do |row, col, ori|

@@ -7,7 +7,7 @@ Feature: welcome message
 
   Scenario: initiate the game
     When I run `rubaship`
-    Then I should see the message:
+    Then the output should match:
       """
       ########################################
       #                                      #

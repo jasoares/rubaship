@@ -72,3 +72,83 @@ Feature: place ships on the board
       | H |   |   |   |   |   |   |   |   |   |   |
       | I |   |   |   |   |   |   |   |   |   |   |
       | J |   |   |   |   |   |   |   |   |   |   |
+
+  @wip
+  Scenario: ship out of board
+    Given I have the board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   |   |   |   |   |   |   |   |   |
+      | C |   |   |   |   |   |   |   |   |   |   |
+      | D |   |   |   |   |   |   |   |   |   |   |
+      | E |   |   |   |   |   |   |   |   |   |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
+    When I place my aircraft carrier at G8:H
+    Then my aircraft carrier should not be placed
+     And I should see the message:
+     """
+     Ship is too big to fit in that position.
+     """
+     And I should have the following board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   |   |   |   |   |   |   |   |   |
+      | C |   |   |   |   |   |   |   |   |   |   |
+      | D |   |   |   |   |   |   |   |   |   |   |
+      | E |   |   |   |   |   |   |   |   |   |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
+
+  @wip
+  Scenario: ship overlapping another ship
+    Given I have the board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   |   |   |   |   |   |   |   |   |
+      | C |   |   |   |   |   |   |   |   |   |   |
+      | D |   |   |   |   |   |   |   |   |   |   |
+      | E |   |   |   |   |   |   |   |   |   |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
+    When I place my aircraft carrier at E4:H
+    Then my aircraft carrier should be placed at E4:H
+     And I should have the following board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   |   |   |   |   |   |   |   |   |
+      | C |   |   |   |   |   |   |   |   |   |   |
+      | D |   |   |   |   |   |   |   |   |   |   |
+      | E |   |   |   | A | A | A | A | A |   |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
+    When I place my battleship at D6:V
+    Then my battleship should not be placed
+     And I should see the message:
+     """
+     Overlapping already positioned ship.
+     """
+     And I should have the following board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   |   |   |   |   |   |   |   |   |
+      | C |   |   |   |   |   |   |   |   |   |   |
+      | D |   |   |   |   |   |   |   |   |   |   |
+      | E |   |   |   | A | A | A | A | A |   |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
