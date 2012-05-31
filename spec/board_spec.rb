@@ -137,23 +137,23 @@ module Rubaship
         end
 
         it "returns the row with the ships contained in sectors" do
-          @board[:C].should == @board.to_a[2]
+          @board[:C].should == @board.row(2)
         end
 
         it "returns the indexed row matching the letter Symbol passed" do
-          @board[:C].should == @board.to_a[2]
+          @board[:C].should == @board.row(2)
         end
 
         it "returns the indexed row matching the letter String passed" do
-          @board["J"].should == @board.to_a[9]
+          @board["J"].should == @board.row(9)
         end
 
         it "returns the range of rows matching the string range passed" do
-          @board["B".."F"].should == @board.to_a[1..5]
+          @board["B".."F"].should == @board.row(1..5)
         end
 
         it "returns the range of rows matching the symbol range passed" do
-          @board[:C..:E].should == @board.to_a[2..4]
+          @board[:C..:E].should == @board.row(2..4)
         end
       end
     end
@@ -222,6 +222,10 @@ module Rubaship
       it "updates the matching column when vertical is passed" do
         @board.add!(@ship, :B, 8, :V)
         @board[(1..1 + @ship.size - 1)].collect { |row| row[7].ship }.should == @ship.to_a
+      end
+
+      it "changes the receiver object" do
+        lambda { @board.add!(Ship.create(:A), :B, 3, :H) }.should change @board, :to_a
       end
 
       it "returns false when passed an invalid position" do
