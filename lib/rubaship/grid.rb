@@ -222,10 +222,6 @@ module Rubaship
       @ship = orig.ship.is_a?(Ship) ? orig.ship.dup : nil
     end
 
-    def to_hash
-      { :ship => @ship }
-    end
-
     def ==(o)
       case o
         when Hash then to_hash == o
@@ -239,6 +235,10 @@ module Rubaship
       else
         raise OverlapShipError.new(@ship)
       end
+    end
+
+    def to_hash
+      { :ship => @ship }
     end
 
     def to_s(empty=" ")
