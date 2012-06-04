@@ -40,8 +40,9 @@ module Rubaship
       row = Grid.row_to_idx(row)
       col = Grid.col_to_idx(col)
       ori = Grid.ori_to_sym(ori)
-      error = InvalidShipPositionError.new
-      raise error unless Grid.position_valid?(ship, row, col, ori)
+      unless Grid.position_valid?(ship, row, col, ori)
+        raise InvalidShipPositionError.new
+      end
 
       row, col = Grid.rangify_pos(ship, row, col, ori)
 
