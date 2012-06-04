@@ -1,18 +1,18 @@
-@board_view, @api
-Feature: show board
+@grid_view, @api
+Feature: show grid
 
   As a player using the CLI client
-  In order to see the current state of my board
+  In order to see the current state of my grid
   I want to be able to see a properly formatted text representation of it
 
-  The board may be exported to a properly formatted string using different
+  The grid may be exported to a properly formatted string using different
   options, which are:
     * empty sector character (default " ")
     * separator character    (default "|")
     * column width           (default 3)
 
   Background:
-    Given I have a board already setup with my fleet
+    Given I have a grid already setup with my fleet
 
   Scenario: default representation
     When I use the default values
@@ -47,7 +47,7 @@ Feature: show board
       |H| | | | | | | | | |S|
       |I| | | | | | | | | | |
       |J| | | | | |P|P| | | |
-      
+
       """
 
   Scenario: 2 column width
@@ -65,7 +65,7 @@ Feature: show board
       |H |  |  |  |  |  |  |  |  |  |S |
       |I |  |  |  |  |  |  |  |  |  |  |
       |J |  |  |  |  |  |P |P |  |  |  |
-      
+
       """
 
   Scenario: 5 column width
@@ -83,7 +83,7 @@ Feature: show board
       |  H  |     |     |     |     |     |     |     |     |     |  S  |
       |  I  |     |     |     |     |     |     |     |     |     |     |
       |  J  |     |     |     |     |     |  P  |  P  |     |     |     |
-      
+
       """
 
   Scenario: "#" as the separator character
@@ -101,7 +101,7 @@ Feature: show board
       # H #   #   #   #   #   #   #   #   #   # S #
       # I #   #   #   #   #   #   #   #   #   #   #
       # J #   #   #   #   #   # P # P #   #   #   #
-      
+
       """
 
   Scenario: "[]" as the separator character
@@ -119,13 +119,13 @@ Feature: show board
       [] H []   []   []   []   []   []   []   []   []   [] S []
       [] I []   []   []   []   []   []   []   []   []   []   []
       [] J []   []   []   []   []   [] P [] P []   []   []   []
-      
+
       """
 
   Scenario: mixed parameters
     When I set "~" as the empty character
      And I use "H" as the separator character
-     And I choose 5 spaces as the column width 
+     And I choose 5 spaces as the column width
     Then I should see the following representation:
       """
       H  ~  H  1  H  2  H  3  H  4  H  5  H  6  H  7  H  8  H  9  H 10  H
@@ -139,7 +139,7 @@ Feature: show board
       H  H  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  S  H
       H  I  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H  ~  H
       H  J  H  ~  H  ~  H  ~  H  ~  H  ~  H  P  H  P  H  ~  H  ~  H  ~  H
-      
+
       """
 
   Scenario: other mixed arguments
@@ -159,5 +159,5 @@ Feature: show board
        H  .  .  .  .  .  .  .  .  .  S 
        I  .  .  .  .  .  .  .  .  .  . 
        J  .  .  .  .  .  P  P  .  .  . 
-      
+
       """

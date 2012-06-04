@@ -4,9 +4,9 @@ module Rubaship
   describe Player do
     before(:each) { @player = Player.new }
 
-    describe "#board" do
-      it "returns a Board object" do
-        @player.board.should be_a Board
+    describe "#grid" do
+      it "returns a Grid object" do
+        @player.grid.should be_a Grid
       end
     end
 
@@ -16,15 +16,15 @@ module Rubaship
       context "when passed a ship symbol" do
         it "parses the symbol to a ship object" do
           @ship = @player.ship(:B)
-          @player.board.should_receive(:add!).with(@ship, :D, 5, :V)
+          @player.grid.should_receive(:add!).with(@ship, :D, 5, :V)
           @player.place(:B, :D, 5, :V)
         end
       end
 
       context "when passed a string position" do
-        it "parses the string position using Board#parse_pos" do
-          @pos = Board.parse_pos("D5:V")
-          @player.board.should_receive(:add!).with(@player.ship(:B), :D, 5, :V)
+        it "parses the string position using Grid#parse_pos" do
+          @pos = Grid.parse_pos("D5:V")
+          @player.grid.should_receive(:add!).with(@player.ship(:B), :D, 5, :V)
           @player.place(:B, @pos)
         end
       end

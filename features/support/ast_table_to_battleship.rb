@@ -8,8 +8,8 @@ module Cucumber
 
         hashes
       end
-      def to_board
-        validate_board_table
+      def to_grid
+        validate_grid_table
 
         raw[1..10].collect do |table_row|
           table_row[1..10].collect do |table_cell|
@@ -18,7 +18,7 @@ module Cucumber
         end
       end
 
-      def validate_board_table
+      def validate_grid_table
         verify_table_width(11)
 
         ("1".."10").each { |col| verify_column(col) }

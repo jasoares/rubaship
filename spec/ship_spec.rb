@@ -56,7 +56,7 @@ module Rubaship
         @ship.position.should be_nil
       end
 
-      context "when the ship is already placed on a board" do
+      context "when the ship is already placed on a grid" do
         before(:all) do
           @player = Player.new
           @ship = @player.ship(@name)
@@ -81,7 +81,7 @@ module Rubaship
     end
 
     describe "#to_s" do
-      it "returns a symbol representation of the, as shown on the board" do
+      it "returns a symbol representation of the, as shown on the grid" do
         @ship.to_s.should == @ship.name[0].upcase
       end
     end

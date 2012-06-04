@@ -1,11 +1,11 @@
 module Rubaship
   class Player
 
-    attr_reader :ships, :board
+    attr_reader :ships, :grid
 
     def initialize
       @ships = Ship.ships
-      @board = Board.new
+      @grid = Grid.new
     end
 
     def ship(type)
@@ -17,12 +17,12 @@ module Rubaship
       raise InvalidShipIdentifier.new(ship) if (ship = self.ship(ship)).nil?
       raise InvalidShipArgument.new(ship) if ship.placed?
       if col.nil?
-        pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String
+        pos_row, col, ori = Grid.parse_pos(pos_row) if pos_row.is_a? String
         pos_row, col, ori = pos_row if pos_row.is_a? Array
       elsif ori.nil?
         raise InvalidShipPosition unless pos_row.is_a? Range or col.is_a? Range
       end
-      @board.add!(ship, pos_row, col, ori)
+      @grid.add!(ship, pos_row, col, ori)
       ship.position = [pos_row, col, ori]
     end
   end

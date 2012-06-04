@@ -1,6 +1,6 @@
 module Rubaship
 
-  class Board
+  class Grid
     include Enumerable
 
     ROWS = ("A".."J").to_a
@@ -12,24 +12,24 @@ module Rubaship
       v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/ix
 
     def initialize
-      @board = Array.new(10) { Array.new(10) { Sector.new } }
+      @grid = Array.new(10) { Array.new(10) { Sector.new } }
     end
 
     def initialize_copy(orig)
       s = orig.enum_for(:each_sector)
-      @board = Array.new(10) { Array.new(10) { s.next.dup } }
+      @grid = Array.new(10) { Array.new(10) { s.next.dup } }
     end
 
     def ==(o)
       return case o
         when Hash  then to_hash == o
         when Array then self.to_a == o
-        when Board then self.to_a == o.to_a
+        when Grid then self.to_a == o.to_a
       end
     end
 
     def [](index)
-      @board[Board.row_to_idx(index)]
+      @grid[Grid.row_to_idx(index)]
     end
 
     def add(ship, row, col, ori)
@@ -38,13 +38,13 @@ module Rubaship
 
     def add!(ship, row, col, ori=nil)
       raise InvalidShipArgument.new(ship) unless ship.is_a? Ship
-      row = Board.row_to_idx(row)
-      col = Board.col_to_idx(col)
-      ori = Board.ori_to_sym(ori)
+      row = Grid.row_to_idx(row)
+      col = Grid.col_to_idx(col)
+      ori = Grid.ori_to_sym(ori)
       error = InvalidShipPosition.new
-      raise error unless Board.position_valid?(ship, row, col, ori)
+      raise error unless Grid.position_valid?(ship, row, col, ori)
 
-      row, col = Board.rangify_pos(ship, row, col, ori)
+      row, col = Grid.rangify_pos(ship, row, col, ori)
 
       check_avail = lambda { |avail, sector| avail ||= sector.ship.nil? }
       insert_ship = lambda { |sector| sector.ship = ship }
@@ -52,27 +52,27 @@ module Rubaship
         backup = self.to_a
         case ori
           when :H
-            if @board[row][col].inject(false, &check_avail)
-              @board[row][col].each(&insert_ship)
+            if @grid[row][col].inject(false, &check_avail)
+              @grid[row][col].each(&insert_ship)
             end
           when :V
-            if @board.transpose[col][row].inject(false, &check_avail)
-              @board.transpose[col][row].each(&insert_ship)
+            if @grid.transpose[col][row].inject(false, &check_avail)
+              @grid.transpose[col][row].each(&insert_ship)
             end
         end
       rescue OverlapShipError => e
-        @board = backup
+        @grid = backup
         raise e
       end
     end
 
     def col(col)
-      @board.transpose[Board.col_to_idx(col)]
+      @grid.transpose[Grid.col_to_idx(col)]
     end
 
     def each
       if block_given?
-        @board.collect do |row|
+        @grid.collect do |row|
           row.collect { |sector| yield sector }
         end
       else
@@ -86,7 +86,7 @@ module Rubaship
 
     def each_col
       if block_given?
-        @board.transpose.each { |col| yield col }
+        @grid.transpose.each { |col| yield col }
       else
         self.enum_for(:each_col)
       end
@@ -96,7 +96,7 @@ module Rubaship
 
     def each_row
       if block_given?
-        @board.each { |row| yield row }
+        @grid.each { |row| yield row }
       else
         self.enum_for(:each_row)
       end
@@ -107,11 +107,11 @@ module Rubaship
     alias :row :[]
 
     def sector(row, col)
-      @board[Board.row_to_idx(row)][Board.col_to_idx(col)]
+      @grid[Grid.row_to_idx(row)][Grid.col_to_idx(col)]
     end
 
     def to_hash
-      @board.each_with_index.inject({}) do |row_hash, (row, i)|
+      @grid.each_with_index.inject({}) do |row_hash, (row, i)|
         row_hash[ROWS[i].to_sym] = row.collect { |sector| sector.to_hash }
         row_hash
       end

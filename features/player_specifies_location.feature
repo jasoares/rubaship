@@ -5,9 +5,9 @@ Feature: player specifies position
   In order to be straight forward to place a ship
   I want to be able to specify a position in a simple short manner
 
-  Taking into account that ships are placed on each player's board by
+  Taking into account that ships are placed on each player's grid by
   specifying an anchor position, and that the position is given by a
-  letter and a number of the board, and that the orientation is given
+  letter and a number of the grid, and that the orientation is given
   by a horizontal ou vertical option, the following are the considerations
   about how the player should provide that information:
 

@@ -1,23 +1,23 @@
 SHIP_REGEXP = /aircraft carrier|battleship|destroyer|submarine|patrol boat/i
 
-Given /^I have the board:$/ do |table|
+Given /^I have the grid:$/ do |table|
   @player = Rubaship::Game.new.player
-  @player.board.should == table.to_board
+  @player.grid.should == table.to_grid
 end
 
 Given /^I have the player's list of ships$/ do
   @list = Rubaship::Game.new.player.ships
 end
 
-Given /^I have a board already setup with my fleet$/ do
+Given /^I have a grid already setup with my fleet$/ do
   @game = Rubaship::Game.new
   @player = @game.player
-  @board = @player.board
-  @board.add!(@player.ship(:A), :B, 2, :H)
-  @board.add!(@player.ship(:B), :D, 3, :V)
-  @board.add!(@player.ship(:D), :D, 6, :H)
-  @board.add!(@player.ship(:S), :F, 10, :V)
-  @board.add!(@player.ship(:P), :J, 6, :H)
+  @grid = @player.grid
+  @grid.add!(@player.ship(:A), :B, 2, :H)
+  @grid.add!(@player.ship(:B), :D, 3, :V)
+  @grid.add!(@player.ship(:D), :D, 6, :H)
+  @grid.add!(@player.ship(:S), :F, 10, :V)
+  @grid.add!(@player.ship(:P), :J, 6, :H)
 end
 
 When /^I start a new game$/ do
@@ -34,7 +34,7 @@ When /^I enter (.*) as the position$/ do |pos|
 end
 
 When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, pos|
-  p = Rubaship::Board.parse_pos(pos)
+  p = Rubaship::Grid.parse_pos(pos)
   begin
     @player.place(ship, p)
   rescue Exception => e
@@ -66,22 +66,22 @@ Then /^I should have the following ships:$/ do |table|
 end
 
 Then /^my (#{SHIP_REGEXP}) should be placed at (.*)$/ do |ship, pos|
-  @player.ship(ship).position.should == Rubaship::Board.parse_pos(pos)
+  @player.ship(ship).position.should == Rubaship::Grid.parse_pos(pos)
 end
 
 Then /^my (#{SHIP_REGEXP}) should not be placed$/ do |ship|
   @player.ship(ship).placed?.should be false
 end
 
-Then /^I should have the following board:$/ do |table|
-  @player.board.should == table.to_board
+Then /^I should have the following grid:$/ do |table|
+  @player.grid.should == table.to_grid
 end
 
 Then /^I should see the following representation:$/ do |representation|
   empty = @empty.nil? ? " " : @empty
   sep = @sep.nil? ? "|" : @sep
   col_width = @col_width.nil? ? 3 : @col_width
-  @board.to_s(empty, sep, col_width).should == representation
+  @grid.to_s(empty, sep, col_width).should == representation
 end
 
 Then /^I should see the message:$/ do |message|
@@ -90,8 +90,8 @@ end
 
 Then /^it should mean ([A-J]|nil) ([1-9]|10|nil) (horizontal|vertical|nil)$/ do |row, col, ori|
   if row == "nil" or col == "nil" or ori == "nil"
-    Rubaship::Board.parse_pos(@pos).should be_nil
+    Rubaship::Grid.parse_pos(@pos).should be_nil
   else
-    Rubaship::Board.parse_pos(@pos).should == Rubaship::Board.format_pos(row, col, ori)
+    Rubaship::Grid.parse_pos(@pos).should == Rubaship::Grid.format_pos(row, col, ori)
   end
 end
