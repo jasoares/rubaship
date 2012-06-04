@@ -19,22 +19,18 @@ module Rubaship
   end
 
   class InvalidShipArgument < ArgumentError
-    def initialize(ship)
-      if !ship.is_a? Ship
-        super("Must be a Ship object and it was #{ship}:#{ship.class}")
-      elsif ship.placed?
-        super("The ship is already placed.")
-      end
-    end
-  end
-
-  class InvalidShipIdentifier < ArgumentError
     def initialize(id)
-      super("Must be a valid ship symbol or name.")
+      super("Must be a valid ship symbol or name identifier.")
     end
   end
 
-  class InvalidShipPosition < StandardError
+  class AlreadyPlacedShipError < StandardError
+    def initialize(ship)
+      super("Cannot reposition the already placed ship #{ship.name}")
+    end
+  end
+
+  class InvalidShipPositionError < StandardError
     def initialize
       super("Ship does not fit inside the grid if placed in that position.")
     end

@@ -37,11 +37,10 @@ module Rubaship
     end
 
     def add!(ship, row, col, ori=nil)
-      raise InvalidShipArgument.new(ship) unless ship.is_a? Ship
       row = Grid.row_to_idx(row)
       col = Grid.col_to_idx(col)
       ori = Grid.ori_to_sym(ori)
-      error = InvalidShipPosition.new
+      error = InvalidShipPositionError.new
       raise error unless Grid.position_valid?(ship, row, col, ori)
 
       row, col = Grid.rangify_pos(ship, row, col, ori)

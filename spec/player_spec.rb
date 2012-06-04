@@ -30,22 +30,24 @@ module Rubaship
       end
 
       context "when passed an invalid ship Symbol" do
-        it "raises an InvalidShipArgument error" do
+        it "raises an InvalidShipArgument" do
           lambda {
             @player.place(:T, :C, 5, :H)
           }.should raise_error(
-            InvalidShipIdentifier,
-            "Must be a valid ship symbol or name."
+            InvalidShipArgument,
+            "Must be a valid ship symbol or name identifier."
           )
         end
       end
 
       context "when passed a Symbol matching an already placed ship" do
-        it "raises an InvalidShipArgument error" do
+        it "raises an AlreadyPlacedShipError" do
           @player.place(:A, :H, 2, :H)
           lambda do
             @player.place(:A, :C, 2, :H)
-          end.should raise_error(InvalidShipArgument, "The ship is already placed.")
+          end.should raise_error(AlreadyPlacedShipError,
+            "Cannot reposition the already placed ship aircraft carrier"
+            )
         end
       end
     end

@@ -259,10 +259,6 @@ module Rubaship
           /^Invalid row or range type passed .+$/
         )
       end
-
-      it "raises InvalidShipArgument when passed an invalid ship" do
-        lambda { @grid.add!(:D, :D, 3, :H) }.should raise_error(InvalidShipArgument)
-      end
     end
 
     describe "#col" do
