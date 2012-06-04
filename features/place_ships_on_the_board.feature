@@ -152,3 +152,21 @@ Feature: place ships on the board
       | H |   |   |   |   |   |   |   |   |   |   |
       | I |   |   |   |   |   |   |   |   |   |   |
       | J |   |   |   |   |   |   |   |   |   |   |
+    When I place my battleship at E2:H
+    Then my battleship should not be placed
+     And I should see the message:
+     """
+     Overlapping already positioned ship.
+     """
+     And I should have the following board:
+      |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
+      | A |   |   |   |   |   |   |   |   |   |   |
+      | B |   |   |   |   |   |   |   |   |   |   |
+      | C |   |   |   |   |   |   |   |   |   |   |
+      | D |   |   |   |   |   |   |   |   |   |   |
+      | E |   |   |   | A | A | A | A | A |   |   |
+      | F |   |   |   |   |   |   |   |   |   |   |
+      | G |   |   |   |   |   |   |   |   |   |   |
+      | H |   |   |   |   |   |   |   |   |   |   |
+      | I |   |   |   |   |   |   |   |   |   |   |
+      | J |   |   |   |   |   |   |   |   |   |   |
