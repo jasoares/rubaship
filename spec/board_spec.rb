@@ -94,6 +94,18 @@ module Rubaship
       end
     end
 
+    describe ".position_valid?" do
+      before(:all) { @ship = Ship.create(:A) }
+
+      it "returns true if the position is valid" do
+        Board.position_valid?(@ship, :C, 7, :V).should be true
+      end
+
+      it "returns false if the position is out of the board and so invalid" do
+        Board.position_valid?(@ship, :C, 7, :H).should be false
+      end
+    end
+
     describe ".row_to_idx" do
       it "accepts a String letter matching it to its board index" do
         Board.row_to_idx("C").should be 2
@@ -191,11 +203,14 @@ module Rubaship
 
     describe "#add" do
       it "returns a board object with the ship added" do
-        @board.add(Ship.create(:B), :A, 10, :V).should == Board.new.add(Ship.create(:B), :a, 10, :v)
+        board = Board.new.add(Ship.create(:B), :a, 10, :v)
+        @board.add(Ship.create(:B), :A, 10, :V).should == board
       end
 
       it "does not change the receiver object. See Board#add!" do
-        lambda { @board.add(Ship.create(:A), :j, 2, :h) }.should_not change @board, :to_a
+        lambda {
+          @board.add(Ship.create(:A), :j, 2, :h)
+        }.should_not change @board, :to_a
       end
     end
 
@@ -203,29 +218,50 @@ module Rubaship
       before(:all) { @ship = Ship.create(:S) }
 
       it "returns the board with the ship added when passed a valid position" do
-        @board.add!(@ship, :G, "1", "Vertical").should == Board.new.add!(@ship, "G1:V")
+        board = Board.new.add!(@ship, :G, 1, :V)
+        @board.add!(@ship, :G, 1, :V).should == board
       end
 
       it "updates the matching row when horizontal is passed" do
         @board.add!(@ship, :D, 4, :H)
-        @board[:D][(3..3 + @ship.size - 1)].collect { |sector| sector.ship }.should == @ship.to_a
+        @board[:D][(3..3 + @ship.size - 1)].collect do |sector|
+          sector.ship
+        end.should == @ship.to_a
       end
 
       it "updates the matching column when vertical is passed" do
         @board.add!(@ship, :B, 8, :V)
-        @board[(1..1 + @ship.size - 1)].collect { |row| row[7].ship }.should == @ship.to_a
+        @board[(1..1 + @ship.size - 1)].collect do |row|
+          row[7].ship
+        end.should == @ship.to_a
       end
 
       it "changes the receiver object" do
-        lambda { @board.add!(@ship, :B, 3, :H) }.should change @board, :to_a
+        lambda do
+          @board.add!(@ship, :B, 3, :H)
+        end.should change @board, :to_a
       end
 
-      it "returns false when passed an invalid position" do
-        @board.add!(@ship, "K6:h").should be false
+      it "raises InvalidColumnArgument when passed an invalid column" do
+        lambda do
+          @board.add!(@ship, :C, 11, :H)
+        end.should raise_error(
+          InvalidColumnArgument,
+          /^Invalid column or range type passed .+$/
+        )
       end
 
-      it "raises an InvalidShipArgument error when passed an invalid ship" do
-        lambda { @board.add!(:D, "D3:h") }.should raise_error(InvalidShipArgument)
+      it "raises InvalidRowArgument when passed an invalid row" do
+        lambda do
+          @board.add!(@ship, :K, 6, :H)
+        end.should raise_error(
+          InvalidRowArgument,
+          /^Invalid row or range type passed .+$/
+        )
+      end
+
+      it "raises InvalidShipArgument when passed an invalid ship" do
+        lambda { @board.add!(:D, :D, 3, :H) }.should raise_error(InvalidShipArgument)
       end
     end
 
@@ -292,7 +328,7 @@ module Rubaship
     end
 
     describe "#sector" do
-      it "returns a single sector which coordinates respond to col and row to idx" do
+      it "returns a single sector which coordinates correspond to col and row to idx" do
         @board.add!(Ship.create(:S), :D, 7, :V)
         @board.sector(:E, 7).should == Sector.new(Ship.create(:S))
       end
@@ -373,6 +409,43 @@ module Rubaship
     describe "#dup" do
       it "returns a deep copy of the sector" do
         lambda { @sector.dup.ship = Ship.create(:A) }.should_not change @sector, :ship
+      end
+    end
+
+    describe "#ship=" do
+      context "when it already contains a ship" do
+        before(:each) do
+          @sector = Sector.new
+          @sector.ship = Ship.create(:A)
+        end
+
+        it "raises an InvalidShipPosition if it already contains a ship" do
+          lambda { @sector.ship = Ship.create(:B) }.should raise_error(
+            InvalidShipPosition,
+            "Overlapping already positioned ship."
+          )
+        end
+
+        it "should not change the sector's ship" do
+          @ship = Ship.create(:B)
+          lambda {
+            begin
+              @sector.ship = @ship
+            rescue InvalidShipPosition
+            end
+          }.should_not change(@sector, :ship)
+        end
+      end
+
+      context "if it contains no ship" do
+        before(:each) { @sector = Sector.new }
+
+        it "adds the ship to the Sector object" do
+          @ship = Ship.create(:B)
+          lambda {
+            @sector.ship = @ship
+          }.should change(@sector, :ship).from(nil).to(@ship)
+        end
       end
     end
 

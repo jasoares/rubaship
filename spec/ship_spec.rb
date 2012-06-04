@@ -46,7 +46,7 @@ module Rubaship
 
       it "returns true after the ship has been placed" do
         @player = Player.new
-        @player.place(@name, Board.parse_pos("3d:h"))
+        @player.place(@name, "3d:h")
         @player.ship(@name).placed?.should be true
       end
     end
@@ -61,7 +61,7 @@ module Rubaship
           @player = Player.new
           @ship = @player.ship(@name)
           @pos = [ :C, 3, :V ]
-          @player.place(@ship, @pos)
+          @player.place(@name, @pos)
         end
 
         it "should return its position represented by an array" do

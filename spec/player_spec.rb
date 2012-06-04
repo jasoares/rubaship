@@ -2,7 +2,7 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Player do
-    before(:all) { @player = Player.new }
+    before(:each) { @player = Player.new }
 
     describe "#board" do
       it "returns a Board object" do
@@ -11,11 +11,42 @@ module Rubaship
     end
 
     describe "#place" do
-      it "tries to add a ship to the board" do
-        @board = @player.board
-        pos = [ :D, 5, :V ]
-        @board.should_receive(:add!).with(@player.ship(:B), pos)
-        @player.place(:B, pos)
+      before(:each) { @player = Player.new }
+
+      context "when passed a ship symbol" do
+        it "parses the symbol to a ship object" do
+          @ship = @player.ship(:B)
+          @player.board.should_receive(:add!).with(@ship, :D, 5, :V)
+          @player.place(:B, :D, 5, :V)
+        end
+      end
+
+      context "when passed a string position" do
+        it "parses the string position using Board#parse_pos" do
+          @pos = Board.parse_pos("D5:V")
+          @player.board.should_receive(:add!).with(@player.ship(:B), :D, 5, :V)
+          @player.place(:B, @pos)
+        end
+      end
+
+      context "when passed an invalid ship Symbol" do
+        it "raises an InvalidShipArgument error" do
+          lambda {
+            @player.place(:T, :C, 5, :H)
+          }.should raise_error(
+            InvalidShipArgument,
+            "Must be a valid ship symbol or name."
+          )
+        end
+      end
+
+      context "when passed a Symbol matching an already placed ship" do
+        it "raises an InvalidShipArgument error" do
+          @player.place(:A, :H, 2, :H)
+          lambda do
+            @player.place(:A, :C, 2, :H)
+          end.should raise_error(InvalidShipArgument, "The ship is already placed.")
+        end
       end
     end
 

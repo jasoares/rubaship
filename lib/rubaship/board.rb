@@ -4,6 +4,8 @@ module Rubaship
   class InvalidColumnArgument < ArgumentError; end
   class InvalidOrientationArgument < ArgumentError; end
   class InvalidShipArgument < ArgumentError; end
+  class InvalidShipPosition < StandardError; end
+  class OverlappingShipError < StandardError; end
 
   class Board
     include Enumerable
@@ -37,30 +39,37 @@ module Rubaship
       @board[Board.row_to_idx(index)]
     end
 
-    def add(ship, pos_row, col=nil, ori=:H)
-      self.dup.add!(ship, pos_row, col, ori)
+    def add(ship, row, col, ori)
+      self.dup.add!(ship, row, col, ori)
     end
 
-    def add!(ship, pos_row, col=nil, ori=:H)
+    def add!(ship, row, col, ori=nil)
       raise InvalidShipArgument, "Must be a Ship object." unless ship.is_a? Ship
-      if col.nil?
-        pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String
-        pos_row, col, ori = pos_row if pos_row.is_a? Array
-      end
-      begin
-        row = Board.row_to_idx(pos_row)
-        col = Board.col_to_idx(col)
-        ori = Board.ori_to_sym(ori)
+      row = Board.row_to_idx(row)
+      col = Board.col_to_idx(col)
+      ori = Board.ori_to_sym(ori)
+      error = InvalidShipPosition.new("Ship is too big to fit in that position.")
+      raise error unless Board.position_valid?(ship, row, col, ori)
 
-        insert_ship = lambda { |sector| sector.ship = ship }
+      row, col = Board.rangify_pos(ship, row, col, ori)
+
+      check_avail = lambda { |avail, sector| avail ||= sector.ship.nil? }
+      insert_ship = lambda { |sector| sector.ship = ship }
+      begin
+        backup = self.to_a
         case ori
           when :H
-            @board[row][col..col + ship.size - 1].each(&insert_ship)
+            if @board[row][col].inject(false, &check_avail)
+              @board[row][col].each(&insert_ship)
+            end
           when :V
-            @board.transpose[col][row..row + ship.size - 1].each(&insert_ship)
+            if @board.transpose[col][row].inject(false, &check_avail)
+              @board.transpose[col][row].each(&insert_ship)
+            end
         end
-      rescue ArgumentError
-        false
+      rescue InvalidShipPosition => e
+        @board = backup
+        raise e
       end
     end
 
@@ -146,10 +155,16 @@ module Rubaship
       end
     end
 
+    def self.position_valid?(ship, row, col, ori)
+      return false if ori == :H and col_to_idx(col) + ship.size > 10
+      return false if ori == :V and row_to_idx(row) + ship.size > 10
+      true
+    end
+
     def self.row_to_idx(row)
       return case row
         when Fixnum then row
-        when String then ROWS.index(row.upcase)
+        when String then row_to_idx(ROWS.index(row.upcase))
         when Symbol then row_to_idx(row.to_s)
         when Range
           if row.first.is_a? Fixnum
@@ -164,7 +179,7 @@ module Rubaship
 
     def self.col_to_idx(col, array=true)
       return case col
-        when Fixnum then array ? col - 1 : col
+        when Fixnum then array ? (1..10).to_a.index(col) : (1..10).to_a.index(col) + 1
         when String then col_to_idx(col.ord - '0'.ord, array)
         when Range
           Range.new((col_to_idx(col.min, array)), col_to_idx(col.max, array))
@@ -194,6 +209,17 @@ module Rubaship
         ori[0].upcase.to_sym,
       )
     end
+
+    def self.rangify_pos(ship, row, col, ori)
+      if ori == :H
+        col = (col..col + ship.size - 1) unless col.is_a? Range
+      elsif ori == :V
+        row = (row..row + ship.size - 1) unless row.is_a? Range
+      end
+      Array.[](
+        row, col
+      )
+    end
   end
 
   class Sector
@@ -216,6 +242,14 @@ module Rubaship
       case o
         when Hash then to_hash == o
         else @ship == o.ship
+      end
+    end
+
+    def ship=(ship)
+      if @ship.nil?
+        @ship = ship
+      else
+        raise InvalidShipPosition, "Overlapping already positioned ship."
       end
     end
 
