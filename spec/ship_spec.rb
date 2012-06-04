@@ -61,7 +61,7 @@ module Rubaship
           @player = Player.new
           @ship = @player.ship(@name)
           @pos = [ :C, 3, :V ]
-          @player.place(@name, @pos)
+          @player.place(@name, *@pos)
         end
 
         it "should return its position represented by an array" do

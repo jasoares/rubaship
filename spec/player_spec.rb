@@ -24,8 +24,8 @@ module Rubaship
       context "when passed a string position" do
         it "parses the string position using Grid#parse_pos" do
           @pos = Grid.parse_pos("D5:V")
-          @player.grid.should_receive(:add!).with(@player.ship(:B), :D, 5, :V)
-          @player.place(:B, @pos)
+          @player.grid.should_receive(:add!).with(@player.ship(:B), *@pos)
+          @player.place(:B, *@pos)
         end
       end
 

@@ -18,7 +18,6 @@ module Rubaship
       raise AlreadyPlacedShipError.new(ship) if ship.placed?
       if col.nil?
         pos_row, col, ori = Grid.parse_pos(pos_row) if pos_row.is_a? String
-        pos_row, col, ori = pos_row if pos_row.kind_of? Array
       elsif ori.nil?
         raise InvalidShipPosition unless pos_row.is_a? Range or col.is_a? Range
       end

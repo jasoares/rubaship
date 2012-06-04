@@ -36,7 +36,7 @@ end
 When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, pos|
   p = Rubaship::Grid.parse_pos(pos)
   begin
-    @player.place(ship, p)
+    @player.place(ship, *p)
   rescue Exception => e
     @message = e.message
   end
