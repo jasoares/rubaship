@@ -421,7 +421,7 @@ module Rubaship
 
         it "raises an InvalidShipPosition if it already contains a ship" do
           lambda { @sector.ship = Ship.create(:B) }.should raise_error(
-            InvalidShipPosition,
+            OverlapShipError,
             "Overlapping already positioned ship \"#{@sector.ship.name}\"."
           )
         end
@@ -431,7 +431,7 @@ module Rubaship
           lambda {
             begin
               @sector.ship = @ship
-            rescue InvalidShipPosition
+            rescue OverlapShipError
             end
           }.should_not change(@sector, :ship)
         end

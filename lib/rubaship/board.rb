@@ -60,7 +60,7 @@ module Rubaship
               @board.transpose[col][row].each(&insert_ship)
             end
         end
-      rescue InvalidShipPosition => e
+      rescue OverlapShipError => e
         @board = backup
         raise e
       end
@@ -238,7 +238,7 @@ module Rubaship
       if @ship.nil?
         @ship = ship
       else
-        raise InvalidShipPosition.new(@ship)
+        raise OverlapShipError.new(@ship)
       end
     end
 

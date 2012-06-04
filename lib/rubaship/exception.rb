@@ -35,12 +35,14 @@ module Rubaship
   end
 
   class InvalidShipPosition < StandardError
-    def initialize(ship=nil)
-      if ship.nil?
-        super("Ship does not fit inside the board if placed in that position.")
-      else
-        super("Overlapping already positioned ship \"#{ship.name}\".")
-      end
+    def initialize
+      super("Ship does not fit inside the board if placed in that position.")
+    end
+  end
+
+  class OverlapShipError < StandardError
+    def initialize(ship)
+      super("Overlapping already positioned ship \"#{ship.name}\".")
     end
   end
 end
