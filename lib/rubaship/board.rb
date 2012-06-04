@@ -1,12 +1,5 @@
 module Rubaship
 
-  class InvalidRowArgument < ArgumentError; end
-  class InvalidColumnArgument < ArgumentError; end
-  class InvalidOrientationArgument < ArgumentError; end
-  class InvalidShipArgument < ArgumentError; end
-  class InvalidShipPosition < StandardError; end
-  class OverlappingShipError < StandardError; end
-
   class Board
     include Enumerable
 
@@ -44,11 +37,11 @@ module Rubaship
     end
 
     def add!(ship, row, col, ori=nil)
-      raise InvalidShipArgument, "Must be a Ship object." unless ship.is_a? Ship
+      raise InvalidShipArgument.new(ship) unless ship.is_a? Ship
       row = Board.row_to_idx(row)
       col = Board.col_to_idx(col)
       ori = Board.ori_to_sym(ori)
-      error = InvalidShipPosition.new("Ship is too big to fit in that position.")
+      error = InvalidShipPosition.new
       raise error unless Board.position_valid?(ship, row, col, ori)
 
       row, col = Board.rangify_pos(ship, row, col, ori)
@@ -172,8 +165,7 @@ module Rubaship
           else
             Range.new(row_to_idx(row.min), row_to_idx(row.max))
           end
-        else raise InvalidRowArgument,
-          "Invalid row or range type passed #{row}:#{row.class}"
+        else raise InvalidRowArgument.new(row)
       end
     end
 
@@ -183,8 +175,7 @@ module Rubaship
         when String then col_to_idx(col.ord - '0'.ord, array)
         when Range
           Range.new((col_to_idx(col.min, array)), col_to_idx(col.max, array))
-        else raise InvalidColumnArgument,
-          "Invalid column or range type passed #{col}:#{col.class}"
+        else raise InvalidColumnArgument.new(col)
       end
     end
 
@@ -193,12 +184,10 @@ module Rubaship
         when String
           if "horizontal" =~ /#{ori}[orizontal]{,#{10 - ori.length}}/i then :H
           elsif "vertical" =~ /#{ori}[ertical]{,#{8 - ori.length}}/i then :V
-          else raise InvalidOrientationArgument,
-            "Invalid orientation \"#{ori}\":String"
+          else raise InvalidOrientationArgument.new(ori)
           end
         when Symbol then ori_to_sym(ori.to_s)
-        else raise InvalidOrientationArgument,
-          "Invalid orientation type passed #{ori}:#{ori.class}"
+        else raise InvalidOrientationArgument.new(ori)
       end
     end
 
@@ -249,7 +238,7 @@ module Rubaship
       if @ship.nil?
         @ship = ship
       else
-        raise InvalidShipPosition, "Overlapping already positioned ship."
+        raise InvalidShipPosition.new(@ship)
       end
     end
 

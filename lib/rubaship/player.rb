@@ -14,12 +14,8 @@ module Rubaship
     end
 
     def place(ship, pos_row, col=nil, ori=nil)
-      if (ship = self.ship(ship)).nil?
-        raise InvalidShipArgument, "Must be a valid ship symbol or name."
-      end
-      if ship.placed?
-        raise InvalidShipArgument, "The ship is already placed."
-      end
+      raise InvalidShipIdentifier.new(ship) if (ship = self.ship(ship)).nil?
+      raise InvalidShipArgument.new(ship) if ship.placed?
       if col.nil?
         pos_row, col, ori = Board.parse_pos(pos_row) if pos_row.is_a? String
         pos_row, col, ori = pos_row if pos_row.is_a? Array

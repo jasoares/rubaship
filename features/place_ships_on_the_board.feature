@@ -91,7 +91,7 @@ Feature: place ships on the board
     Then my aircraft carrier should not be placed
      And I should see the message:
      """
-     Ship is too big to fit in that position.
+     Ship does not fit inside the board if placed in that position.
      """
      And I should have the following board:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
@@ -138,7 +138,7 @@ Feature: place ships on the board
     Then my battleship should not be placed
      And I should see the message:
      """
-     Overlapping already positioned ship.
+     Overlapping already positioned ship "aircraft carrier".
      """
      And I should have the following board:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |
@@ -156,7 +156,7 @@ Feature: place ships on the board
     Then my battleship should not be placed
      And I should see the message:
      """
-     Overlapping already positioned ship.
+     Overlapping already positioned ship "aircraft carrier".
      """
      And I should have the following board:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |

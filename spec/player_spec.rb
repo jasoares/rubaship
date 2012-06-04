@@ -34,7 +34,7 @@ module Rubaship
           lambda {
             @player.place(:T, :C, 5, :H)
           }.should raise_error(
-            InvalidShipArgument,
+            InvalidShipIdentifier,
             "Must be a valid ship symbol or name."
           )
         end
