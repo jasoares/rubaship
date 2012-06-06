@@ -61,6 +61,10 @@ module Rubaship
       @grid.transpose[Grid.col_to_idx(col)]
     end
 
+    def row(row)
+      @grid[Grid.row_to_idx(row)]
+    end
+
     def each
       if block_given?
         @grid.collect do |row|
@@ -94,8 +98,6 @@ module Rubaship
     end
 
     alias :rows :each_row
-
-    alias :row :[]
 
     def sector(row, col)
       @grid[Grid.row_to_idx(row)][Grid.col_to_idx(col)]
