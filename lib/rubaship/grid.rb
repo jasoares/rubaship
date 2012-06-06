@@ -45,25 +45,16 @@ module Rubaship
       end
       raise InvalidPositionError.new unless Grid.position_valid?(ship, row, col)
 
-
-      check_avail = lambda { |avail, sector| avail ||= sector.ship.nil? }
       insert_ship = lambda { |sector| sector.ship = ship }
-      begin
-        backup = self.to_a
-        case ori
-          when :H
-            if @grid[row][col].inject(false, &check_avail)
-              @grid[row][col].each(&insert_ship)
-            end
-          when :V
-            if @grid.transpose[col][row].inject(false, &check_avail)
-              @grid.transpose[col][row].each(&insert_ship)
-            end
-        end
-      rescue OverlapShipError => e
-        @grid = backup
-        raise e
+      if col.is_a? Range
+        grid = @grid[row][col]
+      elsif row.is_a? Range
+        grid = @grid.transpose[col][row]
       end
+      if v = grid.inject(nil) { |r, sector| r ||= sector.ship }
+        raise OverlapShipError.new(v)
+      end
+      grid.each(&insert_ship)
     end
 
     def col(col)
