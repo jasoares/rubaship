@@ -4,6 +4,7 @@ module Rubaship
     include Enumerable
 
     ROWS = ("A".."J").to_a
+    COLS = ("1".."10").to_a
 
     POSITION_REGEXP = /^(?<anchor>[A-Z0-9]{2,3}):(?<orientation>[a-z]{1,10})$/i
     ANCHOR_REGEXP = /^(?:(?<row>[A-J])(?<col>([1-9])|10)|\g<col>\g<row>)$/i
@@ -28,8 +29,26 @@ module Rubaship
       end
     end
 
-    def [](index)
-      @grid[Grid.row_to_idx(index)]
+    def [](idx1, idx2=nil)
+      row = self.row(idx1) if idx1.is_a? Symbol or
+                              (idx1.is_a? String and ROWS.include?(idx1)) or
+                              (idx1.is_a? Range and ROWS.include?(idx1.min.to_s))
+      col = self.col(idx1) if idx1.is_a? Fixnum or
+                              (idx1.is_a? String and COLS.include?(idx1)) or
+                              (idx1.is_a? Range and COLS.include?(idx1.min.to_s))
+      grid = row ? row : col
+      return grid if idx2.nil?
+      idx2 = row ? Grid.col_to_idx(idx2) : Grid.row_to_idx(idx2)
+      if idx1.is_a? Range
+        grid = grid.transpose
+        if idx2.is_a? Range and row
+          grid[idx2].transpose
+        else
+          grid[idx2]
+        end
+      else
+        grid[idx2]
+      end
     end
 
     def add(ship, row, col, ori)

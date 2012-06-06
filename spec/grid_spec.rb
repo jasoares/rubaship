@@ -124,30 +124,66 @@ module Rubaship
 
     describe "#[]" do
       context "for an example grid already containing ships" do
-        before(:all) do
+        before(:each) do
           @grid = Grid.new
           @grid.add!(Ship.create(:D), :C, 2, :H)
           @grid.add!(Ship.create(:S), :C, 1, :V)
         end
 
-        it "returns the row with the ships contained in sectors" do
-          @grid[:C].should == @grid.row(2)
+        it "returns a row when passed a symbol letter" do
+          @grid[:C].should == @grid.row(:C)
         end
 
-        it "returns the indexed row matching the letter Symbol passed" do
-          @grid[:C].should == @grid.row(2)
+        it "returns a row when passed a string letter" do
+          @grid["C"].should == @grid.row(:C)
         end
 
-        it "returns the indexed row matching the letter String passed" do
-          @grid["J"].should == @grid.row(9)
-        end
-
-        it "returns the range of rows matching the string range passed" do
-          @grid["B".."F"].should == @grid.row(1..5)
-        end
-
-        it "returns the range of rows matching the symbol range passed" do
+        it "returns a range of rows when passed a Symbol letter range" do
           @grid[:C..:E].should == @grid.row(2..4)
+        end
+
+        it "returns a range of rows when passed a String letter range" do
+          @grid["C".."E"].should == @grid.row(2..4)
+        end
+
+        it "returns a column when passed a Fixnum" do
+          @grid[3].should == @grid.col(3)
+        end
+
+        it "returns a column when passed a String number" do
+          @grid["3"].should == @grid.col(3)
+        end
+
+        it "returns a range of columns when passed a Fixnum range" do
+          @grid[1..3].should == @grid.col(1..3)
+        end
+
+        it "returns a subrow when passed letter and a fixnum range" do
+          @grid["C", 1..3].should == @grid.row(2)[0..2]
+        end
+
+        it "returns a subcolumn when passed a row range and a column" do
+          @grid[:C..:E, 1].should == @grid.col(1)[2..4]
+        end
+
+        it "returns the same subrow for the same arguments when reversed" do
+          @grid[:C, 1..4].should == @grid[1..4, :C]
+        end
+
+        it "returns the same subcolumn for the same arguments when reversed" do
+          @grid[:C..:E, 1].should == @grid[1, :C..:E]
+        end
+
+        it "returns a subgrid when passed two ranges" do
+          @grid[:C..:E, 1..4].should == @grid.row(:C..:E).transpose[0..3].transpose
+        end
+
+        it "returns a subgrid when passed two ranges 2" do
+          @grid[1..4, :C..:E].should == @grid.row(:C..:E).transpose[0..3].transpose
+        end
+
+        it "returns the same subgrid for the same range arguments when reversed" do
+          @grid[:C..:E, 1..4].should == @grid[1..4, :C..:E]
         end
       end
     end
