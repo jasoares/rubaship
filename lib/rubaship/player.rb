@@ -16,9 +16,9 @@ module Rubaship
     def place(ship, pos_row, col=nil, ori=nil)
       raise InvalidShipArgument.new(ship) if (ship = self.ship(ship)).nil?
       raise AlreadyPlacedShipError.new(ship) if ship.placed?
-      if col.nil?
-        pos_row, col, ori = Grid.parse_pos(pos_row) if pos_row.is_a? String
-      elsif ori.nil?
+      if !col
+        pos_row, col, ori = Grid.parse_pos(pos_row) if pos_row.is_a?(String)
+      elsif !ori
         raise InvalidPositionArgument unless pos_row.is_a? Range or col.is_a? Range
       end
       @grid.add!(ship, pos_row, col, ori)

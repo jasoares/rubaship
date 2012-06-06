@@ -37,7 +37,7 @@ module Rubaship
                               idx1.is_a?(String) && COLS.include?(idx1) or
                               idx1.is_a?(Range) && COLS.include?(idx1.min.to_s)
       grid = row ? row : col
-      return grid if idx2.nil?
+      return grid unless idx2
       idx2 = row ? Grid.col_to_idx(idx2) : Grid.row_to_idx(idx2)
       if idx1.is_a? Range
         grid = grid.transpose[idx2]
@@ -54,7 +54,7 @@ module Rubaship
     def add!(ship, row, col, ori=nil)
       row = Grid.row_to_idx(row)
       col = Grid.col_to_idx(col)
-      unless ori.nil?
+      if ori
         ori = Grid.ori_to_sym(ori)
         row, col = Grid.rangify_pos(ship, row, col, ori)
       end
