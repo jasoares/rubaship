@@ -8,6 +8,12 @@ module Rubaship
       end
     end
 
+    describe "::COLS" do
+      it "returns the array of valid grid cols" do
+        Grid::COLS.should == %w{ 1 2 3 4 5 6 7 8 9 10 }
+      end
+    end
+
     describe ".col_to_idx" do
       it "returns the index of the String column passed" do
         Grid.col_to_idx("3").should be 2
