@@ -111,16 +111,12 @@ module Rubaship
         Grid.row_to_idx(:C..:E).should == (2..4)
       end
 
-      it "returns the argument unchanged when passed a Fixnum" do
-        Grid.row_to_idx(3).should == 3
+      it "raises an InvalidRowArgument when passed an invalid identifier" do
+        lambda { Grid.row_to_idx("K") }.should raise_error(InvalidRowArgument)
       end
 
-      it "returns the argument unchanged when passed a Fixnum Range" do
-        Grid.row_to_idx(3..5).should == (3..5)
-      end
-
-      it "raises an exception when passed any other type" do
-        lambda { Grid.row_to_idx([2]) }.should raise_error(InvalidRowArgument)
+      it "raises an InvalidRowArgument when passed any other type" do
+        lambda { Grid.row_to_idx(:A => 3) }.should raise_error(InvalidRowArgument)
       end
     end
 

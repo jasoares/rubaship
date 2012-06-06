@@ -155,15 +155,12 @@ module Rubaship
 
     def self.row_to_idx(row)
       return case row
-        when Fixnum then row
+        when Fixnum then row if (0..9).include? row
         when String then row_to_idx(ROWS.index(row.upcase))
         when Symbol then row_to_idx(row.to_s)
         when Range
-          if row.first.is_a? Fixnum
-            row
-          else
-            Range.new(row_to_idx(row.min), row_to_idx(row.max))
-          end
+          return row if row.min.is_a? Fixnum
+          row_to_idx(row.min) .. row_to_idx(row.max)
         else raise InvalidRowArgument.new(row)
       end
     end
