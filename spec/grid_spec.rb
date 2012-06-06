@@ -86,11 +86,11 @@ module Rubaship
       before(:all) { @ship = Ship.create(:A) }
 
       it "returns true if the position is valid" do
-        Grid.position_valid?(@ship, :C, 7, :V).should be true
+        Grid.position_valid?(@ship, 2..6, 7).should be true
       end
 
       it "returns false if the position is out of the grid and so invalid" do
-        Grid.position_valid?(@ship, :C, 7, :H).should be false
+        Grid.position_valid?(@ship, :C, 7..11).should be false
       end
     end
 

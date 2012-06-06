@@ -39,12 +39,12 @@ module Rubaship
     def add!(ship, row, col, ori=nil)
       row = Grid.row_to_idx(row)
       col = Grid.col_to_idx(col)
-      ori = Grid.ori_to_sym(ori)
-      unless Grid.position_valid?(ship, row, col, ori)
-        raise InvalidShipPositionError.new
+      unless ori.nil?
+        ori = Grid.ori_to_sym(ori)
+        row, col = Grid.rangify_pos(ship, row, col, ori)
       end
+      raise InvalidPositionError.new unless Grid.position_valid?(ship, row, col)
 
-      row, col = Grid.rangify_pos(ship, row, col, ori)
 
       check_avail = lambda { |avail, sector| avail ||= sector.ship.nil? }
       insert_ship = lambda { |sector| sector.ship = ship }
@@ -148,10 +148,9 @@ module Rubaship
       end
     end
 
-    def self.position_valid?(ship, row, col, ori)
-      return false if ori == :H and col_to_idx(col) + ship.size > 10
-      return false if ori == :V and row_to_idx(row) + ship.size > 10
-      true
+    def self.position_valid?(ship, row, col)
+      range = [row, col].find { |v| v.is_a? Range }
+      range.max > 9 ? false : true
     end
 
     def self.row_to_idx(row)

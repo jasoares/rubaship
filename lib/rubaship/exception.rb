@@ -36,7 +36,7 @@ module Rubaship
     end
   end
 
-  class InvalidShipPositionError < StandardError
+  class InvalidPositionError < StandardError
     def initialize
       super("Ship does not fit inside the grid if placed in that position.")
     end
