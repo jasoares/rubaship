@@ -119,7 +119,7 @@ module Rubaship
     alias :rows :each_row
 
     def sector(row, col)
-      @grid[Grid.row_to_idx(row)][Grid.col_to_idx(col)]
+      self[row, col]
     end
 
     def to_hash

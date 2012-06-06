@@ -150,6 +150,10 @@ module Rubaship
           @grid[3].should == @grid.col(3)
         end
 
+        it "returns a single sector when passed a row and column" do
+          @grid[:C, 2].should == Sector.new(Ship.create(:D))
+        end
+
         it "returns a column when passed a String number" do
           @grid["3"].should == @grid.col(3)
         end
