@@ -6,7 +6,7 @@ module Rubaship
     end
   end
 
-  class InvalidColumnArgument < ArgumentError
+  class InvalidColArgument < ArgumentError
     def initialize(col)
       super("Invalid column or range type passed #{col}:#{col.class}")
     end

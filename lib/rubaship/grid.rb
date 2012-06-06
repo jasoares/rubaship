@@ -169,13 +169,15 @@ module Rubaship
       end
     end
 
-    def self.col_to_idx(col, array=true)
+    def self.col_to_idx(col)
       return case col
-        when Fixnum then array ? (1..10).to_a.index(col) : (1..10).to_a.index(col) + 1
-        when String then col_to_idx(col.ord - '0'.ord, array)
+        when Fixnum
+          raise InvalidColArgument.new(col) unless (1..10).include? col
+          (1..10).to_a.index(col)
+        when String then col_to_idx(col.ord - '0'.ord)
         when Range
-          Range.new((col_to_idx(col.min, array)), col_to_idx(col.max, array))
-        else raise InvalidColumnArgument.new(col)
+          Range.new(col_to_idx(col.min), col_to_idx(col.max))
+        else raise InvalidColArgument.new(col)
       end
     end
 

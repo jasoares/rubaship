@@ -9,36 +9,24 @@ module Rubaship
     end
 
     describe ".col_to_idx" do
-      context "when array_index is passed as true(default)" do
-        it "returns the index of the String column passed" do
-          Grid.col_to_idx("3", true).should be 2
-        end
-
-        it "returns the index of the Fixnum column passed" do
-          Grid.col_to_idx(5).should be 4
-        end
-
-        it "returns the range index that matches the Range passed" do
-          Grid.col_to_idx(3..6).should == (2..5)
-        end
+      it "returns the index of the String column passed" do
+        Grid.col_to_idx("3").should be 2
       end
 
-      context "when array_index is passed as false" do
-        it "returns the Fixnum column number that matches the String column passed" do
-          Grid.col_to_idx("4", false).should be 4
-        end
+      it "returns the index of the Fixnum column passed" do
+        Grid.col_to_idx(5).should be 4
+      end
 
-        it "returns the column number of the Fixnum column passed" do
-          Grid.col_to_idx(5, false).should be 5
-        end
+      it "returns the range index that matches the Range passed" do
+        Grid.col_to_idx(3..6).should == (2..5)
+      end
 
-        it "returns the column range matching the grid column numbers passed" do
-          Grid.col_to_idx("4".."7", false).should == (4..7)
-        end
+      it "raises an InvalidColArgument when an invalid column is passed" do
+        lambda { Grid.col_to_idx(11) }.should raise_error(InvalidColArgument)
       end
 
       it "raises an exception when an invalid column type is passed" do
-        lambda { Grid.col_to_idx(:"2") }.should raise_error(InvalidColumnArgument)
+        lambda { Grid.col_to_idx(:"2") }.should raise_error(InvalidColArgument)
       end
     end
 
@@ -242,11 +230,11 @@ module Rubaship
         end.should change @grid, :to_a
       end
 
-      it "raises InvalidColumnArgument when passed an invalid column" do
+      it "raises InvalidColArgument when passed an invalid column" do
         lambda do
           @grid.add!(@ship, :C, 11, :H)
         end.should raise_error(
-          InvalidColumnArgument,
+          InvalidColArgument,
           /^Invalid column or range type passed .+$/
         )
       end
