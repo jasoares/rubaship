@@ -215,9 +215,7 @@ module Rubaship
 
       it "updates the matching column when vertical is passed" do
         @grid.add!(@ship, :B, 8, :V)
-        @grid[(1..1 + @ship.size - 1)].collect do |row|
-          row[7].ship
-        end.should == @ship.to_a
+        @grid.col(8)[1..3].should == Array.new(3, Sector.new(@ship))
       end
 
       it "changes the receiver object" do
