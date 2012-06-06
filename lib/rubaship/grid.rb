@@ -31,21 +31,17 @@ module Rubaship
 
     def [](idx1, idx2=nil)
       row = self.row(idx1) if idx1.is_a? Symbol or
-                              (idx1.is_a? String and ROWS.include?(idx1)) or
-                              (idx1.is_a? Range and ROWS.include?(idx1.min.to_s))
+                              idx1.is_a?(String) && ROWS.include?(idx1) or
+                              idx1.is_a?(Range) && ROWS.include?(idx1.min.to_s)
       col = self.col(idx1) if idx1.is_a? Fixnum or
-                              (idx1.is_a? String and COLS.include?(idx1)) or
-                              (idx1.is_a? Range and COLS.include?(idx1.min.to_s))
+                              idx1.is_a?(String) && COLS.include?(idx1) or
+                              idx1.is_a?(Range) && COLS.include?(idx1.min.to_s)
       grid = row ? row : col
       return grid if idx2.nil?
       idx2 = row ? Grid.col_to_idx(idx2) : Grid.row_to_idx(idx2)
       if idx1.is_a? Range
-        grid = grid.transpose
-        if idx2.is_a? Range and row
-          grid[idx2].transpose
-        else
-          grid[idx2]
-        end
+        grid = grid.transpose[idx2]
+        row && idx2.is_a?(Range) ? grid.transpose : grid
       else
         grid[idx2]
       end
