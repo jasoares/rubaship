@@ -12,7 +12,7 @@ module Rubaship
     end
   end
 
-  class InvalidOrientationArgument < ArgumentError
+  class InvalidOriArgument < ArgumentError
     def initialize(ori)
       super("Invalid orientation type passed #{ori}:#{ori.class}")
     end

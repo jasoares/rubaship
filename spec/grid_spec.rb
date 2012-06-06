@@ -44,8 +44,8 @@ module Rubaship
           Grid.ori_to_sym("v").should be :V
         end
 
-        it "raises an InvalidOrientationArgument when the word is invalid" do
-          lambda { Grid.ori_to_sym("vr") }.should raise_error(InvalidOrientationArgument)
+        it "raises an InvalidOriArgument when the word is invalid" do
+          lambda { Grid.ori_to_sym("vr") }.should raise_error(InvalidOriArgument)
         end
       end
 
@@ -62,13 +62,13 @@ module Rubaship
           Grid.ori_to_sym(:V).should be :V
         end
 
-        it "raises an InvalidOrientationArgument when the word is invalid" do
-          lambda { Grid.ori_to_sym(:hr) }.should raise_error(InvalidOrientationArgument)
+        it "raises an InvalidOriArgument when the word is invalid" do
+          lambda { Grid.ori_to_sym(:hr) }.should raise_error(InvalidOriArgument)
         end
       end
 
-      it "raises an InvalidOrientationArgument when a non valid type is passed" do
-        lambda { Grid.ori_to_sym(4) }.should raise_error(InvalidOrientationArgument)
+      it "raises an InvalidOriArgument when a non valid type is passed" do
+        lambda { Grid.ori_to_sym(4) }.should raise_error(InvalidOriArgument)
       end
     end
 

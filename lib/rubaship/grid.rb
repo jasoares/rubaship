@@ -186,10 +186,10 @@ module Rubaship
         when String
           if "horizontal" =~ /#{ori}[orizontal]{,#{10 - ori.length}}/i then :H
           elsif "vertical" =~ /#{ori}[ertical]{,#{8 - ori.length}}/i then :V
-          else raise InvalidOrientationArgument.new(ori)
+          else raise InvalidOriArgument.new(ori)
           end
         when Symbol then ori_to_sym(ori.to_s)
-        else raise InvalidOrientationArgument.new(ori)
+        else raise InvalidOriArgument.new(ori)
       end
     end
 
