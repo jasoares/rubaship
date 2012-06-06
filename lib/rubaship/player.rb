@@ -19,7 +19,7 @@ module Rubaship
       if col.nil?
         pos_row, col, ori = Grid.parse_pos(pos_row) if pos_row.is_a? String
       elsif ori.nil?
-        raise InvalidShipPosition unless pos_row.is_a? Range or col.is_a? Range
+        raise InvalidPositionArgument unless pos_row.is_a? Range or col.is_a? Range
       end
       @grid.add!(ship, pos_row, col, ori)
       ship.position = [pos_row, col, ori]

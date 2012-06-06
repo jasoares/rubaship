@@ -24,6 +24,12 @@ module Rubaship
     end
   end
 
+  class InvalidPositionArgument < ArgumentError
+    def initialize
+      super("Either row or col must be a Range when no ori is given")
+    end
+  end
+
   class AlreadyPlacedShipError < StandardError
     def initialize(ship)
       super("Cannot reposition the already placed ship #{ship.name}")

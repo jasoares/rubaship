@@ -29,6 +29,27 @@ module Rubaship
         end
       end
 
+      context "when passed a position without orientation" do
+        it "raises InvalidShipPosition if neither row or col are Ranges" do
+          lambda { @player.place(:B, :D, 3) }.should raise_error(
+            InvalidPositionArgument,
+            "Either row or col must be a Range when no ori is given"
+          )
+        end
+
+        it "accepts a Range row instead of horizontal" do
+          @ship = @player.ship(:B)
+          @player.grid.should_receive(:add!).with(@ship, :D, 5..8, nil)
+          @player.place(:B, :D, 5..8)
+        end
+
+        it "accepts a Range col instead of vertical" do
+          @ship = @player.ship(:B)
+          @player.grid.should_receive(:add!).with(@ship, :D..:G, 5, nil)
+          @player.place(:B, :D..:G, 5)
+        end
+      end
+
       context "when passed an invalid ship Symbol" do
         it "raises an InvalidShipArgument" do
           lambda {
