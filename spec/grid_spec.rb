@@ -105,6 +105,10 @@ module Rubaship
         Grid.row_to_idx("C").should be 2
       end
 
+      it "accepts a lower case String letter" do
+        Grid.row_to_idx("a").should be 0
+      end
+
       it "accepts a Symbol letter matching it to its grid index" do
         Grid.row_to_idx(:D).should be 3
       end

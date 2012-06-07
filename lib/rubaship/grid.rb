@@ -162,7 +162,7 @@ module Rubaship
 
     def self.row_to_idx(row)
       return case row
-        when Fixnum then row if (0..9).include? row
+        when Fixnum then row
         when String then row_to_idx(ROWS.index(row.upcase))
         when Symbol then row_to_idx(row.to_s)
         when Range
