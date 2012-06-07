@@ -25,6 +25,7 @@ module Rubaship
       case v
         when Fixnum then zero_based ? v : v - 1
         when String then self.to_idx(v.ord - '0'.ord)
+        when Col    then v.to_idx
       end
     end
 

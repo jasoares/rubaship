@@ -3,19 +3,19 @@ require 'spec_helper.rb'
 module Rubaship
   describe Row do
     it "accepts a Symbol" do
-      Row.new(:D).should == 3
+      Row.new(:D).should == :D
     end
 
     it "accepts a String" do
-      Row.new("E").should == 4
+      Row.new("E").should == :E
     end
 
     it "accepts a zero_based Fixnum" do
-      Row.new(3).should == 3
+      Row.new(3).should == :D
     end
 
     it "accepts a Row" do
-      Row.new(Row.new(:B)).should == 1
+      Row.new(Row.new(:B)).should == :B
     end
 
     context "for a sample Row created with the value :G" do
@@ -38,6 +38,24 @@ module Rubaship
       describe "#to_s" do
         it "returns \"G\"" do
           @row.to_s.should == "G"
+        end
+      end
+
+      describe "#==" do
+        it "should == 6" do
+          @row.should == 6
+        end
+
+        it "should == :G" do
+          @row.should == :G
+        end
+
+        it "should == \"G\"" do
+          @row.should == "G"
+        end
+
+        it "should == Row.new(:G)" do
+          @row.should == Row.new(:G)
         end
       end
     end
