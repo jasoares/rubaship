@@ -126,8 +126,7 @@ module Rubaship
     end
 
     def to_a
-      s = self.enum_for(:each_sector)
-      Array.new(10) { Array.new(10) { s.next.dup } }
+      @grid
     end
 
     def to_s(empty=" ", sep="|", col_width=3)

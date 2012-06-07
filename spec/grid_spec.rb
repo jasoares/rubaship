@@ -267,7 +267,7 @@ module Rubaship
       it "changes the receiver object" do
         lambda do
           @grid.add!(@ship, :B, 3, :H)
-        end.should change @grid, :to_a
+        end.should change @grid, :to_hash
       end
 
       it "raises InvalidColArgument when passed an invalid column" do
@@ -359,12 +359,18 @@ module Rubaship
     end
 
     describe "#to_a" do
-      it "returns an array" do
-        @grid.to_a.should be_an Array
-      end
+      context "given a sample grid with ships already placed" do
+        before(:each) do
+          @grid.add!(Ship.create(:B), :D, 3, :H)
+        end
 
-      it "is a deep copy of the Grid object inner array" do
-        lambda { @grid.to_a[1][2] = "S" }.should_not change @grid, :to_a
+        it "returns an array" do
+          @grid.to_a.should be_an Array
+        end
+
+        it "returns the Grid object's inner array" do
+          @grid.to_a.should == @grid[:A..:J, 1..10]
+        end
       end
     end
 
