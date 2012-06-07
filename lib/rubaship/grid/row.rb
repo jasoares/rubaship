@@ -29,5 +29,9 @@ module Rubaship
         when Row    then v.to_idx
       end
     end
+
+    def self.rows(size=10)
+      ("A".."Z").first(size)
+    end
   end
 end
