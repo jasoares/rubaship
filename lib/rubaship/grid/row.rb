@@ -1,7 +1,7 @@
 module Rubaship
   class Row
 
-    ROWS = ("A".."Z").to_a
+    ROWS = ("A".."J").to_a
 
     def initialize(v)
       @idx = Row.to_idx(v)
@@ -39,15 +39,11 @@ module Rubaship
     def self.to_idx(v)
       case v
         when Fixnum then v
-        when String then ("A".."Z").to_a.index(v)
+        when String then ROWS.index(v)
         when Symbol then self.to_idx(v.to_s)
         when Range  then self.to_idx(v.min) .. self.to_idx(v.max)
         when Row    then v.to_idx
       end
-    end
-
-    def self.rows(size=ROWS.size)
-      ROWS.first(size)
     end
   end
 end

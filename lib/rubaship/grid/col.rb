@@ -1,7 +1,7 @@
 module Rubaship
   class Col
 
-    COLS = ("1".."26").to_a
+    COLS = ("1".."10").to_a
 
     def initialize(v)
       @idx = Col.to_idx(v)
@@ -39,10 +39,6 @@ module Rubaship
         when Range  then to_idx(v.min)..to_idx(v.max)
         when Col    then v.to_idx
       end
-    end
-
-    def self.cols(size=COLS.size)
-      COLS.first(size)
     end
   end
 end
