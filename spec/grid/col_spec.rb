@@ -2,36 +2,20 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Col do
-    it "accepts a non zero based Fixnum" do
+    it "accepts a column number based Fixnum" do
       Col.new(1).should == 1
     end
 
-    it "accepts a zero based Fixnum" do
-      Col.new(2, true).should == 3
+    it "accepts a String with a column number" do
+      Col.new("9").should == 9
     end
 
-    it "accepts a String with a non zero based number" do
-      Col.new("3").should == 3
-    end
-
-    it "accepts a non zero based Fixnum Range" do
+    it "accepts a column number based Fixnum Range" do
       Col.new(4..6).should == (4..6)
     end
 
-    it "accepts a zero based Fixnum Range" do
-      Col.new(3..5, true).should == (4..6)
-    end
-
-    it "accepts a non zero based String Range" do
+    it "accepts a String Range with column numbers" do
       Col.new("3".."6").should == (3..6)
-    end
-
-    it "accepts a zero based String Range" do
-      Col.new("2".."5", true).should == (3..6)
-    end
-
-    it "accepts a String Range" do
-      Col.new("3".."5").should == (3..5)
     end
 
     context "for a sample column created with the non zero based value 5" do

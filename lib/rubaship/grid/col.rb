@@ -3,8 +3,8 @@ module Rubaship
 
     COLS = ("1".."26").to_a
 
-    def initialize(v, zero_based=false)
-      @idx = Col.to_idx(v, zero_based)
+    def initialize(v)
+      @idx = Col.to_idx(v)
     end
 
     def range?
@@ -32,11 +32,11 @@ module Rubaship
       self.to_idx == Col.to_idx(o)
     end
 
-    def self.to_idx(v, zero_based=false)
+    def self.to_idx(v)
       case v
-        when Fixnum then zero_based ? v : v - 1
-        when String then to_idx(v.ord - '0'.ord, zero_based)
-        when Range  then to_idx(v.min, zero_based)..to_idx(v.max, zero_based)
+        when Fixnum then v - 1
+        when String then to_idx(v.ord - '0'.ord)
+        when Range  then to_idx(v.min)..to_idx(v.max)
         when Col    then v.to_idx
       end
     end
