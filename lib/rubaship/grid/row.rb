@@ -1,8 +1,21 @@
 module Rubaship
   class Row
 
+    ROWS = ("A".."Z").to_a
+
     def initialize(v)
       @value = Row.to_idx(v)
+    end
+
+    def size
+      @value.is_a?(Range) ? @value.count : 1
+    end
+
+    alias :count :size
+    alias :length :size
+
+    def range?
+      @value.is_a?(Range)
     end
 
     def to_idx
@@ -10,11 +23,13 @@ module Rubaship
     end
 
     def to_sym
-      :"#{self.to_s}"
+      str = self.to_s
+      @value.is_a?(Range) ? str.min.to_sym..str.max.to_sym : str.to_sym
     end
 
     def to_s
-      "#{('A'.ord + @value).chr}"
+      v_to_s = Proc.new { |v| ('A'.ord + v).chr }
+      @value.is_a?(Range) ? v_to_s[@value.min]..v_to_s[@value.max] : v_to_s[@value]
     end
 
     def ==(o)
@@ -24,14 +39,15 @@ module Rubaship
     def self.to_idx(v)
       case v
         when Fixnum then v
-        when String then Grid::ROWS.index(v)
+        when String then ("A".."Z").to_a.index(v)
         when Symbol then self.to_idx(v.to_s)
+        when Range  then self.to_idx(v.min) .. self.to_idx(v.max)
         when Row    then v.to_idx
       end
     end
 
-    def self.rows(size=10)
-      ("A".."Z").first(size)
+    def self.rows(size=ROWS.size)
+      ROWS.first(size)
     end
   end
 end

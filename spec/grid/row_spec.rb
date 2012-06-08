@@ -14,6 +14,14 @@ module Rubaship
       Row.new(3).should == :D
     end
 
+    it "accepts a String Range" do
+      Row.new("C".."E").should == (:C..:E)
+    end
+
+    it "accepts a Symbol Range" do
+      Row.new(:D..:F).should == (:D..:F)
+    end
+
     it "accepts a Row" do
       Row.new(Row.new(:B)).should == :B
     end
@@ -21,6 +29,18 @@ module Rubaship
     context "for a sample Row created with the value :G" do
       before(:each) do
         @row = Row.new(:G)
+      end
+
+      describe "#range?" do
+        it "returns false" do
+          @row.range?.should be false
+        end
+      end
+
+      describe "#size" do
+        it "returns 1" do
+          @row.size.should be 1
+        end
       end
 
       describe "#to_idx" do
@@ -60,13 +80,67 @@ module Rubaship
       end
     end
 
+    context "for a sample row which is a range of rows :D..:G" do
+      before(:each) do
+        @row = Row.new(:D..:G)
+      end
+
+      describe "#range?" do
+        it "returns true" do
+          @row.range?.should be true
+        end
+      end
+
+      describe "#size" do
+        it "returns 4" do
+          @row.size.should be 4
+        end
+      end
+
+      describe "#to_idx" do
+        it "returns 3..6" do
+          @row.to_idx.should == (3..6)
+        end
+      end
+
+      describe "#to_sym" do
+        it "returns :D..:G" do
+          @row.to_sym.should == (:D..:G)
+        end
+      end
+
+      describe "#to_s" do
+        it "returns \"D\"..\"G\"" do
+          @row.to_s.should == ("D".."G")
+        end
+      end
+
+      describe "#==" do
+        it "should == 3..6" do
+          @row.should == (3..6)
+        end
+
+        it "should == :D..:G" do
+          @row.should == (:D..:G)
+        end
+
+        it "should == \"D\"..\"G\"" do
+          @row.should == ("D".."G")
+        end
+
+        it "should == Row.new(:D..:G)" do
+          @row.should == Row.new(:D..:G)
+        end
+      end
+    end
+
     describe ".rows" do
       it "returns an array of string rows with the given size" do
         Row.rows(4).should == %w{ A B C D }
       end
 
       it "returns an array of string rows with size 10 when no size is passed" do
-        Row.rows.should == %w{ A B C D E F G H I J }
+        Row.rows.should == ("A".."Z").to_a
       end
     end
   end
