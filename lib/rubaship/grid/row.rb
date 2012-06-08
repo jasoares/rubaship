@@ -4,32 +4,32 @@ module Rubaship
     ROWS = ("A".."Z").to_a
 
     def initialize(v)
-      @value = Row.to_idx(v)
+      @idx = Row.to_idx(v)
     end
 
     def size
-      @value.is_a?(Range) ? @value.count : 1
+      @idx.is_a?(Range) ? @idx.count : 1
     end
 
     alias :count :size
     alias :length :size
 
     def range?
-      @value.is_a?(Range)
+      @idx.is_a?(Range)
     end
 
     def to_idx
-      @value
+      @idx
     end
 
     def to_sym
       str = self.to_s
-      @value.is_a?(Range) ? str.min.to_sym..str.max.to_sym : str.to_sym
+      @idx.is_a?(Range) ? str.min.to_sym..str.max.to_sym : str.to_sym
     end
 
     def to_s
       v_to_s = Proc.new { |v| ('A'.ord + v).chr }
-      @value.is_a?(Range) ? v_to_s[@value.min]..v_to_s[@value.max] : v_to_s[@value]
+      @idx.is_a?(Range) ? v_to_s[@idx.min]..v_to_s[@idx.max] : v_to_s[@idx]
     end
 
     def ==(o)

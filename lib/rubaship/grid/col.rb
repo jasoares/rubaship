@@ -4,23 +4,23 @@ module Rubaship
     COLS = ("1".."26").to_a
 
     def initialize(v, zero_based=false)
-      @value = Col.to_idx(v, zero_based)
+      @idx = Col.to_idx(v, zero_based)
     end
 
     def range?
-      @value.is_a?(Range)
+      @idx.is_a?(Range)
     end
 
     def size
-      self.range? ? @value.count : 1
+      self.range? ? @idx.count : 1
     end
 
     def to_i
-      self.range? ? (@value.min + 1)..(@value.max + 1) : @value + 1
+      self.range? ? (@idx.min + 1)..(@idx.max + 1) : @idx + 1
     end
 
     def to_idx
-      self.range? ? @value.min..@value.max : @value
+      self.range? ? @idx.min..@idx.max : @idx
     end
 
     def to_s
