@@ -35,7 +35,7 @@ module Rubaship
     def self.to_idx(v)
       case v
         when Fixnum then v - 1
-        when String then to_idx(v.ord - '0'.ord)
+        when String then to_idx(Integer(v))
         when Range  then to_idx(v.min)..to_idx(v.max)
         when Col    then v.to_idx
       end

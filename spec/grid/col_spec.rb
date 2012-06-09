@@ -7,7 +7,7 @@ module Rubaship
     end
 
     it "accepts a String with a column number" do
-      Col.new("9").should == 9
+      Col.new("10").should == 10
     end
 
     it "accepts a column number based Fixnum Range" do
