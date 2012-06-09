@@ -4,8 +4,8 @@ module Rubaship
     ROWS = ("A".."J").to_a
 
     def initialize(v)
-      idx = Row.to_idx(v)
-      Row.is_valid?(idx) ? @idx = idx : raise(InvalidRowArgument.new v)
+      raise InvalidRowArgument.new v unless Row.is_valid? v
+      @idx = Row.to_idx v
     end
 
     def size
@@ -54,7 +54,7 @@ module Rubaship
 
     def self.is_valid?(v)
       return self.is_valid?(v.min) && self.is_valid?(v.max) if v.is_a? Range
-      idx = v.is_a?(Fixnum) ? v : self.to_idx(v)
+      idx = self.to_idx(v)
       idx ? (idx >= 0 and idx < ROWS.size) : false
     end
   end

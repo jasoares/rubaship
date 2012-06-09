@@ -150,5 +150,23 @@ module Rubaship
         end
       end
     end
+
+    describe ".is_valid?" do
+      it "returns true for \"A\"" do
+        Row.is_valid?("A").should be true
+      end
+
+      it "returns true for \"a\"" do
+        Row.is_valid?("a").should be true
+      end
+
+      it "returns false for 1" do
+        Row.is_valid?(1).should be false
+      end
+
+      it "returns false for 0" do
+        Row.is_valid?(0).should be false
+      end
+    end
   end
 end

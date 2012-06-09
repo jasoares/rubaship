@@ -149,5 +149,35 @@ module Rubaship
         end
       end
     end
+
+    describe "#is_valid?" do
+      it "returns true for 1" do
+        Col.is_valid?(1).should be true
+      end
+
+      it "returns true for 10" do
+        Col.is_valid?(10).should be true
+      end
+
+      it "returns false for 11" do
+        Col.is_valid?(11).should be false
+      end
+
+      it "returns false for 0" do
+        Col.is_valid?(0).should be false
+      end
+
+      it "returns false for \"A\"" do
+        Col.is_valid?("A").should be false
+      end
+
+      it "returns false for \"C\"..\"E\"" do
+        Col.is_valid?("C".."E").should be false
+      end
+
+      it "returns false for :D" do
+        Col.is_valid?(:D).should be false
+      end
+    end
   end
 end
