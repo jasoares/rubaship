@@ -45,7 +45,7 @@ module Rubaship
 
     def self.to_idx(v)
       case v
-        when String then ROWS.index(v)
+        when String then ROWS.index(v.upcase)
         when Symbol then self.to_idx(v.to_s)
         when Range  then self.to_idx(v.min) .. self.to_idx(v.max)
         when Row    then v.to_idx

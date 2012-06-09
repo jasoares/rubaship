@@ -16,6 +16,10 @@ module Rubaship
       Row.new("E").should == :E
     end
 
+    it "accepts a lower case String" do
+      Row.new("e").should == :E
+    end
+
     it "accepts a String Range" do
       Row.new("C".."E").should == (:C..:E)
     end
