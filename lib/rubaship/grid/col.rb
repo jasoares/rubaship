@@ -4,7 +4,8 @@ module Rubaship
     COLS = ("1".."10").to_a
 
     def initialize(v)
-      @idx = Col.to_idx(v)
+      idx = Col.to_idx(v)
+      Col.is_valid?(idx) ? @idx = idx : raise(InvalidColArgument.new v)
     end
 
     def range?
@@ -35,10 +36,16 @@ module Rubaship
     def self.to_idx(v)
       case v
         when Fixnum then v - 1
-        when String then to_idx(Integer(v))
-        when Range  then to_idx(v.min)..to_idx(v.max)
+        when String then self.to_idx(Integer(v))
+        when Range  then self.to_idx(v.min)..to_idx(v.max)
         when Col    then v.to_idx
       end
+    end
+
+    def self.is_valid?(v)
+      return self.is_valid?(v.min) && self.is_valid?(v.max) if v.is_a? Range
+      idx = v.is_a?(Fixnum) ? v : self.to_idx(v)
+      idx ? (idx >= 0 and idx < COLS.size) : false
     end
   end
 end

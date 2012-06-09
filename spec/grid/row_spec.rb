@@ -16,10 +16,6 @@ module Rubaship
       Row.new("E").should == :E
     end
 
-    it "accepts a zero_based Fixnum" do
-      Row.new(3).should == :D
-    end
-
     it "accepts a String Range" do
       Row.new("C".."E").should == (:C..:E)
     end
@@ -30,6 +26,13 @@ module Rubaship
 
     it "accepts a Row" do
       Row.new(Row.new(:B)).should == :B
+    end
+
+    it "raises an InvalidRowArgument error when passed :K" do
+      lambda { Row.new(:K) }.should raise_error(
+        InvalidRowArgument,
+        /^Invalid row or range type passed .+$/
+      )
     end
 
     context "for a sample Row created with the value :G" do
@@ -68,10 +71,6 @@ module Rubaship
       end
 
       describe "#==" do
-        it "should == 6" do
-          @row.should == 6
-        end
-
         it "should == :G" do
           @row.should == :G
         end
@@ -122,10 +121,6 @@ module Rubaship
       end
 
       describe "#==" do
-        it "should == 3..6" do
-          @row.should == (3..6)
-        end
-
         it "should == :D..:G" do
           @row.should == (:D..:G)
         end

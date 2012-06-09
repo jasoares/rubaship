@@ -24,6 +24,20 @@ module Rubaship
       Col.new("3".."6").should == (3..6)
     end
 
+    it "raises an InvalidColArgument error when passed \"11\"" do
+      lambda { Col.new("11") }.should raise_error(
+        InvalidColArgument,
+        /^Invalid column or range type passed .+$/
+      )
+    end
+
+    it "raises an InvalidColArgument error when passed 0" do
+      lambda { Col.new(0) }.should raise_error(
+        InvalidColArgument,
+        /^Invalid column or range type passed .+$/
+      )
+    end
+
     context "for a sample column created with the non zero based value 5" do
       before(:all) do
         @col = Col.new(5)
