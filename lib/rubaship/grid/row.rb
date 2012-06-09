@@ -19,6 +19,12 @@ module Rubaship
       @idx.is_a?(Range)
     end
 
+    def rangify!(size)
+      return false if self.range?
+      @idx = (@idx..@idx + size - 1)
+      self.to_sym
+    end
+
     def to_idx
       @idx
     end

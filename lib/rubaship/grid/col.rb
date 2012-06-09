@@ -12,6 +12,12 @@ module Rubaship
       @idx.is_a?(Range)
     end
 
+    def rangify!(size)
+      return false if self.range?
+      @idx = (@idx..@idx + size - 1)
+      self.to_i
+    end
+
     def size
       self.range? ? @idx.count : 1
     end

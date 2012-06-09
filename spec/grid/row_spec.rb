@@ -46,6 +46,12 @@ module Rubaship
         end
       end
 
+      describe "#rangify!" do
+        it "returns :G..:J when passed a size of 4" do
+          @row.rangify!(4).should == (:G..:J)
+        end
+      end
+
       describe "#size" do
         it "returns 1" do
           @row.size.should be 1
@@ -93,6 +99,12 @@ module Rubaship
       describe "#range?" do
         it "returns true" do
           @row.range?.should be true
+        end
+      end
+
+      describe "#rangify!" do
+        it "returns false to indicate it is already a Range" do
+          @row.rangify!(4).should be false
         end
       end
 

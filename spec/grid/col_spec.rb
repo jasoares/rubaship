@@ -39,13 +39,19 @@ module Rubaship
     end
 
     context "for a sample column created with the non zero based value 5" do
-      before(:all) do
+      before(:each) do
         @col = Col.new(5)
       end
 
       describe "#range?" do
         it "returns false" do
           @col.range?.should be false
+        end
+      end
+
+      describe "#rangify!" do
+        it "returns 5..8 when passed a size of 4" do
+          @col.rangify!(4).should == (5..8)
         end
       end
 
@@ -89,13 +95,19 @@ module Rubaship
     end
 
     context "for a sample column which is the range of columns 3..7" do
-      before(:all) do
+      before(:each) do
         @col = Col.new(3..7)
       end
 
       describe "#range?" do
         it "returns true" do
           @col.range?.should be true
+        end
+      end
+
+      describe "#rangify!" do
+        it "returns false to indicate it is already a range" do
+          @col.rangify!(3).should be false
         end
       end
 
