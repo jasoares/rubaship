@@ -2,40 +2,6 @@ require 'spec_helper.rb'
 
 module Rubaship
   describe Grid do
-    describe "::ROWS" do
-      it "returns the array of valid grid rows" do
-        Grid::ROWS.should == %w{ A B C D E F G H I J }
-      end
-    end
-
-    describe "::COLS" do
-      it "returns the array of valid grid cols" do
-        Grid::COLS.should == %w{ 1 2 3 4 5 6 7 8 9 10 }
-      end
-    end
-
-    describe ".col_to_idx" do
-      it "returns the index of the String column passed" do
-        Grid.col_to_idx("3").should be 2
-      end
-
-      it "returns the index of the Fixnum column passed" do
-        Grid.col_to_idx(5).should be 4
-      end
-
-      it "returns the range index that matches the Range passed" do
-        Grid.col_to_idx(3..6).should == (2..5)
-      end
-
-      it "raises an InvalidColArgument when an invalid column is passed" do
-        lambda { Grid.col_to_idx(11) }.should raise_error(InvalidColArgument)
-      end
-
-      it "raises an exception when an invalid column type is passed" do
-        lambda { Grid.col_to_idx(:"2") }.should raise_error(InvalidColArgument)
-      end
-    end
-
     describe ".ori_to_sym" do
       context "when passed a String" do
         it "accepts the full word 'horizontal' or 'vertical'" do
@@ -100,104 +66,48 @@ module Rubaship
       end
     end
 
-    describe ".row_to_idx" do
-      it "accepts a String letter matching it to its grid index" do
-        Grid.row_to_idx("C").should be 2
-      end
-
-      it "accepts a lower case String letter" do
-        Grid.row_to_idx("a").should be 0
-      end
-
-      it "accepts a Symbol letter matching it to its grid index" do
-        Grid.row_to_idx(:D).should be 3
-      end
-
-      it "accepts a String Range and converts it to an array index range" do
-        Grid.row_to_idx("B".."D").should == (1..3)
-      end
-
-      it "accepts a Symbol Range and converts it to an array index range" do
-        Grid.row_to_idx(:C..:E).should == (2..4)
-      end
-
-      it "raises an InvalidRowArgument when passed an invalid identifier" do
-        lambda { Grid.row_to_idx("K") }.should raise_error(InvalidRowArgument)
-      end
-
-      it "raises an InvalidRowArgument when passed any other type" do
-        lambda { Grid.row_to_idx(:A => 3) }.should raise_error(InvalidRowArgument)
-      end
-    end
-
     before(:each) { @grid = Grid.new }
 
     describe "#[]" do
-      context "for an example grid already containing ships" do
+      context "given a sample grid with an aircraft carrier at A1:V" do
         before(:each) do
-          @grid = Grid.new
-          @grid.add!(Ship.create(:D), :C, 2, :H)
-          @grid.add!(Ship.create(:S), :C, 1, :V)
+          @ship = Ship.create(:A)
+          @grid.add!(@ship, :A, 1, :V)
         end
 
-        it "returns a row when passed a symbol letter" do
-          @grid[:C].should == @grid.row(:C)
+        it "returns the sector C4 when passed [:C, 1]" do
+          @grid[:C, 1].should == Sector.new(@ship)
         end
 
-        it "returns a row when passed a string letter" do
-          @grid["C"].should == @grid.row(:C)
+        it "returns the row D when passed [:D]" do
+          @grid[:D].should == @grid.row(:D)
         end
 
-        it "returns a range of rows when passed a Symbol letter range" do
-          @grid[:C..:E].should == @grid.row(2..4)
+        it "returns the column 1 when passed [1]" do
+          @grid[1].should == @grid.col(1)
         end
 
-        it "returns a range of rows when passed a String letter range" do
-          @grid["C".."E"].should == @grid.row(2..4)
+        it "returns the columns 1 to 3 when passed [1..3]" do
+          res = @grid.to_a[0..9].transpose[0..2].transpose
+          @grid[1..3].should == res
         end
 
-        it "returns a column when passed a Fixnum" do
-          @grid[3].should == @grid.col(3)
+        it "returns the rows B to D when passed [:B..:D]" do
+          @grid[:B..:D].should == @grid.row(:B..:D)
         end
 
-        it "returns a single sector when passed a row and column" do
-          @grid[:C, 2].should == Sector.new(Ship.create(:D))
+        it "returns an array of the ship sectors when passed [:A..:E, 1]" do
+          @grid[:A..:E, 1].should == Array.new(5, Sector.new(@ship))
         end
 
-        it "returns a column when passed a String number" do
-          @grid["3"].should == @grid.col(3)
+        it "returns a subgrid of sectors when passed [:A..:E, 1..2]" do
+          res = Array.new(5, [Sector.new(@ship), Sector.new])
+          @grid[:A..:E, 1..2].should == res
         end
 
-        it "returns a range of columns when passed a Fixnum range" do
-          @grid[1..3].should == @grid.col(1..3)
-        end
-
-        it "returns a subrow when passed letter and a fixnum range" do
-          @grid["C", 1..3].should == @grid.row(2)[0..2]
-        end
-
-        it "returns a subcolumn when passed a row range and a column" do
-          @grid[:C..:E, 1].should == @grid.col(1)[2..4]
-        end
-
-        it "returns the same subrow for the same arguments when reversed" do
-          @grid[:C, 1..4].should == @grid[1..4, :C]
-        end
-
-        it "returns the same subcolumn for the same arguments when reversed" do
-          @grid[:C..:E, 1].should == @grid[1, :C..:E]
-        end
-
-        it "returns a subgrid when passed two ranges" do
-          @grid[:C..:E, 1..4].should == @grid.row(:C..:E).transpose[0..3].transpose
-        end
-
-        it "returns a subgrid when passed two ranges 2" do
-          @grid[1..4, :C..:E].should == @grid.row(:C..:E).transpose[0..3].transpose
-        end
-
-        it "returns the same subgrid for the same range arguments when reversed" do
-          @grid[:C..:E, 1..4].should == @grid[1..4, :C..:E]
+        it "returns a subgrid of sectors [[A,  ] [A,  ]] when passed [:D..:E, 1..2]" do
+          res = Array.new(2, [Sector.new(@ship), Sector.new])
+          @grid[:D..:E, 1..2].should == res
         end
       end
     end
@@ -293,16 +203,6 @@ module Rubaship
       end
     end
 
-    describe "#col" do
-      it "returns an array containing the sectors of the given column" do
-        @ship = Ship.create(:D)
-        @grid.add!(@ship, :F, 3, :V)
-        es = Sector.new         # empty_sector
-        ss = Sector.new(@ship)  # ship_sector
-        @grid.col(3).should == [es, es, es, es, es, ss, ss, ss, es, es]
-      end
-    end
-
     describe "#dup" do
       it "returns a Grid object" do
         @grid.dup.should be_a Grid
@@ -345,13 +245,6 @@ module Rubaship
 
       it "returns an enumerator when no block given" do
         @grid.each_row.should be_an Enumerator
-      end
-    end
-
-    describe "#row" do
-      it "alias the Grid#[] method" do
-        @grid.add!(Ship.create(:B), :A, 2, :H)
-        @grid.row(:A).should == @grid[:A]
       end
     end
 

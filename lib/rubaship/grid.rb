@@ -3,9 +3,6 @@ module Rubaship
   class Grid
     include Enumerable
 
-    ROWS = ("A".."J").to_a
-    COLS = ("1".."10").to_a
-
     POSITION_REGEXP = /^(?<anchor>[A-Z0-9]{2,3}):(?<orientation>[a-z]{1,10})$/i
     ANCHOR_REGEXP = /^(?:(?<row>[A-J])(?<col>([1-9])|10)|\g<col>\g<row>)$/i
     ORIENT_REGEXP = /^(?<ori>
@@ -30,21 +27,18 @@ module Rubaship
     end
 
     def [](idx1, idx2=nil)
-      row = self.row(idx1) if idx1.is_a? Symbol or
-                              idx1.is_a?(String) && ROWS.include?(idx1) or
-                              idx1.is_a?(Range) && ROWS.include?(idx1.min.to_s)
-      col = self.col(idx1) if idx1.is_a? Fixnum or
-                              idx1.is_a?(String) && COLS.include?(idx1) or
-                              idx1.is_a?(Range) && COLS.include?(idx1.min.to_s)
-      grid = row ? row : col
-      return grid unless idx2
-      idx2 = row ? Grid.col_to_idx(idx2) : Grid.row_to_idx(idx2)
-      if idx1.is_a? Range
-        grid = grid.transpose[idx2]
-        row && idx2.is_a?(Range) ? grid.transpose : grid
+      if idx2.nil?
+        row = Row.is_valid?(idx1) ? Row.new(idx1) : Row.new(:A..:J)
+        col = Col.is_valid?(idx1) ? Col.new(idx1) : Col.new(1..10)
       else
-        grid[idx2]
+        row = Row.new(idx1); col = Col.new(idx2)
       end
+      subgrid = @grid[row.to_idx]
+      if row.range?
+        subgrid = subgrid.transpose[col.to_idx]
+        return col.range? ? subgrid.transpose : subgrid
+      end
+      subgrid[col.to_idx]
     end
 
     def add(ship, row, col, ori)
@@ -52,19 +46,20 @@ module Rubaship
     end
 
     def add!(ship, row, col, ori=nil)
-      row = Grid.row_to_idx(row)
-      col = Grid.col_to_idx(col)
+      row = Row.new(row)
+      col = Col.new(col)
       if ori
         ori = Grid.ori_to_sym(ori)
-        row, col = Grid.rangify_pos(ship, row, col, ori)
+        col.rangify!(ship.size) if ori == :H
+        row.rangify!(ship.size) if ori == :V
       end
-      raise InvalidPositionError.new unless Grid.position_valid?(ship, row, col)
+      raise InvalidPositionError.new unless Grid.position_valid?(ship, row.to_idx, col.to_idx)
 
       insert_ship = lambda { |sector| sector.ship = ship }
-      if col.is_a? Range
-        grid = @grid[row][col]
-      elsif row.is_a? Range
-        grid = @grid.transpose[col][row]
+      if col.range?
+        grid = @grid[row.to_idx][col.to_idx]
+      elsif row.range?
+        grid = @grid.transpose[col.to_idx][row.to_idx]
       end
       if v = grid.inject(nil) { |r, sector| r ||= sector.ship }
         raise OverlapShipError.new(v)
@@ -73,11 +68,11 @@ module Rubaship
     end
 
     def col(col)
-      @grid.transpose[Grid.col_to_idx(col)]
+      @grid.transpose[Col.new(col).to_idx]
     end
 
     def row(row)
-      @grid[Grid.row_to_idx(row)]
+      @grid[Row.new(row).to_idx]
     end
 
     def each
@@ -120,7 +115,7 @@ module Rubaship
 
     def to_hash
       @grid.each_with_index.inject({}) do |row_hash, (row, i)|
-        row_hash[ROWS[i].to_sym] = row.collect { |sector| sector.to_hash }
+        row_hash[Row::ROWS[i].to_sym] = row.collect { |sector| sector.to_hash }
         row_hash
       end
     end
@@ -138,7 +133,7 @@ module Rubaship
       end
 
       str = to_row.([empty] << (1..10).to_a)
-      ROWS.zip(self.rows).inject(str) do |s, row|
+      Row::ROWS.zip(self.rows).inject(str) do |s, row|
         s << to_row.(row)
       end
     end
@@ -160,30 +155,6 @@ module Rubaship
       range.max > 9 ? false : true
     end
 
-    def self.row_to_idx(row)
-      return case row
-        when Fixnum then row
-        when String then row_to_idx(ROWS.index(row.upcase))
-        when Symbol then row_to_idx(row.to_s)
-        when Range
-          return row if row.min.is_a? Fixnum
-          row_to_idx(row.min) .. row_to_idx(row.max)
-        else raise InvalidRowArgument.new(row)
-      end
-    end
-
-    def self.col_to_idx(col)
-      return case col
-        when Fixnum
-          raise InvalidColArgument.new(col) unless (1..10).include? col
-          (1..10).to_a.index(col)
-        when String then col_to_idx(col.ord - '0'.ord)
-        when Range
-          Range.new(col_to_idx(col.min), col_to_idx(col.max))
-        else raise InvalidColArgument.new(col)
-      end
-    end
-
     def self.ori_to_sym(ori)
       return case ori
         when String
@@ -201,17 +172,6 @@ module Rubaship
         row.upcase.to_sym,
         col.ord - '0'.ord,
         ori[0].upcase.to_sym,
-      )
-    end
-
-    def self.rangify_pos(ship, row, col, ori)
-      if ori == :H
-        col = (col..col + ship.size - 1) unless col.is_a? Range
-      elsif ori == :V
-        row = (row..row + ship.size - 1) unless row.is_a? Range
-      end
-      Array.[](
-        row, col
       )
     end
   end
