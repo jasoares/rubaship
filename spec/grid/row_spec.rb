@@ -86,6 +86,20 @@ module Rubaship
         end
       end
 
+      describe "#valid?" do
+        it "returns true when passed a Battleship" do
+          @row.valid?(Ship.create(:B)).should be true
+        end
+
+        it "returns false when passed an Aircraft Carrier" do
+          @row.valid?(Ship.create(:A)).should be false
+        end
+
+        it "returns false when passed 5" do
+          @row.valid?(5).should be false
+        end
+      end
+
       describe "#==" do
         it "should == :G" do
           @row.should == :G

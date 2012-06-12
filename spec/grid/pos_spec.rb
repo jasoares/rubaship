@@ -14,9 +14,9 @@ module Rubaship
       Pos.new(:D, 3, :V).should == [:D, 3, :V]
     end
 
-    context "for a sample position of :B, 4, :H" do
+    context "for a sample position of :B, 8, :H" do
       before(:each) do
-        @pos = Pos.new(:B, 4, :H)
+        @pos = Pos.new(:B, 8, :H)
       end
 
       describe "#row" do
@@ -26,8 +26,8 @@ module Rubaship
       end
 
       describe "#col" do
-        it "returns 4" do
-          @pos.col.should == Col.new(4)
+        it "returns 8" do
+          @pos.col.should == Col.new(8)
         end
       end
 
@@ -38,14 +38,18 @@ module Rubaship
       end
 
       describe "#rangify!" do
-        it "returns the rangified column range 4..8 when passed 5" do
-          @pos.rangify!(5).should == (4..8)
+        it "returns the rangified column range 8..10 when passed 3" do
+          @pos.rangify!(3).should == (8..10)
         end
 
-        it "changes the column from 4 to 4..6 when passed 3" do
+        it "returns the rangified column range 8..10 when passed a destroyer" do
+          @pos.rangify!(Ship.create(:D)).should == (8..10)
+        end
+
+        it "changes the column from 8 to 8..9 when passed 2" do
           lambda {
-            @pos.rangify!(3)
-          }.should change(@pos, :to_a).from([:B, 4, :H]).to([:B, 4..6, :H])
+            @pos.rangify!(2)
+          }.should change(@pos, :to_a).from([:B, 8, :H]).to([:B, 8..9, :H])
         end
 
         it "changes the column range? status from false to true" do
@@ -56,32 +60,32 @@ module Rubaship
       end
 
       describe "#==" do
-        it "should == [:B, 4, :H]" do
-          @pos.should == [:B, 4, :H]
+        it "should == [:B, 8, :H]" do
+          @pos.should == [:B, 8, :H]
         end
 
-        it "should == \"B4:H\"" do
-          @pos.should == "B4:H"
+        it "should == \"B8:H\"" do
+          @pos.should == "B8:H"
         end
 
-        it "should == Pos.new(:B, 4, :H)" do
-          @pos.should == Pos.new(:B, 4, :H)
+        it "should == Pos.new(:B, 8, :H)" do
+          @pos.should == Pos.new(:B, 8, :H)
         end
 
-        it "should == [Row.new(:B), Col.new(4), Ori.new(:H)]" do
-          @pos.should == [Row.new(:B), Col.new(4), Ori.new(:H)]
+        it "should == [Row.new(:B), Col.new(8), Ori.new(:H)]" do
+          @pos.should == [Row.new(:B), Col.new(8), Ori.new(:H)]
         end
       end
     end
 
-    context "for a sample position of :F, 7, :V" do
+    context "for a sample position of :G, 7, :V" do
       before(:each) do
-        @pos = Pos.new(:F, 7, :V)
+        @pos = Pos.new(:G, 7, :V)
       end
 
       describe "#row" do
-        it "returns :F" do
-          @pos.row.should == Row.new(:F)
+        it "returns :G" do
+          @pos.row.should == Row.new(:G)
         end
       end
 
@@ -98,14 +102,14 @@ module Rubaship
       end
 
       describe "#rangify!" do
-        it "returns the rangified row range :F..:J when passed 5" do
-          @pos.rangify!(5).should == (:F..:J)
+        it "returns the rangified row range :G..:J when passed 4" do
+          @pos.rangify!(4).should == (:G..:J)
         end
 
-        it "changes the row from :F to :F..:I when passed 4" do
+        it "changes the row from :G to :G..:I when passed 3" do
           lambda {
-            @pos.rangify!(4)
-          }.should change(@pos, :to_a).from([:F, 7, :V]).to([:F..:I, 7, :V])
+            @pos.rangify!(3)
+          }.should change(@pos, :to_a).from([:G, 7, :V]).to([:G..:I, 7, :V])
         end
 
         it "changes the row range? status from false to true" do
@@ -115,21 +119,31 @@ module Rubaship
         end
       end
 
+      describe "#valid?" do
+        it "returns true when passed a Battleship" do
+          @pos.valid?(Ship.create(:B)).should be true
+        end
+
+        it "returns false when passed an Aircraft Carrier" do
+          @pos.valid?(Ship.create(:A)).should be false
+        end
+      end
+
       describe "#==" do
-        it "should == [:F, 7, :V]" do
-          @pos.should == [:F, 7, :V]
+        it "should == [:G, 7, :V]" do
+          @pos.should == [:G, 7, :V]
         end
 
-        it "should == \"F7:V\"" do
-          @pos.should == "F7:V"
+        it "should == \"G7:V\"" do
+          @pos.should == "G7:V"
         end
 
-        it "should == Pos.new(:F, 7, :V)" do
-          @pos.should == Pos.new(:F, 7, :V)
+        it "should == Pos.new(:G, 7, :V)" do
+          @pos.should == Pos.new(:G, 7, :V)
         end
 
-        it "should == [Row.new(:F), Col.new(7), Ori.new(:V)]" do
-          @pos.should == [Row.new(:F), Col.new(7), Ori.new(:V)]
+        it "should == [Row.new(:G), Col.new(7), Ori.new(:V)]" do
+          @pos.should == [Row.new(:G), Col.new(7), Ori.new(:V)]
         end
       end
     end

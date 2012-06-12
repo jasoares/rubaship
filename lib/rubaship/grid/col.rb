@@ -12,9 +12,10 @@ module Rubaship
       @idx.is_a?(Range)
     end
 
-    def rangify!(size)
-      return false if self.range?
-      @idx = (@idx..@idx + size - 1)
+    def rangify!(s)
+      s = s.size if s.respond_to? :length
+      return false if self.range? or !Col.is_valid?(@idx + s)
+      @idx = (@idx..@idx + s - 1)
       self.to_i
     end
 
@@ -33,6 +34,12 @@ module Rubaship
     def to_s
       int = self.to_i
       self.range? ? int.min.to_s..int.max.to_s : int.to_s
+    end
+
+    def valid?(s)
+      s = s.length if s.respond_to? :length
+      min = self.range? ? self.to_i.min : self.to_i
+      Col.is_valid?(min + s - 1)
     end
 
     def ==(o)

@@ -17,7 +17,6 @@ module Rubaship
     end
 
     def rangify!(s)
-      s = s.size if s.is_a? Ship
       if self.ori.vert? && !self.row.range?
         self.row.rangify!(s)
       elsif self.ori.horiz? && !self.col.range?
@@ -27,6 +26,10 @@ module Rubaship
 
     def to_a
       [self.row.to_sym, self.col.to_i, self.ori.to_sym]
+    end
+
+    def valid?(s)
+      self.ori.vert? ? self.row.valid?(s) : self.col.valid?(s)
     end
 
     def ==(o)

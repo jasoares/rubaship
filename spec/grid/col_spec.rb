@@ -38,9 +38,9 @@ module Rubaship
       )
     end
 
-    context "for a sample column created with the non zero based value 5" do
+    context "for a sample column created with the non zero based value 7" do
       before(:each) do
-        @col = Col.new(5)
+        @col = Col.new(7)
       end
 
       describe "#range?" do
@@ -50,8 +50,8 @@ module Rubaship
       end
 
       describe "#rangify!" do
-        it "returns 5..8 when passed a size of 4" do
-          @col.rangify!(4).should == (5..8)
+        it "returns 7..10 when passed a size of 4" do
+          @col.rangify!(4).should == (7..10)
         end
       end
 
@@ -63,33 +63,43 @@ module Rubaship
 
       describe "#to_idx" do
         it "returns 4" do
-          @col.to_idx.should be 4
+          @col.to_idx.should be 6
         end
       end
 
       describe "#to_s" do
         it "returns \"5\"" do
-          @col.to_s.should == "5"
+          @col.to_s.should == "7"
         end
       end
 
       describe "#to_i" do
         it "returns 5" do
-          @col.to_i.should be 5
+          @col.to_i.should be 7
+        end
+      end
+
+      describe "#valid?" do
+        it "returns true when passed a Battleship" do
+          @col.valid?(Ship.create(:B)).should be true
+        end
+
+        it "returns false when passed an Aircraft Carrier" do
+          @col.valid?(Ship.create(:A)).should be false
         end
       end
 
       describe "#==" do
-        it "should == 5" do
-          @col.should == 5
+        it "should == 7" do
+          @col.should == 7
         end
 
-        it "should == \"5\"" do
-          @col.should == "5"
+        it "should == \"7\"" do
+          @col.should == "7"
         end
 
-        it "should == Col.new(5)" do
-          @col.should == Col.new(5)
+        it "should == Col.new(7)" do
+          @col.should == Col.new(7)
         end
       end
     end

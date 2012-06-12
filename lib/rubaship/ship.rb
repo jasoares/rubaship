@@ -22,6 +22,8 @@ module Rubaship
       @status == o.status
     end
 
+    alias :length :size
+
     def placed?
       @placed
     end

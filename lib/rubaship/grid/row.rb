@@ -9,7 +9,7 @@ module Rubaship
     end
 
     def size
-      @idx.is_a?(Range) ? @idx.count : 1
+      self.range? ? @idx.count : 1
     end
 
     alias :count :size
@@ -19,9 +19,10 @@ module Rubaship
       @idx.is_a?(Range)
     end
 
-    def rangify!(size)
+    def rangify!(s)
+      s = s.length if s.respond_to? :length
       return false if self.range?
-      @idx = (@idx..@idx + size - 1)
+      @idx = (@idx..@idx + s - 1)
       self.to_sym
     end
 
@@ -31,13 +32,20 @@ module Rubaship
 
     def to_sym
       str = self.to_s
-      @idx.is_a?(Range) ? str.min.to_sym..str.max.to_sym : str.to_sym
+      self.range? ? str.min.to_sym..str.max.to_sym : str.to_sym
     end
 
     def to_s
       v_to_s = Proc.new { |v| ('A'.ord + v).chr }
-      @idx.is_a?(Range) ? v_to_s[@idx.min]..v_to_s[@idx.max] : v_to_s[@idx]
+      self.range? ? v_to_s[@idx.min]..v_to_s[@idx.max] : v_to_s[@idx]
     end
+
+    def valid?(s)
+      s = s.length if s.respond_to? :length
+      min = self.range? ? self.to_s.min : self.to_s
+      Row.is_valid?((min.ord + s - 1).chr)
+    end
+
 
     def ==(o)
       self.to_idx == Row.to_idx(o)
