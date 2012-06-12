@@ -54,6 +54,12 @@ module Rubaship
         it "returns :G..:J when passed a size of 4" do
           @row.rangify!(4).should == (:G..:J)
         end
+
+        it "changes the return value of range? from false to true" do
+          lambda {
+            @row.rangify!(3)
+          }.should change(@row, :range?).from(false).to(true)
+        end
       end
 
       describe "#size" do

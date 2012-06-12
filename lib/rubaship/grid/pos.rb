@@ -16,8 +16,17 @@ module Rubaship
       @row, @col, @ori = Row.new(row), Col.new(col), Ori.new(ori)
     end
 
+    def rangify!(s)
+      s = s.size if s.is_a? Ship
+      if self.ori.vert? && !self.row.range?
+        self.row.rangify!(s)
+      elsif self.ori.horiz? && !self.col.range?
+        self.col.rangify!(s)
+      end
+    end
+
     def to_a
-      [@row.to_sym, @col.to_i, @ori.to_sym]
+      [self.row.to_sym, self.col.to_i, self.ori.to_sym]
     end
 
     def ==(o)
@@ -46,9 +55,7 @@ module Rubaship
       if pos_row.is_a?(String) and !col and !ori
         pos_row, col, ori = self.parse pos_row
       elsif self.is_valid?(pos_row, col, ori)
-        [pos_row, col, ori]
-      else
-        nil
+        self.format(pos_row, col, ori)
       end
     end
   end
