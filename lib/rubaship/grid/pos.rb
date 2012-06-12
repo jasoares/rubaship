@@ -27,6 +27,10 @@ module Rubaship
       Pos.format(self.row, self.col, self.ori)
     end
 
+    def to_s
+      "#{self.row}#{self.col}:#{self.ori}"
+    end
+
     def valid?(s)
       self.ori.vert? ? self.row.valid?(s) : self.col.valid?(s)
     end

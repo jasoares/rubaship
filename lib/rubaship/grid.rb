@@ -46,20 +46,15 @@ module Rubaship
     end
 
     def add!(ship, row, col, ori=nil)
-      row = Row.new(row)
-      col = Col.new(col)
-      if ori
-        ori = Grid.ori_to_sym(ori)
-        col.rangify!(ship.size) if ori == :H
-        row.rangify!(ship.size) if ori == :V
-      end
-      raise InvalidPositionError.new unless Grid.position_valid?(ship, row.to_idx, col.to_idx)
+      pos = Pos.new(row, col, ori)
+      raise InvalidPositionForShip.new(ship, pos) unless pos.valid?(ship)
+      pos.rangify!(ship)
 
       insert_ship = lambda { |sector| sector.ship = ship }
-      if col.range?
-        grid = @grid[row.to_idx][col.to_idx]
-      elsif row.range?
-        grid = @grid.transpose[col.to_idx][row.to_idx]
+      if pos.col.range?
+        grid = @grid[pos.row.to_idx][pos.col.to_idx]
+      elsif pos.row.range?
+        grid = @grid.transpose[pos.col.to_idx][pos.row.to_idx]
       end
       if v = grid.inject(nil) { |r, sector| r ||= sector.ship }
         raise OverlapShipError.new(v)

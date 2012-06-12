@@ -30,15 +30,15 @@ module Rubaship
     end
   end
 
-  class AlreadyPlacedShipError < StandardError
-    def initialize(ship)
-      super("Cannot reposition the already placed ship #{ship.name}")
+  class InvalidPositionForShip < ArgumentError
+    def initialize(ship, pos)
+      super("The #{ship.name} does not fit inside the grid if placed in #{pos.to_s}.")
     end
   end
 
-  class InvalidPositionError < StandardError
-    def initialize
-      super("Ship does not fit inside the grid if placed in that position.")
+  class AlreadyPlacedShipError < StandardError
+    def initialize(ship)
+      super("Cannot reposition the already placed ship #{ship.name}")
     end
   end
 
