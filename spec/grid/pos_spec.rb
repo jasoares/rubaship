@@ -14,6 +14,31 @@ module Rubaship
       Pos.new(:D, 3, :V).should == [:D, 3, :V]
     end
 
+    it "accepts a range row :B..:E and a column 3 without an orientation" do
+      Pos.new(:B..:E, 3).should == [:B..:E, 3, :V]
+    end
+
+    it "forces the orientation to :H when passed a column range" do
+      lambda { Pos.new(:B, 3..7, :V) }.should raise_error(
+        InvalidPositionArgument,
+        "Either row or col must be a Range matching the orientation argument if any."
+      )
+    end
+
+    it "raises an InvalidPositionArgument when passed :C..:E, 4..7" do
+      lambda { Pos.new(:C..:E, 4..7) }.should raise_error(
+        InvalidPositionArgument,
+        "Either row or col must be a Range matching the orientation argument if any."
+      )
+    end
+
+    it "raises an InvalidPositionArgument when passed :C, 3" do
+      lambda { Pos.new(:C, 3) }.should raise_error(
+        InvalidPositionArgument,
+        "Either row or col must be a Range matching the orientation argument if any."
+      )
+    end
+
     context "for a sample position of :B, 8, :H" do
       before(:each) do
         @pos = Pos.new(:B, 8, :H)
@@ -148,6 +173,40 @@ module Rubaship
       end
     end
 
+    describe ".is_valid?" do
+      it "returns true when passed :C, 4, :H" do
+        Pos.is_valid?(:C, 4, :V).should be true
+      end
+
+      it "returns true when passed :D, 10, :V" do
+        Pos.is_valid?(:D, 10, :V).should be true
+      end
+
+      it "returns true when passed :D..:F, 6, :V" do
+        Pos.is_valid?(:D..:F, 6, :V).should be true
+      end
+
+      it "returns true when passed :D, 4..7, :H" do
+        Pos.is_valid?(:D, 4..7, :H).should be true
+      end
+
+      it "returns true when passed :D, 4..7 with no orientation" do
+        Pos.is_valid?(:D, 4..7).should be true
+      end
+
+      it "returns false when passed :K, 3, :H" do
+        Pos.is_valid?(:K, 3, :H).should be false
+      end
+
+      it "returns false when passed :A..:D, 5, :H" do
+        Pos.is_valid?(:A..:D, 5, :H).should be false
+      end
+
+      it "returns false when passed :C, 5..8, :V" do
+        Pos.is_valid?(:C, 5..8, :V).should be false
+      end
+    end
+
     describe ".parse" do
       it "returns [:A, 3, :H] when passed \"A3:H\"" do
         Pos.parse("A3:H").should == [:A, 3, :H]
@@ -165,22 +224,22 @@ module Rubaship
         Pos.parse("B11:H").should be_nil
       end
 
-      it "returns false when passed \"K7:V\"" do
+      it "returns nil when passed \"K7:V\"" do
         Pos.parse("K7:V").should be_nil
       end
     end
 
-    describe ".is_valid?" do
-      it "returns true when passed :C, 4, :H" do
-        Pos.is_valid?(:C, 4, :V).should be true
+    describe ".to_a" do
+      it "returns [:A, 3, :H] when passed :A, 3, :H" do
+        Pos.to_a(:A, 3, :H).should == [:A, 3, :H]
       end
 
-      it "returns true when passed :D, 10, :V" do
-        Pos.is_valid?(:D, 10, :V).should be true
+      it "returns [:A..:D, 4, :V] when passed :A..:D, 4, :V" do
+        Pos.to_a(:A..:D, 4, :V).should == [:A..:D, 4, :V]
       end
 
-      it "returns false when passed :K, 3, :H" do
-        Pos.is_valid?(:K, 3, :H).should be false
+      it "returns [:A..:D, 4, :V] when passed :A..:D, 4" do
+        Pos.to_a(:A..:D, 4).should == [:A..:D, 4, :V]
       end
     end
   end

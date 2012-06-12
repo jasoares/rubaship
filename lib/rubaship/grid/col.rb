@@ -60,6 +60,7 @@ module Rubaship
     end
 
     def self.is_valid?(v)
+      v = v.to_i if v.respond_to? :to_i
       return self.is_valid?(v.min) && self.is_valid?(v.max) if v.is_a? Range
       idx = self.to_idx(v)
       idx ? (idx >= 0 and idx < COLS.size) : false

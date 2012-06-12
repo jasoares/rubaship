@@ -11,9 +11,8 @@ module Rubaship
       v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/ix
 
     def initialize(pos_row, col=nil, ori=nil)
-      raise InvalidPositionError unless Pos.is_valid?(pos_row, col, ori)
-      row, col, ori = Pos.to_a(pos_row, col, ori)
-      @row, @col, @ori = Row.new(row), Col.new(col), Ori.new(ori)
+      pos_row, col, ori = Pos.to_a(pos_row, col, ori)
+      @row, @col, @ori = Row.new(pos_row), Col.new(col), Ori.new(ori)
     end
 
     def rangify!(s)
@@ -25,7 +24,7 @@ module Rubaship
     end
 
     def to_a
-      [self.row.to_sym, self.col.to_i, self.ori.to_sym]
+      Pos.format(self.row, self.col, self.ori)
     end
 
     def valid?(s)
@@ -37,10 +36,12 @@ module Rubaship
     end
 
     def self.is_valid?(pos_row, col=nil, ori=nil)
-      if pos_row.is_a?(String) and !col and !ori
-        pos_row, col, ori = self.parse pos_row
+      begin
+        row, col, ori = Pos.to_a(pos_row, col, ori)
+        Row.is_valid? row and Col.is_valid? col and Ori.is_valid? ori
+      rescue Exception
+        false
       end
-      Row.is_valid?(pos_row) && Col.is_valid?(col) && Ori.is_valid?(ori)
     end
 
     def self.format(row, col, ori)
@@ -51,15 +52,27 @@ module Rubaship
       return nil unless m = POSITION_REGEXP.match(p)
       anchor = ANCHOR_REGEXP.match(m[:anchor])
       orient = ORIENT_REGEXP.match(m[:orient])
-      self.format(anchor[:row], anchor[:col], orient[:ori]) if anchor and orient
+      if anchor and orient
+        self.format(anchor[:row], anchor[:col], orient[:ori])
+      else
+        nil
+      end
     end
 
     def self.to_a(pos_row, col=nil, ori=nil)
       if pos_row.is_a?(String) and !col and !ori
-        pos_row, col, ori = self.parse pos_row
-      elsif self.is_valid?(pos_row, col, ori)
-        self.format(pos_row, col, ori)
+        pos_row, col, ori = Pos.parse(pos_row)
+      else
+        pos_row = Row.new(pos_row); col = Col.new(col)
+        raise InvalidPositionArgument if
+          !pos_row.range? && !col.range? && !ori or
+           pos_row.range? && col.range? or
+           pos_row.range? && ori == :H or
+               col.range? && ori == :V
+        ori = :V if pos_row.range?
+        ori = :H if col.range?
       end
+      self.format(pos_row, col, ori)
     end
   end
 end
