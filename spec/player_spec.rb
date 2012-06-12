@@ -33,7 +33,7 @@ module Rubaship
         it "raises InvalidShipPosition if neither row or col are Ranges" do
           lambda { @player.place(:B, :D, 3) }.should raise_error(
             InvalidPositionArgument,
-            "Either row or col must be a Range when no ori is given"
+            "Either row or col must be a Range matching the orientation argument if any."
           )
         end
 

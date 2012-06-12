@@ -26,7 +26,7 @@ module Rubaship
 
   class InvalidPositionArgument < ArgumentError
     def initialize
-      super("Either row or col must be a Range when no ori is given")
+      super("Either row or col must be a Range matching the orientation argument if any.")
     end
   end
 
