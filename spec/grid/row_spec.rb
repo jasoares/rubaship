@@ -1,12 +1,6 @@
 require 'spec_helper.rb'
 
 module Rubaship
-  describe Row::ROWS do
-    it "keeps a Symbol array of valid rows" do
-      Row::ROWS.should == ("A".."J").to_a
-    end
-  end
-
   describe Row do
     it "accepts a Symbol" do
       Row.new(:D).should == :D
@@ -200,6 +194,12 @@ module Rubaship
         it "should == Row.new(:D..:G)" do
           @row.should == Row.new(:D..:G)
         end
+      end
+    end
+
+    describe "::ROWS" do
+      it "keeps a Symbol array of valid rows" do
+        Row::ROWS.should == ("A".."J").to_a
       end
     end
 
