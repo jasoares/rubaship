@@ -28,18 +28,20 @@ module Rubaship
     end
 
     def to_idx
-      self.range? ? @idx.min..@idx.max : @idx
+      @idx
     end
 
     def to_s
-      int = self.to_i
-      self.range? ? int.min.to_s..int.max.to_s : int.to_s
+      self.to_i.to_s
+    end
+
+    def to_str
+      self.range? ? self.to_i.min.to_s..self.to_i.max.to_s : self.to_i.to_s
     end
 
     def valid?(s)
       s = s.length if s.respond_to? :length
-      min = self.range? ? self.to_i.min : self.to_i
-      Col.is_valid?(min + s - 1)
+      self.range? ? self.size >= s : Col.is_valid?(self.to_i + s - 1)
     end
 
     def ==(o)
@@ -50,7 +52,7 @@ module Rubaship
       case v
         when Fixnum then v - 1
         when String then self.to_idx(v.to_i)
-        when Range  then self.to_idx(v.min)..to_idx(v.max)
+        when Range  then self.to_idx(v.min)..self.to_idx(v.max)
         when Col    then v.to_idx
       end
     end
