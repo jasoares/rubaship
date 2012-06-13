@@ -191,6 +191,80 @@ module Rubaship
       end
     end
 
+    context "for a sample position with a range of rows :D..:G and 3" do
+      before(:each) do
+        @pos = Pos.new(:D..:G, 3)
+      end
+
+      describe "#row" do
+        it "returns :D..:G" do
+          @pos.row.should == Row.new(:D..:G)
+        end
+      end
+
+      describe "#col" do
+        it "returns 3" do
+          @pos.col.should == Col.new(3)
+        end
+      end
+
+      describe "#ori" do
+        it "returns :V" do
+          @pos.ori.should == Ori.new(:V)
+        end
+      end
+
+      describe "#range?" do
+        it "returns true" do
+          @pos.range?.should be true
+        end
+      end
+
+      describe "#rangify!" do
+        it "returns the position unchanged since it is already a range" do
+          lambda { @pos.rangify!(4) }.should_not change(@pos, :to_a)
+        end
+      end
+
+      describe "#to_s" do
+        it "returns D..G3:V" do
+          @pos.to_s.should == "D..G3:V"
+        end
+      end
+
+      describe "#valid?" do
+        it "returns true when passed a Battleship" do
+          @pos.valid?(Ship.create(:B)).should be true
+        end
+
+        it "returns false when passed an Aircraft Carrier" do
+          @pos.valid?(Ship.create(:A)).should be false
+        end
+      end
+
+      describe "#==" do
+        it "should == [:D..:G, 3, :V]" do
+          @pos.should == [:D..:G, 3, :V]
+        end
+
+        it "should not == \"D3:V\"" do
+          @pos.should_not == "D3:V"
+        end
+
+        it "should == Pos.new(:D..:G, 3, :V)" do
+          @pos.should == Pos.new(:D..:G, 3, :V)
+        end
+
+        it "should == Pos.new(:D..:G, 3)" do
+          @pos.should == Pos.new(:D..:G, 3)
+        end
+
+        it "should == [Row.new(:D..:G), Col.new(3), Ori.new(:V)]" do
+          @pos.should == [Row.new(:D..:G), Col.new(3), Ori.new(:V)]
+        end
+      end
+    end
+
     describe ".is_valid?" do
       it "returns true when passed :C, 4, :H" do
         Pos.is_valid?(:C, 4, :V).should be true
