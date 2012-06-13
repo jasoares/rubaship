@@ -62,19 +62,19 @@ module Rubaship
       end
 
       describe "#to_idx" do
-        it "returns 4" do
+        it "returns 6" do
           @col.to_idx.should be 6
         end
       end
 
       describe "#to_s" do
-        it "returns \"5\"" do
+        it "returns \"7\"" do
           @col.to_s.should == "7"
         end
       end
 
       describe "#to_i" do
-        it "returns 5" do
+        it "returns 7" do
           @col.to_i.should be 7
         end
       end
@@ -134,27 +134,27 @@ module Rubaship
       end
 
       describe "#to_s" do
-        it "returns \"3\"..\"6\"" do
+        it "returns \"3\"..\"7\"" do
           @col.to_s.should == ("3".."7")
         end
       end
 
       describe "#to_i" do
-        it "returns 3..6" do
+        it "returns 3..7" do
           @col.to_i.should == (3..7)
         end
       end
 
       describe "#==" do
-        it "should == 3..6" do
+        it "should == 3..7" do
           @col.should == (3..7)
         end
 
-        it "should == \"3\"..\"6\"" do
+        it "should == \"3\"..\"7\"" do
           @col.should == ("3".."7")
         end
 
-        it "should == Col.new(3..6)" do
+        it "should == Col.new(3..7)" do
           @col.should == Col.new(3..7)
         end
       end
