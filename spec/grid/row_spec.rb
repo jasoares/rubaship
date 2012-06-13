@@ -219,6 +219,10 @@ module Rubaship
       it "returns false for 0" do
         Row.is_valid?(0).should be false
       end
+
+      it "returns false for \"K\"" do
+        Row.is_valid?("K").should be false
+      end
     end
   end
 end
