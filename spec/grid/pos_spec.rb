@@ -341,6 +341,34 @@ module Rubaship
       it "returns [:D, 6, :H] when passed \"D6:H\"" do
         Pos.to_a("D6:H").should == [:D, 6, :H]
       end
+
+      it "raises InvalidPositionArgument when passed a row range and :H" do
+        lambda { Pos.to_a(:D..:G, 6, :H) }.should raise_error(
+          InvalidPositionArgument,
+          "Either row or col must be a Range matching the orientation argument if any."
+        )
+      end
+
+      it "raises InvalidPositionArgument when passed a col range and :V" do
+        lambda { Pos.to_a(:D, 6..9, :V) }.should raise_error(
+          InvalidPositionArgument,
+          "Either row or col must be a Range matching the orientation argument if any."
+        )
+      end
+
+      it "raises InvalidPositionArgument when passed a row range and a col range" do
+        lambda { Pos.to_a(:D..:G, 6..9, :H) }.should raise_error(
+          InvalidPositionArgument,
+          "Either row or col must be a Range matching the orientation argument if any."
+        )
+      end
+
+      it "raises InvalidPositionArgument when passed no range and no orientation" do
+        lambda { Pos.to_a(:D, 6) }.should raise_error(
+          InvalidPositionArgument,
+          "Either row or col must be a Range matching the orientation argument if any."
+        )
+      end
     end
   end
 end
