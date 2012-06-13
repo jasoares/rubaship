@@ -25,6 +25,7 @@ module Rubaship
       elsif self.ori.horiz? && !self.col.range?
         self.col.rangify!(s)
       end
+      self
     end
 
     def to_a

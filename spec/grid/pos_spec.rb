@@ -63,12 +63,12 @@ module Rubaship
       end
 
       describe "#rangify!" do
-        it "returns the rangified column range 8..10 when passed 3" do
-          @pos.rangify!(3).should == (8..10)
+        it "returns the position rangified :B, 8..10, :H, when passed 3" do
+          @pos.rangify!(3).should == [:B, 8..10, :H]
         end
 
-        it "returns the rangified column range 8..10 when passed a destroyer" do
-          @pos.rangify!(Ship.create(:D)).should == (8..10)
+        it "returns the position rangified :B, 8..10, :H, when passed a destroyer" do
+          @pos.rangify!(Ship.create(:D)).should == [:B, 8..10, :H]
         end
 
         it "changes the column from 8 to 8..9 when passed 2" do
@@ -133,8 +133,8 @@ module Rubaship
       end
 
       describe "#rangify!" do
-        it "returns the rangified row range :G..:J when passed 4" do
-          @pos.rangify!(4).should == (:G..:J)
+        it "returns the rangified position :G..:J, 7 when passed 4" do
+          @pos.rangify!(4).should == [:G..:J, 7, :V]
         end
 
         it "changes the row from :G to :G..:I when passed 3" do
