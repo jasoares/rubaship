@@ -203,12 +203,28 @@ module Rubaship
         Col.is_valid?(10).should be true
       end
 
+      it "returns true when passed \"10\"" do
+        Col.is_valid?("10").should be true
+      end
+
+      it "returns true when passed 4..6" do
+        Col.is_valid?(4..6).should be true
+      end
+
+      it "returns true when passed \"4\"..\"6\"" do
+        Col.is_valid?("4".."6").should be true
+      end
+
       it "returns false for 11" do
         Col.is_valid?(11).should be false
       end
 
       it "returns false for 0" do
         Col.is_valid?(0).should be false
+      end
+
+      it "returns false when passed \"11\"" do
+        Col.is_valid?("11").should be false
       end
 
       it "returns false for \"A\"" do
@@ -221,6 +237,14 @@ module Rubaship
 
       it "returns false for :D" do
         Col.is_valid?(:D).should be false
+      end
+
+      it "returns false when passed \"7\"..\"11\"" do
+        Col.is_valid?("7".."11").should be false
+      end
+
+      it "returns false when passed \"7..9\"" do
+        Col.is_valid?("7..9").should be false
       end
     end
   end

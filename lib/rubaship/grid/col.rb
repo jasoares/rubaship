@@ -49,11 +49,15 @@ module Rubaship
     end
 
     def self.to_idx(v)
-      case v
-        when Fixnum then v - 1
-        when String then self.to_idx(v.to_i)
-        when Range  then self.to_idx(v.min)..self.to_idx(v.max)
-        when Col    then v.to_idx
+      begin
+        case v
+          when Fixnum then v - 1
+          when String then self.to_idx(Integer(v))
+          when Range  then self.to_idx(v.min)..self.to_idx(v.max)
+          when Col    then v.to_idx
+        end
+      rescue ArgumentError
+        false
       end
     end
 
@@ -62,7 +66,7 @@ module Rubaship
     end
 
     def self.is_valid?(v)
-      v = v.to_i if v.respond_to? :to_i
+      v = v.to_i if v.is_a? Col
       return self.is_valid?(v.min) && self.is_valid?(v.max) if v.is_a? Range
       idx = self.to_idx(v)
       idx ? (idx >= 0 and idx < COLS.size) : false
