@@ -15,6 +15,10 @@ module Rubaship
       @row, @col, @ori = Row.new(pos_row), Col.new(col), Ori.new(ori)
     end
 
+    def range?
+      row.range? or col.range?
+    end
+
     def rangify!(s)
       if self.ori.vert? && !self.row.range?
         self.row.rangify!(s)

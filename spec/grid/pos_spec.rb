@@ -126,6 +126,12 @@ module Rubaship
         end
       end
 
+      describe "#range?" do
+        it "returns false" do
+          @pos.range?.should be false
+        end
+      end
+
       describe "#rangify!" do
         it "returns the rangified row range :G..:J when passed 4" do
           @pos.rangify!(4).should == (:G..:J)
