@@ -80,8 +80,8 @@ module Rubaship
       end
 
       describe "#to_s" do
-        it "returns \"horizontal\"" do
-          @ori.to_s.should == "horizontal"
+        it "returns \"H\"" do
+          @ori.to_s.should == "H"
         end
       end
 
@@ -133,8 +133,8 @@ module Rubaship
       end
 
       describe "#to_s" do
-        it "returns \"vertical\"" do
-          @ori.to_s.should == "vertical"
+        it "returns \"V\"" do
+          @ori.to_s.should == "V"
         end
       end
 

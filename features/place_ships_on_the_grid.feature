@@ -91,7 +91,7 @@ Feature: place ships on the grid
     Then my aircraft carrier should not be placed
      And I should see the message:
      """
-     The aircraft carrier does not fit inside the grid if placed in G8:horizontal.
+     The aircraft carrier does not fit inside the grid if placed in G8:H.
      """
      And I should have the following grid:
       |   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |

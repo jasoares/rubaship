@@ -19,8 +19,8 @@ module Rubaship
 
     def to_s
       case @ori
-        when :H then Horiz
-        when :V then Vert
+        when :H then Horiz[0].upcase
+        when :V then Vert[0].upcase
       end
     end
 
