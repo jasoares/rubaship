@@ -1,12 +1,6 @@
 require 'spec_helper.rb'
 
 module Rubaship
-  describe Col::COLS do
-    it "keeps a String array of valid columns" do
-      Col::COLS.should == ("1".."10").to_a
-    end
-  end
-
   describe Col do
     it "accepts a column number based Fixnum" do
       Col.new(1).should == 1
@@ -194,7 +188,13 @@ module Rubaship
       end
     end
 
-    describe "#is_valid?" do
+    describe "::COLS" do
+      it "keeps a String array of valid columns" do
+        Col::COLS.should == ("1".."10").to_a
+      end
+    end
+
+    describe ".is_valid?" do
       it "returns true for 1" do
         Col.is_valid?(1).should be true
       end
