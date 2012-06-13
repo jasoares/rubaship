@@ -13,20 +13,16 @@ module Rubaship
     describe "#place" do
       before(:each) { @player = Player.new }
 
-      context "when passed a ship symbol" do
-        it "parses the symbol to a ship object" do
-          @ship = @player.ship(:B)
-          @player.grid.should_receive(:add!).with(@ship, :D, 5, :V)
-          @player.place(:B, :D, 5, :V)
-        end
+      it "parses the symbol to a ship object when passed a ship symbol" do
+        @ship = @player.ship(:B)
+        @player.grid.should_receive(:add!).with(@ship, :D, 5, :V)
+        @player.place(:B, :D, 5, :V)
       end
 
-      context "when passed a string position" do
-        it "parses the string position using Grid#parse_pos" do
-          @pos = Grid.parse_pos("D5:V")
-          @player.grid.should_receive(:add!).with(@player.ship(:B), *@pos)
-          @player.place(:B, *@pos)
-        end
+      it "parses the string to a position using Pos.parse" do
+        @pos = Pos.parse("D5:V")
+        @player.grid.should_receive(:add!).with(@player.ship(:B), *@pos)
+        @player.place(:B, *@pos)
       end
 
       context "when passed a position without orientation" do
@@ -39,13 +35,13 @@ module Rubaship
 
         it "accepts a Range row instead of horizontal" do
           @ship = @player.ship(:B)
-          @player.grid.should_receive(:add!).with(@ship, :D, 5..8, nil)
+          @player.grid.should_receive(:add!).with(@ship, :D, 5..8, :H)
           @player.place(:B, :D, 5..8)
         end
 
         it "accepts a Range col instead of vertical" do
           @ship = @player.ship(:B)
-          @player.grid.should_receive(:add!).with(@ship, :D..:G, 5, nil)
+          @player.grid.should_receive(:add!).with(@ship, :D..:G, 5, :V)
           @player.place(:B, :D..:G, 5)
         end
       end

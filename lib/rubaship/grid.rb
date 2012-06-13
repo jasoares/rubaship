@@ -41,21 +41,17 @@ module Rubaship
       subgrid[col.to_idx]
     end
 
-    def add(ship, row, col, ori)
-      self.dup.add!(ship, row, col, ori)
+    def add(ship, *pos)
+      self.dup.add!(ship, *pos)
     end
 
-    def add!(ship, row, col, ori=nil)
-      pos = Pos.new(row, col, ori)
-      raise InvalidPositionForShip.new(ship, pos) unless pos.valid?(ship)
-      pos.rangify!(ship)
+    def add!(ship, *pos)
+      p = pos.is_a?(Pos) ? pos : Pos.new(*pos)
+      raise InvalidPositionForShip.new(ship, p) unless p.valid?(ship)
+      p.rangify!(ship)
 
       insert_ship = lambda { |sector| sector.ship = ship }
-      if pos.col.range?
-        grid = @grid[pos.row.to_idx][pos.col.to_idx]
-      elsif pos.row.range?
-        grid = @grid.transpose[pos.col.to_idx][pos.row.to_idx]
-      end
+      grid = self[p.row, p.col]
       if v = grid.inject(nil) { |r, sector| r ||= sector.ship }
         raise OverlapShipError.new(v)
       end
@@ -131,43 +127,6 @@ module Rubaship
       Row::ROWS.zip(self.rows).inject(str) do |s, row|
         s << to_row.(row)
       end
-    end
-
-    def self.parse_pos(p)
-      return nil unless m = POSITION_REGEXP.match(p)
-
-      anchor, orient = m.captures
-      anchor = ANCHOR_REGEXP.match(anchor)
-      orient = ORIENT_REGEXP.match(orient)
-
-      unless anchor.nil? or orient.nil?
-        format_pos(anchor[1], anchor[2], orient[1])
-      end
-    end
-
-    def self.position_valid?(ship, row, col)
-      range = [row, col].find { |v| v.is_a? Range }
-      range.max > 9 ? false : true
-    end
-
-    def self.ori_to_sym(ori)
-      return case ori
-        when String
-          if "horizontal" =~ /#{ori}[orizontal]{,#{10 - ori.length}}/i then :H
-          elsif "vertical" =~ /#{ori}[ertical]{,#{8 - ori.length}}/i then :V
-          else raise InvalidOriArgument.new(ori)
-          end
-        when Symbol then ori_to_sym(ori.to_s)
-        else raise InvalidOriArgument.new(ori)
-      end
-    end
-
-    def self.format_pos(row, col, ori)
-      Array.[](
-        row.upcase.to_sym,
-        col.ord - '0'.ord,
-        ori[0].upcase.to_sym,
-      )
     end
   end
 end
