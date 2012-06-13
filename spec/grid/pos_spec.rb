@@ -247,6 +247,10 @@ module Rubaship
       it "returns [:A..:D, 4, :V] when passed :A..:D, 4" do
         Pos.to_a(:A..:D, 4).should == [:A..:D, 4, :V]
       end
+
+      it "returns [:C..:I, 3, :V] when passed Pos.new(:C..:I, 3, :V)" do
+        Pos.to_a(Pos.new(:C..:I, 3, :V)).should == [:C..:I, 3, :V]
+      end
     end
   end
 end

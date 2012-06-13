@@ -69,6 +69,7 @@ module Rubaship
     end
 
     def self.to_a(pos_row, col=nil, ori=nil)
+      return pos_row.to_a if pos_row.is_a?(Pos)
       if pos_row.is_a?(String) and !col and !ori
         pos_row, col, ori = Pos.parse(pos_row)
       else
