@@ -30,21 +30,22 @@ module Rubaship
     end
 
     def to_sym
-      str = self.to_s
-      self.range? ? str.min.to_sym..str.max.to_sym : str.to_sym
+      self.range? ? self.to_str.min.to_sym..self.to_str.max.to_sym : self.to_str.to_sym
     end
 
     def to_s
+      self.to_str.to_s
+    end
+
+    def to_str
       v_to_s = Proc.new { |v| ('A'.ord + v).chr }
       self.range? ? v_to_s[@idx.min]..v_to_s[@idx.max] : v_to_s[@idx]
     end
 
     def valid?(s)
       s = s.length if s.respond_to? :length
-      min = self.range? ? self.to_s.min : self.to_s
-      Row.is_valid?((min.ord + s - 1).chr)
+      self.range? ? self.size >= s : Row.is_valid?( (self.to_str.ord + s - 1).chr )
     end
-
 
     def ==(o)
       self.to_idx == Row.to_idx(o)
