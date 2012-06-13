@@ -9,10 +9,9 @@ module Rubaship
     end
 
     def size
-      self.range? ? @idx.count : 1
+      self.range? ? self.to_idx.count : 1
     end
 
-    alias :count :size
     alias :length :size
 
     def range?

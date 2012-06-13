@@ -44,6 +44,10 @@ module Rubaship
         @row = Row.new(:G)
       end
 
+      subject { @row }
+
+      it { should respond_to(:length) }
+
       describe "#range?" do
         it "returns false" do
           @row.range?.should be false
@@ -119,6 +123,10 @@ module Rubaship
       before(:each) do
         @row = Row.new(:D..:G)
       end
+
+      subject { @row }
+
+      it { should respond_to(:length) }
 
       describe "#range?" do
         it "returns true" do
