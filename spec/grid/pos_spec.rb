@@ -84,6 +84,12 @@ module Rubaship
         end
       end
 
+      describe "#to_s" do
+        it "returns B8:H" do
+          @pos.to_s.should == "B8:H"
+        end
+      end
+
       describe "#==" do
         it "should == [:B, 8, :H]" do
           @pos.should == [:B, 8, :H]
@@ -147,6 +153,12 @@ module Rubaship
           lambda {
             @pos.rangify!(3)
           }.should change(@pos.row, :range?).from(false).to(true)
+        end
+      end
+
+      describe "#to_s" do
+        it "returns G7:V" do
+          @pos.to_s.should == "G7:V"
         end
       end
 
