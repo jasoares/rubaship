@@ -84,6 +84,12 @@ module Rubaship
         end
       end
 
+      describe "#to_a" do
+        it "returns [:B, 8, :H]" do
+          @pos.to_a.should == [:B, 8, :H]
+        end
+      end
+
       describe "#to_s" do
         it "returns B8:H" do
           @pos.to_s.should == "B8:H"
@@ -153,6 +159,12 @@ module Rubaship
           lambda {
             @pos.rangify!(3)
           }.should change(@pos.row, :range?).from(false).to(true)
+        end
+      end
+
+      describe "#to_a" do
+        it "returns [:G, 7, :V]" do
+          @pos.to_a.should == [:G, 7, :V]
         end
       end
 
@@ -226,6 +238,12 @@ module Rubaship
         end
       end
 
+      describe "#to_a" do
+        it "returns [:D..:G, 3, :V]" do
+          @pos.to_a.should == [:D..:G, 3, :V]
+        end
+      end
+
       describe "#to_s" do
         it "returns D..G3:V" do
           @pos.to_s.should == "D..G3:V"
@@ -296,6 +314,16 @@ module Rubaship
 
       it "returns false when passed :C, 5..8, :V" do
         Pos.is_valid?(:C, 5..8, :V).should be false
+      end
+    end
+
+    describe ".format" do
+      it "returns [:A, 3, :H] when passed \"A\", 3, \"horizontal\"" do
+        Pos.format("A", "3", "horizontal").should == [:A, 3, :H]
+      end
+
+      it "returns [:C..:H, 3, :V] when passed \"C\"..\"H\", \"3\", \"Vert\"" do
+        Pos.format("C".."H", "3", "Vert").should == [:C..:H, 3, :V]
       end
     end
 
