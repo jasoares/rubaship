@@ -4,11 +4,14 @@ module Rubaship
 
     attr_reader :row, :col, :ori
 
-    POSITION_REGEXP = /^(?<anchor>[A-J0-9]{2,3}):(?<orient>[a-z]{1,10})$/i
-    ANCHOR_REGEXP = /^(?:(?<row>[A-J])(?<col>([1-9])|10)|\g<col>\g<row>)$/i
-    ORIENT_REGEXP = /^(?<ori>
-      h(o(r(i(z(o(n(t(a(l)?)?)?)?)?)?)?)?)? |
-      v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/ix
+    POS_REGEXP = /^
+      (?:
+        (?<row> [A-J] ) (?<col> [1-9]|10 ) | \g<col> \g<row>
+      ) : (?<ori>
+        h(o(r(i(z(o(n(t(a(l)?)?)?)?)?)?)?)?)? |
+        v(e(r(t(i(c(a(l)?)?)?)?)?)?)?
+      )
+    $/ix
 
     def initialize(pos_row, col=nil, ori=nil)
       pos_row, col, ori = Pos.to_a(pos_row, col, ori)
@@ -58,14 +61,8 @@ module Rubaship
     end
 
     def self.parse(p)
-      return nil unless m = POSITION_REGEXP.match(p)
-      anchor = ANCHOR_REGEXP.match(m[:anchor])
-      orient = ORIENT_REGEXP.match(m[:orient])
-      if anchor and orient
-        self.format(anchor[:row], anchor[:col], orient[:ori])
-      else
-        nil
-      end
+      return nil unless m = POS_REGEXP.match(p)
+      [m[:row].upcase.to_sym, m[:col].to_i, m[:ori][0].upcase.to_sym]
     end
 
     def self.to_a(pos_row, col=nil, ori=nil)
