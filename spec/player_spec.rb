@@ -19,31 +19,10 @@ module Rubaship
         @player.place(:B, :D, 5, :V)
       end
 
-      it "parses the string to a position using Pos.parse" do
-        @pos = Pos.parse("D5:V")
+      it "sends the position arguments unchanged" do
+        @pos = Pos.new(:D, 5, :V)
         @player.grid.should_receive(:add!).with(@player.ship(:B), *@pos)
         @player.place(:B, *@pos)
-      end
-
-      context "when passed a position without orientation" do
-        it "raises InvalidShipPosition if neither row or col are Ranges" do
-          lambda { @player.place(:B, :D, 3) }.should raise_error(
-            InvalidPositionArgument,
-            "Either row or col must be a Range matching the orientation argument if any."
-          )
-        end
-
-        it "accepts a Range row instead of horizontal" do
-          @ship = @player.ship(:B)
-          @player.grid.should_receive(:add!).with(@ship, :D, 5..8, :H)
-          @player.place(:B, :D, 5..8)
-        end
-
-        it "accepts a Range col instead of vertical" do
-          @ship = @player.ship(:B)
-          @player.grid.should_receive(:add!).with(@ship, :D..:G, 5, :V)
-          @player.place(:B, :D..:G, 5)
-        end
       end
 
       context "when passed an invalid ship Symbol" do

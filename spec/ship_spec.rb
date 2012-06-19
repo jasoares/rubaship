@@ -3,7 +3,7 @@ require 'spec_helper.rb'
 module Rubaship
 
   shared_examples "a ship" do
-    before(:all) do
+    before(:each) do
       @ship = Ship.create(@name)
     end
 
@@ -45,19 +45,19 @@ module Rubaship
       end
 
       it "returns true after the ship has been placed" do
-        @player = Player.new
-        @player.place(@name, "3d:h")
-        @player.ship(@name).placed?.should be true
+        expect do
+          @ship.position = [:A, 3, :H]
+        end.should change(@ship, :placed?).from(false).to(true)
       end
     end
 
     describe "#position" do
-      it "returns nil when if the ship has not been placed" do
+      it "returns nil when the ship has not been placed" do
         @ship.position.should be_nil
       end
 
       context "when the ship is already placed on a grid" do
-        before(:all) do
+        before(:each) do
           @player = Player.new
           @ship = @player.ship(@name)
           @pos = [ :C, 3, :V ]

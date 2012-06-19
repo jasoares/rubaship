@@ -14,7 +14,15 @@ module Rubaship
     $/ix
 
     def initialize(pos_row, col=nil, ori=nil)
-      pos_row, col, ori = Pos.to_a(pos_row, col, ori)
+      pos_row, col, ori = Pos.parse(pos_row) if
+        pos_row.is_a?(String) and !col and !ori
+      raise InvalidPositionArgument if
+        !pos_row.is_a? Range and !col.is_a? Range and !ori
+      ori ||= pos_row.is_a?(Range) ? :V : (col.is_a?(Range) ? :H : nil)
+      raise InvalidPositionArgument if
+        pos_row.is_a?(Range) && col.is_a?(Range) or
+        pos_row.is_a?(Range) && ori == :H or
+        col.is_a?(Range) && ori == :V
       @row, @col, @ori = Row.new(pos_row), Col.new(col), Ori.new(ori)
     end
 
@@ -32,7 +40,15 @@ module Rubaship
     end
 
     def to_a
-      Pos.format(self.row, self.col, self.ori)
+      [row.to_sym, col.to_i, ori.to_sym]
+    end
+
+    def to_ary
+      [row, col, ori]
+    end
+
+    def to_hash
+      { :row => row, :col => col, :ori => ori }
     end
 
     def to_s
@@ -44,16 +60,20 @@ module Rubaship
     end
 
     def ==(o)
-      self.to_a == Pos.to_a(*o)
+      row, col, ori = case o
+        when String then Pos.parse(o).to_a
+        when Array  then o
+        when Pos    then o.to_a
+      end
+      self.row == row and self.col == col and self.ori == ori
     end
 
-    def self.is_valid?(pos_row, col=nil, ori=nil)
-      begin
-        row, col, ori = Pos.to_a(pos_row, col, ori)
-        Row.is_valid? row and Col.is_valid? col and Ori.is_valid? ori
-      rescue Exception
-        false
+    def self.is_valid?(row, col, ori=nil)
+      ori ||= row.is_a?(Range) ? :V : (col.is_a?(Range) ? :H : nil)
+      if row.is_a?(Range) && ori == :H or col.is_a?(Range) && ori == :V
+        return false
       end
+      Row.is_valid? row and Col.is_valid? col and Ori.is_valid? ori
     end
 
     def self.format(row, col, ori)
@@ -79,7 +99,7 @@ module Rubaship
         ori = :V if pos_row.range?
         ori = :H if col.range?
       end
-      self.format(pos_row, col, ori)
+      [pos_row.to_sym, col.to_i, ori.to_sym]
     end
   end
 end

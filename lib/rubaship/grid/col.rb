@@ -57,7 +57,7 @@ module Rubaship
           when Col    then v.to_idx
         end
       rescue ArgumentError
-        false
+        nil
       end
     end
 
