@@ -1,13 +1,19 @@
+require 'spec_helper.rb'
+
 module Rubaship
-  class Cli
-    def self.start
-      <<-welcome_msg
+  module Cli
+    describe Cli do
+      describe "#start" do
+        it "returns a welcome message to the player" do
+          Cli.start.should == <<-EOF
 ########################################
 #                                      #
 #         Welcome to Rubaship!         #
 #                                      #
 ########################################
-      welcome_msg
+          EOF
+        end
+      end
     end
   end
 end

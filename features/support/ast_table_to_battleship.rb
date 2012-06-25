@@ -13,7 +13,7 @@ module Cucumber
 
         raw[1..10].collect do |table_row|
           table_row[1..10].collect do |table_cell|
-            Rubaship::Sector.new(Rubaship::Ship.create(table_cell))
+            Rubaship::Grid::Sector.new(Rubaship::Ship.create(table_cell))
           end
         end
       end

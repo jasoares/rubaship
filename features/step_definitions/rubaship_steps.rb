@@ -34,7 +34,7 @@ When /^I enter (.*) as the position$/ do |pos|
 end
 
 When /^I place my (#{SHIP_REGEXP}) at (.*)$/ do |ship, pos|
-  p = Rubaship::Pos.parse(pos)
+  p = Rubaship::Grid::Pos.parse(pos)
   begin
     @player.place(ship, *p)
   rescue Exception => e
@@ -66,7 +66,9 @@ Then /^I should have the following ships:$/ do |table|
 end
 
 Then /^my (#{SHIP_REGEXP}) should be placed at (.*)$/ do |ship, pos|
-  @player.ship(ship).position.should == Rubaship::Pos.parse(pos)
+  pos = Rubaship::Grid::Pos.new(pos)
+  pos.rangify!(@player.ship(ship))
+  @player.ship(ship).position.should == pos
 end
 
 Then /^my (#{SHIP_REGEXP}) should not be placed$/ do |ship|
@@ -90,8 +92,8 @@ end
 
 Then /^it should mean ([A-J]|nil) ([1-9]|10|nil) (horizontal|vertical|nil)$/ do |row, col, ori|
   if row == "nil" or col == "nil" or ori == "nil"
-    Rubaship::Pos.parse(@pos).should be_nil
+    Rubaship::Grid::Pos.parse(@pos).should be_nil
   else
-    Rubaship::Pos.parse(@pos).should == Rubaship::Pos.format(row, col, ori)
+    Rubaship::Grid::Pos.parse(@pos).should == Rubaship::Grid::Pos.format(row, col, ori)
   end
 end

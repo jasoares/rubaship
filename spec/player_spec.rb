@@ -6,7 +6,7 @@ module Rubaship
 
     describe "#grid" do
       it "returns a Grid object" do
-        @player.grid.should be_a Grid
+        @player.grid.should be_a Grid::Grid
       end
     end
 
@@ -20,9 +20,9 @@ module Rubaship
       end
 
       it "sends the position arguments unchanged" do
-        @pos = Pos.new(:D, 5, :V)
-        @player.grid.should_receive(:add!).with(@player.ship(:B), *@pos)
-        @player.place(:B, *@pos)
+        @pos = Grid::Pos.new(:D, 5, :V)
+        @player.grid.should_receive(:add!).with(@player.ship(:B), @pos)
+        @player.place(:B, @pos)
       end
 
       context "when passed an invalid ship Symbol" do

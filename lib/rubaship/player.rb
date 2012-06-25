@@ -5,7 +5,7 @@ module Rubaship
 
     def initialize
       @ships = Ship.ships
-      @grid = Grid.new
+      @grid = Grid::Grid.new
     end
 
     def ship(type)
@@ -16,9 +16,7 @@ module Rubaship
     def place(ship, *pos)
       raise InvalidShipArgument.new(ship) if (ship = self.ship(ship)).nil?
       raise AlreadyPlacedShipError.new(ship) if ship.placed?
-      pos = pos.is_a?(Pos) ? pos : Pos.new(*pos)
-      @grid.add!(ship, *pos)
-      ship.position = *pos
+      ship.position = @grid.add!(ship, *pos).to_a
     end
   end
 end

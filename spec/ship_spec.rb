@@ -60,7 +60,9 @@ module Rubaship
         before(:each) do
           @player = Player.new
           @ship = @player.ship(@name)
-          @pos = [ :C, 3, :V ]
+          @row = Grid::Row.new(:C)
+          @row.rangify!(@ship)
+          @pos = Grid::Pos.new(@row.to_pos, 3, :V)
           @player.place(@name, *@pos)
         end
 
@@ -69,7 +71,7 @@ module Rubaship
         end
 
         it "should contain the position of the ship" do
-          @ship.position.should be == @pos
+          @ship.position.should == @pos
         end
       end
     end
