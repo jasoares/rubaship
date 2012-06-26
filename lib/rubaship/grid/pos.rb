@@ -61,11 +61,15 @@ module Rubaship
       end
 
       def self.is_valid?(row, col, ori=nil)
-        ori ||= row.is_a?(Range) ? :V : (col.is_a?(Range) ? :H : nil)
-        if row.is_a?(Range) && ori == :H or col.is_a?(Range) && ori == :V
-          return false
+        return false unless Row.is_valid?(row) and Col.is_valid?(col)
+        row, col = Row.new(row), Col.new(col)
+        return false if row.range? && col.range? or ori && !Ori.is_valid?(ori) or
+          !row.range? && !col.range? && !ori
+        if ori
+          ori = Ori.new(ori)
+          return false if row.range? && ori.horiz? or col.range? && ori.vert?
         end
-        Row.is_valid? row and Col.is_valid? col and Ori.is_valid? ori
+        true
       end
 
       def self.format(row, col, ori)

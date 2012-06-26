@@ -337,8 +337,24 @@ module Rubaship
           Pos.is_valid?(:D, 4..7).should be true
         end
 
+        it "returns true when passed :D..:G, 5 with no orientation" do
+          Pos.is_valid?(:D..:G, 5).should be true
+        end
+
+        it "returns false when passed :D..:G, 4..7" do
+          Pos.is_valid?(:D..:G, 4..7).should be false
+        end
+
+        it "returns false when passed :C, 3 with no orientation" do
+          Pos.is_valid?(:C, 3).should be false
+        end
+
         it "returns false when passed :K, 3, :H" do
           Pos.is_valid?(:K, 3, :H).should be false
+        end
+
+        it "returns false when passed :C, 0" do
+          Pos.is_valid?(:C, 0).should be false
         end
 
         it "returns false when passed :A..:D, 5, :H" do
