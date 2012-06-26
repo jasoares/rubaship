@@ -45,8 +45,12 @@ module Rubaship
         end
 
         describe "#rangify!" do
+          it "returns a col" do
+            @col.rangify!(4).should be_a Col
+          end
+
           it "returns 7..10 when passed a size of 4" do
-            @col.rangify!(4).should == (7..10)
+            @col.rangify!(4).should == Col.new(7..10)
           end
         end
 

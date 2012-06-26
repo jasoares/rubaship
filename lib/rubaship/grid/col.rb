@@ -17,7 +17,7 @@ module Rubaship
         s = s.size if s.respond_to? :length
         return false if self.range? or !Col.is_valid?(@idx + s)
         @idx = (@idx..@idx + s - 1)
-        self.to_i
+        self
       end
 
       def size

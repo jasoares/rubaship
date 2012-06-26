@@ -23,7 +23,7 @@ module Rubaship
         s = s.length if s.respond_to? :length
         return false if self.range?
         @idx = (@idx..@idx + s - 1)
-        self.to_sym
+        self
       end
 
       def to_idx
