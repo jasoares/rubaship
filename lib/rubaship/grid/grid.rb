@@ -3,12 +3,6 @@ module Rubaship
     class Grid
       include Enumerable
 
-      POSITION_REGEXP = /^(?<anchor>[A-Z0-9]{2,3}):(?<orientation>[a-z]{1,10})$/i
-      ANCHOR_REGEXP = /^(?:(?<row>[A-J])(?<col>([1-9])|10)|\g<col>\g<row>)$/i
-      ORIENT_REGEXP = /^(?<ori>
-        h(o(r(i(z(o(n(t(a(l)?)?)?)?)?)?)?)?)? |
-        v(e(r(t(i(c(a(l)?)?)?)?)?)?)?)$/ix
-
       def initialize
         @grid = Array.new(10) { Array.new(10) { Sector.new } }
       end
