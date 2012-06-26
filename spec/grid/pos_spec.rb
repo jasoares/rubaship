@@ -3,6 +3,10 @@ require 'spec_helper.rb'
 module Rubaship
   module Grid
     describe Pos do
+      it "accepts a string of the form RC:O like \"E4:H\"" do
+        Pos.new("E4:H").should == [:E, 4, :H]
+      end
+
       it "accepts a sequence of Row, Col and Ori objects" do
         Pos.new(Row.new(:A), Col.new(3), Ori.new(:H)).should == [:A, 3, :H]
       end
@@ -367,16 +371,20 @@ module Rubaship
       end
 
       describe ".parse" do
+        it "returns an array" do
+          Pos.parse("D4:V").should be_an Array
+        end
+
         it "returns Pos.new(:A, 3, :H) when passed \"A3:H\"" do
-          Pos.parse("A3:H").should == Pos.new(:A, 3, :H)
+          Pos.parse("A3:H").should == [:A, 3, :H]
         end
 
         it "returns Pos.new(:C, 7, :H) when passed \"C7:H\"" do
-          Pos.parse("C7:H").should == Pos.new(:C, 7, :H)
+          Pos.parse("C7:H").should == [:C, 7, :H]
         end
 
         it "returns Pos.new(:E, 10, :V) when passed \"E10:V\"" do
-          Pos.parse("E10:V").should == Pos.new(:E, 10, :V)
+          Pos.parse("E10:V").should == [:E, 10, :V]
         end
 
         it "returns nil when passed\"B11:H\"" do

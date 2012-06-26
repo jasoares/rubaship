@@ -13,9 +13,12 @@ module Rubaship
         )
       $/ix
 
-      def initialize(pos_row, col=nil, ori=nil)
-        pos_row, col, ori = Pos.to_a(pos_row, col, ori)
-        @row, @col, @ori = Row.new(pos_row), Col.new(col), Ori.new(ori)
+      def initialize(*args)
+        args = Pos.parse(*args) if args.size == 1 and args[0].is_a? String
+        @row, @col = Row.new(args[0]), Col.new(args[1])
+        args[2] ||= @row.range? ? :V : @col.range? ? :H : nil
+        raise InvalidPositionArgument unless Pos.is_valid?(*args)
+        @ori = Ori.new(args[2])
       end
 
       def range?
@@ -53,7 +56,7 @@ module Rubaship
 
       def ==(o)
         row, col, ori = case o
-          when String then Pos.parse(o).to_a
+          when String then Pos.parse(o)
           when Array  then o
           when Pos    then o.to_a
         end
@@ -78,24 +81,7 @@ module Rubaship
 
       def self.parse(p)
         return nil unless m = POS_REGEXP.match(p)
-        self.to_a(m[:row], m[:col], m[:ori])
-      end
-
-      def self.to_a(pos_row, col=nil, ori=nil)
-        if !col and !ori
-          return pos_row.to_a if pos_row.is_a? Pos
-          return self.parse(pos_row) if pos_row.is_a? String
-        else
-          pos_row, col = Row.new(pos_row), Col.new(col)
-          raise InvalidPositionArgument if
-            !pos_row.range? && !col.range? && !ori or
-             pos_row.range? && col.range? or
-             pos_row.range? && ori == :H or
-                 col.range? && ori == :V
-          ori = :V if pos_row.range?
-          ori = :H if col.range?
-        end
-        self.format pos_row, col, ori
+        self.format(m[:row], m[:col], m[:ori])
       end
     end
   end
