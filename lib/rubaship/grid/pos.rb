@@ -21,6 +21,10 @@ module Rubaship
         @ori = Ori.new(args[2])
       end
 
+      def eql?(o)
+        o.is_a? Pos and row.eql? o.row and col.eql? o.col and ori.eql? o.ori
+      end
+
       def range?
         row.range? or col.range?
       end

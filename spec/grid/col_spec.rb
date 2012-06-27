@@ -38,6 +38,16 @@ module Rubaship
           @col = Col.new(7)
         end
 
+        describe "#eql?" do
+          it "should eql Col.new(7)" do
+            @col.should eql Col.new(7)
+          end
+
+          it "should not eql 7" do
+            @col.should_not eql 7
+          end
+        end
+
         describe "#range?" do
           it "returns false" do
             @col.range?.should be false
@@ -50,7 +60,7 @@ module Rubaship
           end
 
           it "returns 7..10 when passed a size of 4" do
-            @col.rangify!(4).should == Col.new(7..10)
+            @col.rangify!(4).should eql Col.new(7..10)
           end
         end
 
@@ -120,6 +130,16 @@ module Rubaship
       context "for a sample column which is the range of columns 3..7" do
         before(:each) do
           @col = Col.new(3..7)
+        end
+
+        describe "#eql?" do
+          it "should eql Col.new(3..7)" do
+            @col.should eql Col.new(3..7)
+          end
+
+          it "should not eql (3..7)" do
+            @col.should_not eql (3..7)
+          end
         end
 
         describe "#range?" do

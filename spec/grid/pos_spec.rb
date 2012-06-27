@@ -45,31 +45,41 @@ module Rubaship
           @pos = Pos.new(:B, 8, :H)
         end
 
+        describe "eql?" do
+          it "should eql Pos.new(:B, 8, :H)" do
+            @pos.should eql Pos.new(:B, 8, :H)
+          end
+
+          it "should not eql [:B, 8, :H]" do
+            @pos.should_not eql [:B, 8, :H]
+          end
+        end
+
         describe "#row" do
-          it "returns :B" do
-            @pos.row.should == Row.new(:B)
+          it "returns <Row>:B" do
+            @pos.row.should eql Row.new(:B)
           end
         end
 
         describe "#col" do
-          it "returns 8" do
-            @pos.col.should == Col.new(8)
+          it "returns <Col>8" do
+            @pos.col.should eql Col.new(8)
           end
         end
 
         describe "#ori" do
-          it "returns :H" do
-            @pos.ori.should == Ori.new(:H)
+          it "returns <Ori>:H" do
+            @pos.ori.should eql Ori.new(:H)
           end
         end
 
         describe "#rangify!" do
           it "returns the position rangified :B, 8..10, :H, when passed 3" do
-            @pos.rangify!(3).should == [:B, 8..10, :H]
+            @pos.rangify!(3).should eql Pos.new(:B, 8..10, :H)
           end
 
           it "returns the position rangified :B, 8..10, :H, when passed a destroyer" do
-            @pos.rangify!(Ship.create(:D)).should == [:B, 8..10, :H]
+            @pos.rangify!(Ship.create(:D)).should eql Pos.new(:B, 8..10, :H)
           end
 
           it "changes the column from 8 to 8..9 when passed 2" do
@@ -93,7 +103,7 @@ module Rubaship
 
         describe "#to_ary" do
           it "returns [Row, Col, Ori] matching :B, 8, :H" do
-            @pos.to_ary.should =~ [Row.new(:B), Col.new(8), Ori.new(:H)]
+            @pos.to_ary.should eql [Row.new(:B), Col.new(8), Ori.new(:H)]
           end
         end
 
@@ -133,21 +143,31 @@ module Rubaship
           @pos = Pos.new(:G, 7, :V)
         end
 
+        describe "eql?" do
+          it "should eql Pos.new(:G, 7, :V)" do
+            @pos.should eql Pos.new(:G, 7, :V)
+          end
+
+          it "should not eql [:G, 7, :V]" do
+            @pos.should_not eql [:G, 7, :V]
+          end
+        end
+
         describe "#row" do
           it "returns :G" do
-            @pos.row.should == Row.new(:G)
+            @pos.row.should eql Row.new(:G)
           end
         end
 
         describe "#col" do
           it "returns 7" do
-            @pos.col.should == Col.new(7)
+            @pos.col.should eql Col.new(7)
           end
         end
 
         describe "#ori" do
           it "returns :V" do
-            @pos.ori.should == Ori.new(:V)
+            @pos.ori.should eql Ori.new(:V)
           end
         end
 
@@ -159,7 +179,7 @@ module Rubaship
 
         describe "#rangify!" do
           it "returns the rangified position :G..:J, 7 when passed 4" do
-            @pos.rangify!(4).should == [:G..:J, 7, :V]
+            @pos.rangify!(4).should eql Pos.new(:G..:J, 7, :V)
           end
 
           it "changes the row from :G to :G..:I when passed 3" do
@@ -182,8 +202,8 @@ module Rubaship
         end
 
         describe "#to_ary" do
-          it "returns [Row.new(:G), Col.new(7), Ori.new(:V)]" do
-            @pos.to_ary.should =~ [Row.new(:G), Col.new(7), Ori.new(:V)]
+          it "returns [Row, Col, Ori] matching :G, 7, :V" do
+            @pos.to_ary.should eql [Row.new(:G), Col.new(7), Ori.new(:V)]
           end
         end
 
@@ -233,21 +253,31 @@ module Rubaship
           @pos = Pos.new(:D..:G, 3)
         end
 
+        describe "eql?" do
+          it "should eql Pos.new(:D..:G, 3)" do
+            @pos.should eql Pos.new(:D..:G, 3)
+          end
+
+          it "should not eql [:D..:G, 3, :V]" do
+            @pos.should_not eql [:D..:G, 3, :V]
+          end
+        end
+
         describe "#row" do
           it "returns :D..:G" do
-            @pos.row.should == Row.new(:D..:G)
+            @pos.row.should eql Row.new(:D..:G)
           end
         end
 
         describe "#col" do
           it "returns 3" do
-            @pos.col.should == Col.new(3)
+            @pos.col.should eql Col.new(3)
           end
         end
 
         describe "#ori" do
           it "returns :V" do
-            @pos.ori.should == Ori.new(:V)
+            @pos.ori.should eql Ori.new(:V)
           end
         end
 
@@ -271,7 +301,7 @@ module Rubaship
 
         describe "#to_ary" do
           it "returns [Row, Col, Ori] matching :D..:G, 3, :V" do
-            @pos.to_ary.should =~ [Row.new(:D..:G), Col.new(3), Ori.new(:V)]
+            @pos.to_ary.should eql [Row.new(:D..:G), Col.new(3), Ori.new(:V)]
           end
         end
 

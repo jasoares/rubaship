@@ -68,6 +68,16 @@ module Rubaship
           @ori = Ori.new(:H)
         end
 
+        describe "#eql?" do
+          it "should eql Ori.new(:H)" do
+            @ori.should eql Ori.new(:H)
+          end
+
+          it "should not eql :H" do
+            @ori.should_not eql :H
+          end
+        end
+
         describe "#horiz?" do
           it "returns true" do
             @ori.horiz?.should be true
@@ -119,6 +129,16 @@ module Rubaship
       context "for a sample vertical Ori" do
         before(:each) do
           @ori = Ori.new(:V)
+        end
+
+        describe "#eql?" do
+          it "should eql Ori.new(:V)" do
+            @ori.should eql Ori.new(:V)
+          end
+
+          it "should not eql :V" do
+            @ori.should_not eql :V
+          end
         end
 
         describe "#horiz?" do

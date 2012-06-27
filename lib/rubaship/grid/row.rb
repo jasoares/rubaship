@@ -9,6 +9,10 @@ module Rubaship
         @idx = Row.to_idx v
       end
 
+      def eql?(o)
+        o.is_a? Row and self == o
+      end
+
       def size
         self.range? ? self.to_idx.count : 1
       end

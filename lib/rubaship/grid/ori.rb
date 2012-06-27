@@ -10,6 +10,10 @@ module Rubaship
         @ori = Ori.to_sym(ori)
       end
 
+      def eql?(o)
+        o.is_a? Ori and self == o
+      end
+
       def horiz?
         @ori == :H
       end

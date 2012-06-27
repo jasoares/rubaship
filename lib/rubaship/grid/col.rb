@@ -9,6 +9,10 @@ module Rubaship
         @idx = Col.to_idx v
       end
 
+      def eql?(o)
+        o.is_a? Col and self == o
+      end
+
       def range?
         @idx.is_a?(Range)
       end

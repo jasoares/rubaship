@@ -43,6 +43,16 @@ module Rubaship
 
         it { should respond_to(:length) }
 
+        describe "#eql?" do
+          it "should eql Row.new(:G)" do
+            @row.should eql Row.new(:G)
+          end
+
+          it "should not eql :G" do
+            @row.should_not eql :G
+          end
+        end
+
         describe "#range?" do
           it "returns false" do
             @row.range?.should be false
@@ -55,7 +65,7 @@ module Rubaship
           end
 
           it "returns the rangified row" do
-            @row.rangify!(4).should == Row.new(:G..:J)
+            @row.rangify!(4).should eql Row.new(:G..:J)
           end
 
           it "changes the return value of range? from false to true" do
@@ -86,6 +96,12 @@ module Rubaship
         describe "#to_s" do
           it "returns \"G\"" do
             @row.to_s.should == "G"
+          end
+        end
+
+        describe "#to_str" do
+          it "returns \"G\"" do
+            @row.to_str.should == "G"
           end
         end
 
@@ -126,6 +142,16 @@ module Rubaship
         subject { @row }
 
         it { should respond_to(:length) }
+
+        describe "#eql?" do
+          it "should eql Row.new(:D..:G)" do
+            @row.should eql Row.new(:D..:G)
+          end
+
+          it "should not eql (:D..:G)" do
+            @row.should_not eql (:D..:G)
+          end
+        end
 
         describe "#range?" do
           it "returns true" do
