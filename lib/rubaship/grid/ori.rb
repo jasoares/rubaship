@@ -5,6 +5,8 @@ module Rubaship
       Horiz = "horizontal"
       Vert = "vertical"
 
+      attr_reader :ori
+
       def initialize(ori)
         raise InvalidOriArgument.new(ori) unless Ori.is_valid? ori
         @ori = Ori.to_sym(ori)
@@ -15,30 +17,26 @@ module Rubaship
       end
 
       def horiz?
-        @ori == :H
+        ori == :H
       end
 
-      def to_pos
-        self.to_sym
-      end
-
-      def to_sym
-        @ori
-      end
+      alias :to_pos :ori
 
       def to_s
-        case @ori
+        case ori
           when :H then Horiz[0].upcase
           when :V then Vert[0].upcase
         end
       end
 
+      alias :to_sym :ori
+
       def vert?
-        @ori == :V
+        ori == :V
       end
 
       def ==(o)
-        self.to_sym == Ori.to_sym(o)
+        ori == Ori.to_sym(o)
       end
 
       def self.to_sym(ori)
@@ -47,7 +45,7 @@ module Rubaship
             if    /#{ori}\w*/i.match(Horiz) then :H
             elsif /#{ori}\w*/i.match(Vert)  then :V
             end
-          when Symbol then self.to_sym(ori.to_s)
+          when Symbol then Ori.to_sym(ori.to_s)
           when Ori    then ori.to_sym
         end
       end
@@ -57,7 +55,7 @@ module Rubaship
       end
 
       def self.is_valid?(str)
-        self.to_sym(str) ? true : false
+        Ori.to_sym(str) ? true : false
       end
     end
   end

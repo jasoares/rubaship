@@ -16,57 +16,53 @@ module Rubaship
       end
 
       def size
-        self.range? ? self.to_idx.count : 1
+        range? ? idx.count : 1
       end
 
       alias :length :size
 
       def range?
-        @idx.is_a?(Range)
+        idx.is_a?(Range)
       end
 
       def rangify!(s)
         s = s.length if s.respond_to? :length
         return false if self.range?
-        @idx = (@idx..@idx + s - 1)
+        @idx = (idx .. idx + s - 1)
         self
       end
 
-      def to_idx
-        @idx
-      end
-
-      def to_pos
-        self.to_sym
-      end
+      alias :to_idx :idx
 
       def to_sym
-        self.range? ? self.to_str.min.to_sym..self.to_str.max.to_sym : self.to_str.to_sym
+        range? ? to_str.min.to_sym..to_str.max.to_sym : to_str.to_sym
       end
 
+      alias :to_pos :to_sym
+
       def to_s
-        self.to_str.to_s
+        to_str.to_s
       end
 
       def to_str
         v_to_s = Proc.new { |v| ('A'.ord + v).chr }
-        self.range? ? v_to_s[@idx.min]..v_to_s[@idx.max] : v_to_s[@idx]
+        range? ? v_to_s[idx.min] .. v_to_s[idx.max] : v_to_s[idx]
       end
 
       def valid?(s)
         s = s.length if s.respond_to? :length
-        self.range? ? self.size >= s : Row.is_valid?( (self.to_str.ord + s - 1).chr )
+        range? ? size >= s : Row.is_valid?( (to_str.ord + s - 1).chr )
       end
 
       def ==(o)
-        self.to_idx == Row.to_idx(o)
+        idx == Row.to_idx(o)
       end
 
       def self.to_idx(v)
         case v
           when String then ROWS.index(v.upcase)
-          when Symbol then self.to_idx(v.to_s)
-          when Range  then self.to_idx(v.min) .. self.to_idx(v.max)
+          when Symbol then Row.to_idx(v.to_s)
+          when Range  then Row.to_idx(v.min) .. Row.to_idx(v.max)
           when Row    then v.to_idx
         end
       end
@@ -77,8 +73,8 @@ module Rubaship
 
       def self.is_valid?(v)
         v = v.to_sym if v.respond_to? :to_sym
-        return self.is_valid?(v.min) && self.is_valid?(v.max) if v.is_a? Range
-        idx = self.to_idx(v)
+        return Row.is_valid?(v.min) && Row.is_valid?(v.max) if v.is_a? Range
+        idx = Row.to_idx(v)
         idx ? (idx >= 0 and idx < ROWS.size) : false
       end
     end
