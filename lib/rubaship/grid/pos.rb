@@ -30,10 +30,10 @@ module Rubaship
       end
 
       def rangify!(s)
-        if self.ori.vert? && !self.row.range?
-          self.row.rangify!(s)
-        elsif self.ori.horiz? && !self.col.range?
-          self.col.rangify!(s)
+        if ori.vert? && !row.range?
+          row.rangify!(s)
+        elsif ori.horiz? && !col.range?
+          col.rangify!(s)
         end
         self
       end
@@ -51,11 +51,11 @@ module Rubaship
       end
 
       def to_s
-        "#{self.row}#{self.col}:#{self.ori}"
+        "#{row}#{col}:#{ori}"
       end
 
       def valid?(s)
-        self.ori.vert? ? self.row.valid?(s) : self.col.valid?(s)
+        ori.vert? ? row.valid?(s) : col.valid?(s)
       end
 
       def ==(o)
