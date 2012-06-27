@@ -97,7 +97,7 @@ module Rubaship
 
         describe "#to_a" do
           it "returns [:B, 8, :H]" do
-            @pos.to_a.should =~ [:B, 8, :H]
+            @pos.to_a.should == [:B, 8, :H]
           end
         end
 
@@ -197,7 +197,7 @@ module Rubaship
 
         describe "#to_a" do
           it "returns [:G, 7, :V]" do
-            @pos.to_a.should =~ [:G, 7, :V]
+            @pos.to_a.should == [:G, 7, :V]
           end
         end
 
@@ -295,7 +295,7 @@ module Rubaship
 
         describe "#to_a" do
           it "returns [:D..:G, 3, :V]" do
-            @pos.to_a.should =~ [:D..:G, 3, :V]
+            @pos.to_a.should == [:D..:G, 3, :V]
           end
         end
 
