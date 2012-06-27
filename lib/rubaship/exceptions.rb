@@ -1,32 +1,7 @@
 module Rubaship
-
-  class InvalidRowArgument < ArgumentError
-    def initialize(row)
-      super("Invalid row or range type passed #{row}:#{row.class}")
-    end
-  end
-
-  class InvalidColArgument < ArgumentError
-    def initialize(col)
-      super("Invalid column or range type passed #{col}:#{col.class}")
-    end
-  end
-
-  class InvalidOriArgument < ArgumentError
-    def initialize(ori)
-      super("Invalid orientation type passed #{ori}:#{ori.class}")
-    end
-  end
-
   class InvalidShipArgument < ArgumentError
     def initialize(id)
       super("Must be a valid ship symbol or name identifier.")
-    end
-  end
-
-  class InvalidPositionArgument < ArgumentError
-    def initialize
-      super("Either row or col must be a Range matching the orientation argument if any.")
     end
   end
 
