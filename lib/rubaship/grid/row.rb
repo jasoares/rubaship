@@ -2,6 +2,8 @@ module Rubaship
   module Grid
     class Row
 
+      attr_reader :idx
+
       ROWS = ("A".."J").to_a
 
       def initialize(v)

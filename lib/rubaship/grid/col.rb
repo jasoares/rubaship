@@ -4,6 +4,8 @@ module Rubaship
 
       COLS = ("1".."10").to_a
 
+      attr_reader :idx
+
       def initialize(v)
         raise InvalidColArgument.new v unless Col.is_valid? v
         @idx = Col.to_idx v
