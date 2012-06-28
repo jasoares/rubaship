@@ -16,7 +16,7 @@ module Rubaship
       def initialize(*args)
         args = Pos.parse(*args) if args.size == 1 and args[0].is_a? String
         @row, @col = Row.new(args[0]), Col.new(args[1])
-        args[2] ||= @row.range? ? :V : @col.range? ? :H : nil
+        args[2] ||= @row.range? && :V or @col.range? && :H
         raise InvalidPositionArgument unless Pos.is_valid?(*args)
         @ori = Ori.new(args[2])
       end
@@ -30,11 +30,7 @@ module Rubaship
       end
 
       def rangify!(s)
-        if ori.vert? && !row.range?
-          row.rangify!(s)
-        elsif ori.horiz? && !col.range?
-          col.rangify!(s)
-        end
+        ori.vert? && row.rangify!(s) or ori.horiz? && col.rangify!(s)
         self
       end
 
