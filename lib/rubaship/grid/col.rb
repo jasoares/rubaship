@@ -42,7 +42,7 @@ module Rubaship
       end
 
       def to_str
-        range? ? to_i.min.to_s .. to_i.max.to_s : to_i.to_s
+        range? ? COLS[idx.min] .. COLS[idx.max] : COLS[idx]
       end
 
       def valid?(s)

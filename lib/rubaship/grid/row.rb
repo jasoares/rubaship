@@ -27,7 +27,7 @@ module Rubaship
 
       def rangify!(s)
         min = range? ? idx.min : idx
-        @idx = min .. min + s - 1 if Row.is_valid?((to_s[0].ord + s - 1).chr)
+        @idx = min .. min + s - 1 if Row.is_valid?(ROWS[min + s - 1])
         self
       end
 
@@ -44,13 +44,12 @@ module Rubaship
       end
 
       def to_str
-        v_to_s = Proc.new { |v| ('A'.ord + v).chr }
-        range? ? v_to_s[idx.min] .. v_to_s[idx.max] : v_to_s[idx]
+        range? ? ROWS[idx.min] .. ROWS[idx.max] : ROWS[idx]
       end
 
       def valid?(s)
         s = s.length if s.respond_to? :length
-        range? ? size >= s : Row.is_valid?( (to_str.ord + s - 1).chr )
+        range? ? size >= s : Row.is_valid?(ROWS[idx + s - 1])
       end
 
       def ==(o)
