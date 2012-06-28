@@ -27,7 +27,7 @@ module Rubaship
 
       def rangify!(s)
         s = s.length if s.respond_to? :length
-        return false if self.range?
+        return false if range? or !Row.is_valid?((to_str.ord + s - 1).chr)
         @idx = (idx .. idx + s - 1)
         self
       end

@@ -64,7 +64,7 @@ module Rubaship
             @row.rangify!(4).should be_a Row
           end
 
-          it "returns the rangified row" do
+          it "returns the rangified row when passed 4" do
             @row.rangify!(4).should eql Row.new(:G..:J)
           end
 
@@ -72,6 +72,16 @@ module Rubaship
             lambda {
               @row.rangify!(3)
             }.should change(@row, :range?).from(false).to(true)
+          end
+
+          it "returns false when passed 5 forcing it out of grid" do
+            @row.rangify!(5).should be false
+          end
+
+          it "should not change the row when passed 5" do
+            lambda {
+              @row.rangify!(5)
+            }.should_not change(@row, :idx)
           end
         end
 
