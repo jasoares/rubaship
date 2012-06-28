@@ -78,10 +78,6 @@ module Rubaship
             @pos.rangify!(3).should eql Pos.new(:B, 8..10, :H)
           end
 
-          it "returns the position rangified :B, 8..10, :H, when passed a destroyer" do
-            @pos.rangify!(Ship.create(:D)).should eql Pos.new(:B, 8..10, :H)
-          end
-
           it "changes the column from 8 to 8..9 when passed 2" do
             lambda {
               @pos.rangify!(2)

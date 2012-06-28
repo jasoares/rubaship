@@ -67,7 +67,7 @@ end
 
 Then /^my (#{SHIP_REGEXP}) should be placed at (.*)$/ do |ship, pos|
   pos = Rubaship::Grid::Pos.new(pos)
-  pos.rangify!(@player.ship(ship))
+  pos.rangify!(@player.ship(ship).size)
   @player.ship(ship).position.should == pos
 end
 

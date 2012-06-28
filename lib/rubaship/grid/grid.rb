@@ -42,7 +42,7 @@ module Rubaship
       def add!(ship, *pos)
         p = pos.is_a?(Pos) ? pos : Pos.new(*pos)
         raise InvalidPositionForShip.new(ship, p) unless p.valid?(ship)
-        p.rangify!(ship)
+        p.rangify!(ship.size)
 
         insert_ship = lambda { |sector| sector.ship = ship }
         grid = self[p.row, p.col]

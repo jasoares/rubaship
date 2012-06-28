@@ -61,7 +61,7 @@ module Rubaship
           @player = Player.new
           @ship = @player.ship(@name)
           @row = Grid::Row.new(:C)
-          @row.rangify!(@ship)
+          @row.rangify!(@ship.size)
           @pos = Grid::Pos.new(@row.to_pos, 3, :V)
           @player.place(@name, *@pos)
         end
