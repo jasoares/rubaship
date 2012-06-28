@@ -62,6 +62,22 @@ module Rubaship
           it "returns 7..10 when passed a size of 4" do
             @col.rangify!(4).should eql Col.new(7..10)
           end
+
+          it "changes the return value of range? from false to true" do
+            lambda {
+              @col.rangify!(3)
+            }.should change(@col, :range?).from(false).to(true)
+          end
+
+          it "returns an unchanged col when passed 5 forcing it out of grid" do
+            @col.rangify!(5).should eql Col.new(7)
+          end
+
+          it "should not change the col when passed 5" do
+            lambda {
+              @col.rangify!(5)
+            }.should_not change(@col, :idx)
+          end
         end
 
         describe "#size" do
@@ -149,8 +165,18 @@ module Rubaship
         end
 
         describe "#rangify!" do
-          it "returns false to indicate it is already a range" do
-            @col.rangify!(3).should be false
+          it "returns a rangified col with the same size 5 passed" do
+            @col.rangify!(5).should eql Col.new(3..7)
+          end
+
+          it "should change the col range to the new size 3 passed" do
+            lambda {
+              @col.rangify!(3)
+            }.should change(@col, :to_s).from("3..7").to("3..5")
+          end
+
+          it "returns a rangified row with the new size 4 passed" do
+            @col.rangify!(4).should eql Col.new(3..6)
           end
         end
 

@@ -27,8 +27,8 @@ module Rubaship
 
       def rangify!(s)
         s = s.length if s.respond_to? :length
-        return false if range? or !Row.is_valid?((to_str.ord + s - 1).chr)
-        @idx = (idx .. idx + s - 1)
+        min = range? ? idx.min : idx
+        @idx = min .. min + s - 1 if Row.is_valid?((to_s[0].ord + s - 1).chr)
         self
       end
 

@@ -74,8 +74,8 @@ module Rubaship
             }.should change(@row, :range?).from(false).to(true)
           end
 
-          it "returns false when passed 5 forcing it out of grid" do
-            @row.rangify!(5).should be false
+          it "returns an unchanged row when passed 5 forcing it out of grid" do
+            @row.rangify!(5).should eql Row.new(:G)
           end
 
           it "should not change the row when passed 5" do
@@ -170,8 +170,18 @@ module Rubaship
         end
 
         describe "#rangify!" do
-          it "returns false to indicate it is already a Range" do
-            @row.rangify!(4).should be false
+          it "returns a rangified row with the same 4 size passed" do
+            @row.rangify!(4).should eql Row.new(:D..:G)
+          end
+
+          it "should change the row range to the new size 5 passed" do
+            lambda {
+              @row.rangify!(5)
+            }.should change(@row, :to_s).from("D..G").to("D..H")
+          end
+
+          it "returns a rangified row with the new size 5 passed" do
+            @row.rangify!(5).should eql Row.new(:D..:H)
           end
         end
 

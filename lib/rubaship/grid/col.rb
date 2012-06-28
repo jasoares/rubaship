@@ -20,9 +20,9 @@ module Rubaship
       end
 
       def rangify!(s)
-        s = s.size if s.respond_to? :length
-        return false if range? or !Col.is_valid?(idx + s)
-        @idx = (idx .. idx + s - 1)
+        s = s.length if s.respond_to? :length
+        min, col = range? ? [idx.min, to_i.min] : [idx, to_i]
+        @idx = min .. min + s - 1 if Col.is_valid?(col + s - 1)
         self
       end
 
